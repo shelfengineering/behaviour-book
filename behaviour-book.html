@@ -2730,6 +2730,12 @@ function parseDate(d) {
   return new Date(d);
 }
 
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
 function fmtDate(d) {
   const date = parseDate(d);
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -3646,7 +3652,7 @@ function app() {
       });
 
       const concern = this.students.filter(s => this.getTier(s.id) >= 2).map(s =>
-        '<li><strong>' + s.name + '</strong> — Tier ' + this.getTier(s.id) + ', ratio ' + this.getRatio(s.id).toFixed(1) + ':1, ' + this.getStudentNegativeCount(s.id) + ' negative entries</li>'
+        '<li><strong>' + escHtml(s.name) + '</strong> — Tier ' + this.getTier(s.id) + ', ratio ' + this.getRatio(s.id).toFixed(1) + ':1, ' + this.getStudentNegativeCount(s.id) + ' negative entries</li>'
       ).join('');
 
       const topNeg = this.getTopCategories('negative').slice(0, 3).map(c => c.category + ' (' + c.count + ')').join(', ');
@@ -3662,7 +3668,7 @@ function app() {
         '<div style="margin-bottom:12px;"><strong>Tier Distribution:</strong> Tier 1: ' + t1 + ' &bull; Tier 2: ' + t2 + ' &bull; Tier 3: ' + t3 + '</div>' +
         (topNeg ? '<div style="margin-bottom:12px;"><strong>Top Negative Categories:</strong> ' + topNeg + '</div>' : '') +
         (overdue > 0 ? '<div style="margin-bottom:12px;color:#B94A3E;"><strong>Overdue Follow-ups:</strong> ' + overdue + '</div>' : '<div style="margin-bottom:12px;color:#7A9E7E;"><strong>Follow-ups:</strong> All up to date</div>') +
-        (ratioWarnings.length > 0 ? '<div style="margin-bottom:12px;"><strong>Below Ratio Target (' + this.settings.ratioTarget + ':1):</strong> ' + ratioWarnings.map(s => s.name + ' (' + this.getRatio(s.id).toFixed(1) + ':1)').join(', ') + '</div>' : '') +
+        (ratioWarnings.length > 0 ? '<div style="margin-bottom:12px;"><strong>Below Ratio Target (' + this.settings.ratioTarget + ':1):</strong> ' + ratioWarnings.map(s => escHtml(s.name) + ' (' + this.getRatio(s.id).toFixed(1) + ':1)').join(', ') + '</div>' : '') +
         (concern ? '<div style="margin-bottom:8px;"><strong>Students of Concern:</strong></div><ul style="margin:0 0 12px 18px;">' + concern + '</ul>' : '<div style="margin-bottom:12px;color:#7A9E7E;"><strong>All students at Tier 1.</strong></div>');
 
       this.showReport = true;
