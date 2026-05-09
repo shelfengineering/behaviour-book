@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behaviour Book — Privacy &amp; Data Security</title>
+<meta name="description" content="Complete privacy and data security documentation for Behaviour Book. No server, no cloud, no accounts. All student data stays on the teacher's device. Compliant with Australian Privacy Principles.">
+<meta property="og:title" content="Behaviour Book — Privacy &amp; Data Security">
+<meta property="og:description" content="Technical and legal privacy overview. No data leaves your device. Designed for IT administrators and school leadership.">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_AU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": "Behaviour Book Privacy & Data Security",
+  "description": "Privacy policy and technical data security documentation for Behaviour Book.",
+  "inLanguage": "en-AU",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can the developer see my data?", "acceptedAnswer": { "@type": "Answer", "text": "No. There is no server, no account, and no mechanism for anyone other than the teacher to access the data." }},
+    { "@type": "Question", "name": "Is student data encrypted?", "acceptedAnswer": { "@type": "Answer", "text": "The saved JSON file is plain text. For encryption, save it to an encrypted drive (BitLocker, FileVault, or encrypted school network share)." }},
+    { "@type": "Question", "name": "Does the app work offline?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. After the first load (which fetches fonts and Alpine.js), the app runs entirely offline. No internet connection is needed." }},
+    { "@type": "Question", "name": "Does the app comply with Australian Privacy Principles?", "acceptedAnswer": { "@type": "Answer", "text": "The app does not collect, transmit, or store data on any external system. All data stays on the teacher's device. It is designed to sit outside the scope of most data protection obligations." }},
+    { "@type": "Question", "name": "Does the app use cookies or tracking?", "acceptedAnswer": { "@type": "Answer", "text": "No. No cookies, no localStorage, no sessionStorage, no analytics, no tracking pixels, no advertising scripts." }},
+    { "@type": "Question", "name": "Can I audit the app's network activity?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Developer Tools (F12), go to Network tab. After initial page load, you will see zero network requests during normal use." }}
+  ]
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --clay: #C17248;
+  --clay-dark: #A35A32;
+  --sage: #7A9E7E;
+  --sage-dark: #5C7E60;
+  --sand: #F5EDE3;
+  --sand-dark: #E8D9C8;
+  --charcoal: #3D3D3D;
+  --warm-grey: #756A62;
+  --upcoming: #5B8FA8;
+  --font: 'Nunito', system-ui, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--sand);
+  color: var(--charcoal);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 740px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.header {
+  background: white;
+  border-bottom: 1px solid var(--sand-dark);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner {
+  max-width: 740px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clay);
+  text-decoration: none;
+}
+.header-nav { display: flex; gap: 16px; }
+.header-nav a { font-size: 0.8rem; font-weight: 700; color: var(--warm-grey); text-decoration: none; }
+.header-nav a:hover { color: var(--clay); }
+
+/* Hero */
+.privacy-hero {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+.privacy-hero h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.privacy-hero .subtitle {
+  font-size: 1rem;
+  color: var(--warm-grey);
+  max-width: 560px;
+  margin: 0 auto;
+}
+.last-updated {
+  font-size: 0.75rem;
+  color: var(--warm-grey);
+  margin-top: 12px;
+}
+
+/* TL;DR box */
+.tldr {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  border-left: 4px solid var(--sage);
+  box-shadow: 0 1px 3px rgba(61,61,61,0.06);
+}
+.tldr h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--sage-dark);
+  margin-bottom: 12px;
+}
+.tldr ul {
+  list-style: none;
+  padding: 0;
+}
+.tldr li {
+  padding: 6px 0;
+  padding-left: 28px;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.tldr li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--sage);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+/* Sections */
+.section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(61,61,61,0.06);
+}
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.section h3 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+.section p { font-size: 0.88rem; margin-bottom: 10px; }
+.section ul, .section ol {
+  margin: 8px 0 12px 20px;
+  font-size: 0.88rem;
+}
+.section li { margin-bottom: 4px; }
+.section code {
+  background: var(--sand);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+/* Technical detail box */
+.tech-detail {
+  background: var(--sand);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border: 1px solid var(--sand-dark);
+}
+.tech-detail-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--warm-grey);
+  margin-bottom: 6px;
+}
+
+/* Compliance table */
+.compliance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 12px 0;
+}
+.compliance-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--sand);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--warm-grey);
+  border-bottom: 2px solid var(--sand-dark);
+}
+.compliance-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--sand-dark);
+  vertical-align: top;
+}
+.compliance-table tr:last-child td { border-bottom: none; }
+.status-yes { color: var(--sage-dark); font-weight: 700; }
+.status-na { color: var(--warm-grey); font-weight: 600; }
+
+/* Callout */
+.callout {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.callout-info { background: #E3EFF5; border-left: 3px solid var(--upcoming); color: #3A6B80; }
+.callout-warn { background: #FDF3DC; border-left: 3px solid #D4A843; color: #6B4E10; }
+.callout strong { font-weight: 700; }
+
+/* Source list */
+.sources {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sand-dark);
+}
+.sources h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.sources ul { list-style: none; padding: 0; }
+.sources li {
+  padding: 4px 0;
+  font-size: 0.78rem;
+}
+.sources a { color: var(--upcoming); text-decoration: none; font-weight: 600; }
+.sources a:hover { text-decoration: underline; }
+
+/* Footer */
+.privacy-footer {
+  text-align: center;
+  padding: 32px 24px 48px;
+  font-size: 0.78rem;
+  color: var(--warm-grey);
+}
+.privacy-footer a { color: var(--clay); text-decoration: none; font-weight: 700; }
+.privacy-footer a:hover { text-decoration: underline; }
+
+/* Print */
+@media print {
+  .header { position: static; }
+  .section, .tldr { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+  body { background: white; }
+}
+
+@media (max-width: 640px) {
+  .privacy-hero h1 { font-size: 1.6rem; }
+  .section { padding: 18px; }
+  .compliance-table { font-size: 0.78rem; }
+  .compliance-table th, .compliance-table td { padding: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="header-title">&#128218; Behaviour Book</a>
+    <div class="header-nav">
+      <a href="behaviour-book.html">Open App</a>
+      <a href="stories.html">Stories</a>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="privacy-hero">
+    <h1>Privacy &amp; Data Security</h1>
+    <p class="subtitle">A complete technical and legal overview of how Behaviour Book handles student data. Designed to be shared with IT administrators and school leadership.</p>
+    <p class="last-updated">Last updated: 10 May 2026</p>
+  </div>
+
+  <!-- TL;DR -->
+  <div class="tldr">
+    <h2>Summary for Administrators</h2>
+    <ul>
+      <li><strong>No data is transmitted anywhere.</strong> Behaviour Book runs entirely in the browser. There is no server, no database, no API, and no analytics.</li>
+      <li><strong>No user accounts.</strong> No email, no password, no sign-up. There is nothing to authenticate against.</li>
+      <li><strong>Data is stored as a local file.</strong> The teacher saves a <code>.json</code> file to their device. Loading the app reads from that file. That's the only persistence mechanism.</li>
+      <li><strong>No third-party data sharing.</strong> Student names, behaviour entries, and notes never leave the teacher's device.</li>
+      <li><strong>No cookies, no localStorage, no sessionStorage.</strong> The app uses none of these browser storage mechanisms.</li>
+      <li><strong>Two external resources loaded:</strong> a font (Google Fonts) and a JS framework (Alpine.js via jsDelivr CDN). Neither receives any student data.</li>
+      <li><strong>The app is a single HTML file.</strong> It can be saved locally and run fully offline with no internet connection.</li>
+    </ul>
+  </div>
+
+  <!-- Architecture -->
+  <div class="section">
+    <h2>Technical Architecture</h2>
+
+    <h3>How the app works</h3>
+    <p>Behaviour Book is a <strong>single HTML file</strong> (~3,500 lines) containing all HTML, CSS, and JavaScript. When a teacher opens it in a browser, the entire application runs locally on their device. There is no server component.</p>
+
+    <div class="tech-detail">
+      <div class="tech-detail-label">Data flow</div>
+      <p style="margin: 0;"><strong>Teacher's device (browser tab)</strong> ← all data lives here<br>
+      ↓ Save button → downloads a <code>.json</code> file to the device's file system<br>
+      ↑ Load button → reads a <code>.json</code> file from the device's file system<br>
+      ↕ No network requests are made to send or receive student data</p>
+    </div>
+
+    <h3>What happens in memory</h3>
+    <p>All student names, behaviour entries, notes, and settings exist only in the browser tab's JavaScript memory. When the tab is closed, the data is gone — unless the teacher has saved it to a file.</p>
+
+    <h3>What's in the saved file</h3>
+    <p>The <code>.json</code> file is a plain-text file containing:</p>
+    <ul>
+      <li>Student records (name, grade, notes)</li>
+      <li>Behaviour entries (date, type, category, location, description, action taken)</li>
+      <li>Teacher-authored notes (timestamped freeform text)</li>
+      <li>Settings (expectations, categories, locations, thresholds)</li>
+    </ul>
+    <p>The file is human-readable. Teachers can open it in any text editor to inspect exactly what's stored. No data is encrypted, obfuscated, or hidden.</p>
+
+    <div class="callout callout-info">
+      <strong>For IT admins:</strong> The file contains no executable code. It's a standard JSON document. It can be safely stored on network drives, USBs, or any file storage your school uses.
+    </div>
+  </div>
+
+  <!-- Network Activity -->
+  <div class="section">
+    <h2>Network Activity</h2>
+
+    <h3>What the app loads from the internet</h3>
+    <p>When a teacher opens the HTML file in a browser with internet access, two resources are loaded:</p>
+
+    <table class="compliance-table">
+      <thead>
+        <tr><th>Resource</th><th>From</th><th>Purpose</th><th>Data sent to them</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nunito + Fraunces fonts</td>
+          <td>fonts.googleapis.com</td>
+          <td>Typography</td>
+          <td>Standard HTTP request headers only (IP address, user agent). <strong>No student data.</strong></td>
+        </tr>
+        <tr>
+          <td>Alpine.js v3.14.9</td>
+          <td>cdn.jsdelivr.net</td>
+          <td>UI framework (reactivity)</td>
+          <td>Standard HTTP request headers only. <strong>No student data.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>What the app does NOT do</h3>
+    <ul>
+      <li>No <code>fetch()</code> or <code>XMLHttpRequest</code> calls to any server</li>
+      <li>No WebSocket connections</li>
+      <li>No analytics scripts (no Google Analytics, no Mixpanel, no tracking pixels)</li>
+      <li>No error reporting services (no Sentry, no Bugsnag)</li>
+      <li>No advertising scripts or trackers</li>
+      <li>No social media widgets or embeds</li>
+    </ul>
+
+    <div class="tech-detail">
+      <div class="tech-detail-label">Verification</div>
+      <p style="margin: 0;">IT administrators can verify this by opening the browser's Developer Tools (F12) → Network tab while using the app. After the initial page load, you will see <strong>zero network requests</strong> during normal use (logging entries, viewing students, etc.). The Save function uses <code>URL.createObjectURL()</code> to generate a local download — no upload occurs.</p>
+    </div>
+
+    <h3>Fully offline mode</h3>
+    <p>The app can run with <strong>no internet connection at all</strong>. If the HTML file is opened locally and the fonts/Alpine.js have been cached by the browser (from a previous session), or if Alpine.js is embedded directly into the file, the app works entirely offline. The only difference is that fonts may fall back to system defaults.</p>
+  </div>
+
+  <!-- Data Storage -->
+  <div class="section">
+    <h2>Data Storage &amp; Persistence</h2>
+
+    <h3>What is NOT used</h3>
+    <table class="compliance-table">
+      <thead>
+        <tr><th>Storage mechanism</th><th>Used?</th><th>Reason</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Cookies</td><td class="status-na">No</td><td>Not used. No tracking, no session management.</td></tr>
+        <tr><td>localStorage</td><td class="status-na">No</td><td>Deliberately avoided — not reliable across all school device configurations.</td></tr>
+        <tr><td>sessionStorage</td><td class="status-na">No</td><td>Not used.</td></tr>
+        <tr><td>IndexedDB</td><td class="status-na">No</td><td>Not used.</td></tr>
+        <tr><td>Cloud storage</td><td class="status-na">No</td><td>No server exists. No cloud integration of any kind.</td></tr>
+        <tr><td>Browser cache</td><td class="status-na">No student data</td><td>The browser may cache the HTML file and fonts, but student data is never written to cache.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>What IS used</h3>
+    <p><strong>File download/upload only.</strong> The teacher explicitly saves their data as a <code>.json</code> file using the browser's download function (or the device's share sheet on mobile). Loading data requires the teacher to explicitly select a file. At no point is data persisted automatically.</p>
+
+    <div class="callout callout-warn">
+      <strong>Important:</strong> If a teacher closes the browser tab without saving, all unsaved data is lost. The app warns about this via a browser-native "unsaved changes" prompt, but it cannot prevent data loss if the teacher dismisses the warning or the browser crashes.
+    </div>
+
+    <h3>Where the file lives</h3>
+    <p>The saved <code>.json</code> file is stored wherever the teacher chooses to save it — typically:</p>
+    <ul>
+      <li>Downloads folder (computer)</li>
+      <li>Files app / On My iPhone (iOS)</li>
+      <li>Downloads folder (Android)</li>
+      <li>A school network drive, USB, or cloud storage the teacher manages themselves</li>
+    </ul>
+    <p>Behaviour Book has no knowledge of where the file is stored after download. It does not access the file system, watch for changes, or sync in the background.</p>
+  </div>
+
+  <!-- Data Content -->
+  <div class="section">
+    <h2>What Data Is Collected</h2>
+
+    <p>Behaviour Book collects only what the teacher explicitly types in. There is no automated data collection of any kind.</p>
+
+    <table class="compliance-table">
+      <thead>
+        <tr><th>Data type</th><th>Examples</th><th>Entered by</th><th>Sent anywhere?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Student name</td><td>"Emma T.", "Liam N."</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Grade/class</td><td>"Year 3"</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Student notes</td><td>"Has an IEP"</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Behaviour entries</td><td>Type, category, location, description, action</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Timestamps</td><td>Date/time of entry</td><td>Auto-generated locally</td><td class="status-na">No</td></tr>
+        <tr><td>Follow-up notes</td><td>"Call mum on Friday"</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Teacher notes</td><td>"Met with parents today"</td><td>Teacher</td><td class="status-na">No</td></tr>
+        <tr><td>Settings</td><td>Expectations, categories</td><td>Teacher</td><td class="status-na">No</td></tr>
+      </tbody>
+    </table>
+
+    <h3>What is NOT collected</h3>
+    <ul>
+      <li>No teacher name, email, or identity</li>
+      <li>No school name or location</li>
+      <li>No device information, IP address, or browser fingerprint</li>
+      <li>No usage analytics, session duration, or click tracking</li>
+      <li>No student photos, IDs, or government identifiers</li>
+      <li>No parent/carer contact details</li>
+    </ul>
+  </div>
+
+  <!-- Australian Privacy Compliance -->
+  <div class="section">
+    <h2>Australian Privacy Compliance</h2>
+
+    <p>Behaviour Book's architecture is designed to sit <strong>outside the scope</strong> of most data protection obligations because it does not collect, transmit, or store data on any system controlled by a third party. However, teachers and schools should be aware of the following:</p>
+
+    <h3>Privacy Act 1988 &amp; Australian Privacy Principles (APPs)</h3>
+    <table class="compliance-table">
+      <thead>
+        <tr><th>Principle</th><th>Requirement</th><th>Behaviour Book</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>APP 1</td>
+          <td>Open and transparent management of personal information</td>
+          <td class="status-yes">This privacy page. The data file is human-readable JSON.</td>
+        </tr>
+        <tr>
+          <td>APP 3</td>
+          <td>Collection of solicited personal information must be necessary</td>
+          <td class="status-yes">Only behaviour-relevant data is collected. No extraneous fields.</td>
+        </tr>
+        <tr>
+          <td>APP 5</td>
+          <td>Notification of collection</td>
+          <td class="status-yes">The teacher themselves enters all data. No covert collection occurs.</td>
+        </tr>
+        <tr>
+          <td>APP 6</td>
+          <td>Use or disclosure of personal information</td>
+          <td class="status-yes">Data is never disclosed to any third party. It exists only on the teacher's device.</td>
+        </tr>
+        <tr>
+          <td>APP 8</td>
+          <td>Cross-border disclosure</td>
+          <td class="status-na">Not applicable. No data leaves the device. Google Fonts and jsDelivr receive standard HTTP headers (IP address) but no student data.</td>
+        </tr>
+        <tr>
+          <td>APP 11</td>
+          <td>Security of personal information</td>
+          <td class="status-yes">Data security is the responsibility of the teacher/school's device and file management. The app cannot be breached because there is nothing to breach — no server, no database.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>State and territory legislation</h3>
+    <p>Government schools are subject to state/territory privacy legislation rather than the federal Privacy Act. Because Behaviour Book does not transmit or store data externally, it does not introduce new privacy obligations beyond those the school already has for managing student records on school devices.</p>
+
+    <div class="callout callout-info">
+      <strong>Recommendation:</strong> Schools should treat the saved <code>.json</code> file with the same care as any other document containing student names and behaviour information — store it securely, don't share it with unauthorised persons, and delete it when no longer needed.
+    </div>
+
+    <h3>Children's Online Privacy Code 2026</h3>
+    <p>The OAIC's Children's Online Privacy Code (expected December 2026) applies to online services that collect children's personal information. Behaviour Book does not collect children's information itself — the teacher records observations about student behaviour on their own device. The app has no interaction with students and no online service component. However, schools should confirm with their legal advisors whether their use of any classroom tool falls within the Code's scope.</p>
+  </div>
+
+  <!-- Security Considerations -->
+  <div class="section">
+    <h2>Security Considerations for IT Administrators</h2>
+
+    <h3>Risk assessment</h3>
+    <table class="compliance-table">
+      <thead>
+        <tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Data breach via server compromise</td>
+          <td><strong>Impossible</strong></td>
+          <td>No server exists. There is nothing to compromise.</td>
+        </tr>
+        <tr>
+          <td>Unauthorised access to student data</td>
+          <td>Same as any local file</td>
+          <td>Governed by device access controls (password, biometrics) and file permissions. Same risk profile as a Word document.</td>
+        </tr>
+        <tr>
+          <td>Data loss (teacher loses file)</td>
+          <td>Moderate</td>
+          <td>The app prompts to save regularly. Teachers should keep dated backup copies. The file is small (&lt;100KB typically) and can be emailed to oneself.</td>
+        </tr>
+        <tr>
+          <td>Malicious code in the HTML file</td>
+          <td>Very low</td>
+          <td>The file can be inspected in any text editor. It loads Alpine.js from a pinned CDN version (3.14.9). No other scripts are loaded.</td>
+        </tr>
+        <tr>
+          <td>Supply chain attack (compromised CDN)</td>
+          <td>Very low</td>
+          <td>Alpine.js is loaded from jsDelivr with a pinned version. For maximum security, the school can inline the Alpine.js script directly into the HTML file (~20KB).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Recommended deployment for schools</h3>
+    <ol>
+      <li><strong>Host the HTML file on your school intranet or SharePoint.</strong> Teachers access it via a local URL. No internet needed after first load.</li>
+      <li><strong>Or distribute the file directly.</strong> Email it, put it on a shared drive, or install it on school-managed devices.</li>
+      <li><strong>Establish a save location policy.</strong> Recommend teachers save their data files to a specific school drive or folder that is backed up and access-controlled.</li>
+      <li><strong>For maximum isolation:</strong> Download Alpine.js, embed it inline in the HTML file, and remove the CDN link. The app then requires zero internet access.</li>
+    </ol>
+
+    <div class="tech-detail">
+      <div class="tech-detail-label">Content Security Policy recommendation</div>
+      <p style="margin: 0;">If hosting on a school web server, you can add a strict CSP header:<br>
+      <code>Content-Security-Policy: default-src 'self'; script-src 'self' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com;</code></p>
+    </div>
+  </div>
+
+  <!-- Source Code -->
+  <div class="section">
+    <h2>Source Code Transparency</h2>
+    <p>Behaviour Book is a single HTML file. All code — HTML structure, CSS styling, and JavaScript logic — is visible in the file itself. There is no compiled code, no minified bundles, and no obfuscation.</p>
+    <p>Any technically competent person can open the file in a text editor and verify:</p>
+    <ul>
+      <li>That no network requests are made to external servers</li>
+      <li>That no data is written to localStorage, cookies, or IndexedDB</li>
+      <li>That the Save function creates a local download only</li>
+      <li>That the Load function reads a local file only</li>
+      <li>That no analytics, tracking, or telemetry code is present</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Can the developer see my data?</h3>
+    <p>No. There is no mechanism for anyone other than the teacher to access the data. There is no server to send it to, no account to associate it with, and no analytics to capture it.</p>
+
+    <h3>Is student data encrypted?</h3>
+    <p>The saved JSON file is not encrypted. It's plain text. If your school requires encryption, save the file to an encrypted drive or folder (e.g. BitLocker on Windows, FileVault on Mac, or an encrypted school network share).</p>
+
+    <h3>What happens if a teacher loses their file?</h3>
+    <p>The data is gone. There is no cloud backup and no recovery mechanism. We recommend teachers keep multiple dated copies and use their school's standard backup procedures.</p>
+
+    <h3>Can multiple teachers share a file?</h3>
+    <p>Yes, but only one teacher should edit the file at a time. The file can be shared via email, USB, or shared drives. There is no real-time collaboration — each save creates a new file.</p>
+
+    <h3>Does the app work on school-managed devices (Chromebooks, iPads)?</h3>
+    <p>Yes. It runs in any modern browser (Chrome, Safari, Firefox, Edge). No software installation is required. On managed devices, the IT admin can whitelist the two CDN domains (fonts.googleapis.com, cdn.jsdelivr.net) or host the file locally with embedded dependencies.</p>
+
+    <h3>Does the app comply with GDPR?</h3>
+    <p>Behaviour Book does not process personal data in the GDPR sense — it does not collect, store, or transmit data to any data controller or processor. The teacher's local device is the only place data exists. However, schools with EU obligations should consult their DPO.</p>
+
+    <h3>Can I audit the app's network activity?</h3>
+    <p>Yes. Open your browser's Developer Tools (F12), go to the Network tab, and use the app normally. After the initial page load (fonts + Alpine.js), you will see zero network requests. Every action — logging, viewing, saving — happens locally.</p>
+  </div>
+
+  <!-- Contact -->
+  <div class="section">
+    <h2>Contact</h2>
+    <p>For privacy questions, technical queries, or to report a concern:</p>
+    <p><strong>Email:</strong> <a href="mailto:nicolas@shelfengineering.com">nicolas@shelfengineering.com</a></p>
+  </div>
+
+  <!-- Sources -->
+  <div class="sources">
+    <h2>References</h2>
+    <ul>
+      <li><a href="https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines" target="_blank">Australian Privacy Principles Guidelines — OAIC</a></li>
+      <li><a href="https://www.alrc.gov.au/publication/for-your-information-australian-privacy-law-and-practice-alrc-report-108/69-particular-privacy-issues-affecting-children-and-young-people/schools/" target="_blank">Schools and Privacy — Australian Law Reform Commission</a></li>
+      <li><a href="https://harwoodandrews.com.au/news-ha/legal-requirements-schools-data-privacy" target="_blank">Legal Requirements for Schools and Data Privacy — Harwood Andrews</a></li>
+      <li><a href="https://www.teachermagazine.com/au_en/articles/legal-matters-schools-and-data-privacy" target="_blank">Legal Matters: Schools and Data Privacy — Teacher Magazine</a></li>
+      <li><a href="https://www.moores.com.au/childrens-online-privacy-code-2026-consequences-and-liability-for-schools/" target="_blank">Children's Online Privacy Code 2026 — Moores</a></li>
+      <li><a href="https://isa.edu.au/wp-content/uploads/2023/04/Privacy-Compliance-Manual-2023.pdf" target="_blank">Privacy Compliance Manual — Independent Schools Australia</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="privacy-footer">
+  <a href="index.html">Home</a> &middot; <a href="behaviour-book.html">Open App</a> &middot; <a href="stories.html">Stories</a><br>
+  &#128218; Behaviour Book &middot; Built by <a href="mailto:nicolas@shelfengineering.com">Shelf Engineering</a>
+</div>
+
+</body>
+</html>

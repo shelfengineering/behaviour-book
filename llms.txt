@@ -1,0 +1,55 @@
+# Behaviour Book
+
+> A free, private, browser-based tool for Australian primary school teachers to track student behaviour, spot patterns, and respond with evidence-based strategies. No accounts, no cloud, no data leaves the device.
+
+## What it does
+
+Behaviour Book helps teachers:
+- Log positive and negative student behaviour in under 10 seconds
+- Automatically detect patterns: recurring categories, hotspot locations, ratio drops
+- Classify students into Tier 1 (universal), Tier 2 (targeted), or Tier 3 (intensive) support levels using the SWPBS framework
+- Track the positive-to-negative ratio per student (target: 4:1)
+- Surface follow-up reminders so nothing falls through the cracks
+- Generate suggested next steps: CICO, FBA, BSP, restorative conversations, parent contact
+- Produce weekly summary reports for leadership
+- Provide a built-in strategy guide with evidence-based intervention descriptions
+
+## Technical architecture
+
+- Single HTML file (~3,500 lines) with embedded CSS and JavaScript
+- Uses Alpine.js v3 for reactivity (loaded via CDN)
+- No server, no database, no API, no analytics
+- Data persists as a local JSON file saved/loaded by the teacher
+- No cookies, no localStorage, no sessionStorage, no cloud storage
+- Works offline after first load
+- Mobile-friendly with iOS safe-area support
+
+## Privacy
+
+- Zero data transmission. All student data stays on the teacher's device.
+- No user accounts. No email, password, or sign-up.
+- Two external resources: Google Fonts (typography) and Alpine.js (UI framework). Neither receives student data.
+- Compliant with Australian Privacy Principles. Full privacy policy available.
+
+## Supported frameworks
+
+- SWPBS / PBL (School-Wide Positive Behaviour Support)
+- Berry Street Education Model (trauma-informed)
+- Restorative Practices
+- Custom school values
+- Framework-free tracking
+
+## Target audience
+
+Australian primary school teachers (Prep/Foundation to Year 6). Approximately 163,000 primary school teachers across ~6,200 schools in Australia.
+
+## Pages
+
+- [Home](index.html): Landing page with overview and links
+- [App](behaviour-book.html): The full application
+- [Stories](stories.html): Four classroom scenarios demonstrating value
+- [Privacy](privacy.html): Complete technical and legal privacy documentation
+
+## Contact
+
+Email: nicolas@shelfengineering.com

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behaviour Book — See How It Works</title>
+<meta name="description" content="Four real classroom stories showing how Behaviour Book helps Australian teachers spot behaviour patterns, track positive ratios, prepare for meetings with data, and never miss a follow-up.">
+<meta property="og:title" content="Behaviour Book — See How It Works">
+<meta property="og:description" content="Four classroom stories showing what the app catches that a busy teacher might miss.">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_AU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="See How Behaviour Book Works">
+<meta name="twitter:description" content="Pattern detection, ratio tracking, tiered support, and follow-up reminders — in real classroom scenarios.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Behaviour Book — Four Stories from the Classroom",
+  "description": "Real-world scenarios showing how Behaviour Book helps Australian teachers spot patterns, track ratios, and respond with evidence-based strategies.",
+  "inLanguage": "en-AU",
+  "about": {
+    "@type": "SoftwareApplication",
+    "name": "Behaviour Book"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --clay: #C17248;
+  --clay-light: #D4916E;
+  --clay-dark: #A35A32;
+  --sage: #7A9E7E;
+  --sage-light: #A3C4A7;
+  --sage-dark: #5C7E60;
+  --sand: #F5EDE3;
+  --sand-dark: #E8D9C8;
+  --sand-darker: #D4C4B0;
+  --charcoal: #3D3D3D;
+  --warm-grey: #8C8279;
+  --tier2: #D4A843;
+  --tier3: #B94A3E;
+  --upcoming: #5B8FA8;
+  --font: 'Nunito', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--sand);
+  background-image: radial-gradient(circle at 50% 0%, rgba(193,114,72,0.03) 0%, transparent 60%);
+  color: var(--charcoal);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Hero ===== */
+.hero {
+  background: linear-gradient(160deg, var(--clay) 0%, var(--clay-dark) 100%);
+  color: white;
+  padding: 72px 24px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.hero-logo { font-size: 3.5rem; margin-bottom: 10px; position: relative; }
+.hero h1 { font-family: var(--font-display); font-size: 2.6rem; font-weight: 700; margin-bottom: 14px; line-height: 1.1; position: relative; letter-spacing: -0.02em; }
+.hero-sub { font-size: 1.05rem; opacity: 0.9; max-width: 560px; margin: 0 auto 32px; line-height: 1.6; position: relative; }
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: var(--clay-dark);
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  position: relative;
+}
+.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+/* ===== Container ===== */
+.container { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+
+/* ===== What Is Section ===== */
+.what-is {
+  padding: 48px 20px 16px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.what-is h2 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin-bottom: 14px; text-align: center; letter-spacing: -0.02em; }
+.what-is-intro {
+  font-size: 1rem;
+  color: var(--warm-grey);
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.what-is-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.what-is-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(61,61,61,0.06), 0 4px 12px rgba(61,61,61,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.what-is-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(61,61,61,0.1); }
+.what-is-card-icon { font-size: 1.6rem; margin-bottom: 8px; }
+.what-is-card-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; margin-bottom: 5px; }
+.what-is-card-desc { font-size: 0.78rem; color: var(--warm-grey); line-height: 1.5; }
+
+.how-it-works {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(61,61,61,0.07);
+  margin-bottom: 12px;
+}
+.how-it-works h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; text-align: center; }
+.how-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 10px 0;
+}
+.how-step + .how-step { border-top: 1px solid var(--sand-dark); }
+.how-step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--sand-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--warm-grey);
+  flex-shrink: 0;
+}
+.how-step-text { font-size: 0.85rem; line-height: 1.5; }
+.how-step-text strong { font-weight: 700; }
+
+.key-concepts {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(61,61,61,0.07);
+  margin-bottom: 12px;
+}
+.key-concepts h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; text-align: center; }
+.concept {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+}
+.concept + .concept { border-top: 1px solid var(--sand-dark); }
+.concept-badge {
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.concept-text { font-size: 0.82rem; line-height: 1.5; }
+.concept-text strong { font-weight: 700; }
+
+/* ===== Divider ===== */
+.section-divider {
+  text-align: center;
+  padding: 48px 20px 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.section-divider h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.02em; }
+.section-divider p { color: var(--warm-grey); font-size: 0.95rem; line-height: 1.6; }
+
+/* ===== Story ===== */
+.story {
+  padding: 44px 24px;
+  margin: 0 -20px;
+  border-radius: 0;
+}
+.story + .story { border-top: none; }
+.story:nth-child(1) { background: linear-gradient(135deg, #F4FAF6 0%, var(--sand) 100%); }
+.story:nth-child(2) { background: linear-gradient(135deg, #FDFAF2 0%, var(--sand) 100%); }
+.story:nth-child(3) { background: linear-gradient(135deg, #FDF6F5 0%, var(--sand) 100%); }
+.story:nth-child(4) { background: linear-gradient(135deg, #F2F7FA 0%, var(--sand) 100%); }
+.story-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.story-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.story-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--warm-grey);
+}
+.story:nth-child(1) .story-number { background: #EDF5EF; color: var(--sage-dark); }
+.story:nth-child(2) .story-number { background: #FDF3DC; color: var(--tier2); }
+.story:nth-child(3) .story-number { background: #F5E0DD; color: var(--tier3); }
+.story:nth-child(4) .story-number { background: #E3EFF5; color: var(--upcoming); }
+.story h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+}
+.story-scene {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 1px 3px rgba(61,61,61,0.05), 0 4px 12px rgba(61,61,61,0.04);
+  margin-bottom: 16px;
+}
+.story-scene-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.scene-without { color: var(--warm-grey); }
+.scene-with { color: var(--sage-dark); }
+.story-scene p { font-size: 0.9rem; line-height: 1.6; }
+.story-scene p + p { margin-top: 8px; }
+.story-prose { font-size: 0.9rem; line-height: 1.6; margin-top: 14px; }
+.story-prose + .story-prose { margin-top: 8px; }
+.story-bullets {
+  margin: 14px 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.story-bullets li {
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+.story-bullets li::marker { color: var(--warm-grey-light); }
+
+/* ===== Mock UI ===== */
+.mock-ui {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(61,61,61,0.06), 0 8px 24px rgba(61,61,61,0.08);
+  overflow: hidden;
+  margin: 24px 0;
+  border: 1px solid rgba(61,61,61,0.06);
+}
+.mock-header {
+  background: var(--sand);
+  padding: 11px 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--warm-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--sand-dark);
+}
+.mock-caption {
+  font-size: 0.72rem;
+  color: var(--warm-grey);
+  font-style: italic;
+  padding: 8px 16px 0;
+  line-height: 1.4;
+}
+.mock-body { padding: 14px 16px; }
+
+.mock-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+.mock-alert:last-child { margin-bottom: 0; }
+.mock-alert-warn { background: #FDF3DC; color: #946B1A; }
+.mock-alert-danger { background: #FDE8E5; color: var(--tier3); }
+.mock-alert-info { background: #EDF5EF; color: var(--sage-dark); }
+.mock-alert-icon { font-size: 1rem; flex-shrink: 0; }
+.mock-alert-text { line-height: 1.35; }
+.mock-alert-text strong { font-weight: 700; }
+
+/* Class overview mock - with clear column labels */
+.mock-table-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 8px;
+  border-bottom: 2px solid var(--sand-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--warm-grey);
+}
+.mock-th-avatar { width: 32px; flex-shrink: 0; }
+.mock-th-name { flex: 1; }
+.mock-th-tier { width: 56px; text-align: center; }
+.mock-th-ratio { width: 70px; text-align: right; }
+
+.mock-student-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--sand-dark);
+  font-size: 0.85rem;
+}
+.mock-student-row:last-child { border-bottom: none; }
+.mock-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+.mock-name { font-weight: 700; flex: 1; }
+.mock-badge {
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 56px;
+  text-align: center;
+}
+.badge-t1 { background: #EDF5EF; color: var(--sage); }
+.badge-t2 { background: #FDF3DC; color: var(--tier2); }
+.badge-t3 { background: #F5E0DD; color: var(--tier3); }
+.mock-ratio-col {
+  width: 70px;
+  text-align: right;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.mock-ratio-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sand-dark);
+  overflow: hidden;
+  margin-top: 3px;
+}
+.mock-ratio-bar-fill { height: 100%; border-radius: 3px; }
+
+.mock-step {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--sand-dark);
+  font-size: 0.8rem;
+}
+.mock-step:last-child { border-bottom: none; }
+.mock-step-border {
+  border-left: 3px solid var(--sage);
+  padding-left: 10px;
+  line-height: 1.4;
+}
+.mock-step-border.warn { border-left-color: var(--tier2); }
+.mock-step-border.urgent { border-left-color: var(--tier3); }
+
+/* Takeaway */
+.story-takeaway {
+  background: linear-gradient(135deg, var(--sand-dark) 0%, var(--sand) 100%);
+  border-left: 4px solid var(--clay);
+  border-radius: 0 12px 12px 0;
+  padding: 18px 20px;
+  margin-top: 24px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.story-takeaway strong { color: var(--clay-dark); font-weight: 800; }
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 56px 24px 64px;
+  background: white;
+  border-top: 1px solid var(--sand-dark);
+  margin-top: 20px;
+}
+.footer h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.02em; }
+.footer p { color: var(--warm-grey); font-size: 0.95rem; max-width: 460px; margin: 0 auto 24px; line-height: 1.6; }
+.footer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(193,114,72,0.3);
+}
+.footer-cta:hover { background: var(--clay-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(193,114,72,0.35); }
+.footer-demo {
+  margin-top: 12px;
+}
+.footer-demo a {
+  color: var(--clay);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.footer-demo a:hover { text-decoration: underline; }
+.footer-privacy { margin-top: 20px; font-size: 0.75rem; color: var(--warm-grey); }
+
+/* ===== Responsive ===== */
+/* ===== Paper Texture ===== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+body > * { position: relative; z-index: 1; }
+
+/* Stagger */
+.stagger-in > * {
+  opacity: 0;
+  animation: staggerFade 0.3s ease-out forwards;
+}
+.stagger-in > *:nth-child(1) { animation-delay: 0s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.05s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.1s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.15s; }
+@keyframes staggerFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in > * { animation: none !important; opacity: 1 !important; }
+}
+
+@media (min-width: 768px) {
+  .story { padding: 48px 32px; }
+  .hero { padding: 80px 24px 64px; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: 1.9rem; }
+  .hero { padding: 48px 20px 40px; }
+  .story h3 { font-size: 1.15rem; }
+  .what-is-grid { grid-template-columns: 1fr; }
+  .what-is h2 { font-size: 1.4rem; }
+  .story { padding: 36px 16px; margin: 0 -16px; }
+  .mock-th-tier { display: none; }
+  .mock-badge { display: none; }
+  .mock-ratio-col { width: 55px; }
+  .how-step { padding: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-logo">&#128218;</div>
+  <h1>Behaviour Book</h1>
+  <p class="hero-sub">A free, private tool that helps Australian primary school teachers track student behaviour, spot patterns early, and respond with evidence-based strategies.</p>
+  <a href="behaviour-book.html" class="hero-cta">&#128073; Try It Now — Free</a>
+</div>
+
+<!-- What is Behaviour Book -->
+<div class="what-is">
+  <h2>What is Behaviour Book?</h2>
+  <p class="what-is-intro">
+    It's a single-page app you open in your browser. You log quick behaviour entries throughout the day, and the app does the rest:
+  </p>
+  <ul class="story-bullets" style="max-width: 460px; margin: -12px auto 28px; text-align: left;">
+    <li>Spots <strong>patterns</strong> you'd miss across a busy week</li>
+    <li>Tracks your <strong>positive-to-negative ratio</strong> per student</li>
+    <li>Suggests <strong>evidence-based next steps</strong> matched to each student's data</li>
+    <li>Reminds you about <strong>follow-ups</strong> before they slip through the cracks</li>
+  </ul>
+
+  <div class="what-is-grid stagger-in">
+    <div class="what-is-card">
+      <div class="what-is-card-icon">&#9889;</div>
+      <div class="what-is-card-title">Log in 10 seconds</div>
+      <div class="what-is-card-desc">Tap a student, choose positive or negative, pick a category, done. Designed for the pace of a real classroom.</div>
+    </div>
+    <div class="what-is-card">
+      <div class="what-is-card-icon">&#128202;</div>
+      <div class="what-is-card-title">Patterns surface automatically</div>
+      <div class="what-is-card-desc">The app detects recurring behaviours, hotspot locations, and trends you might not notice across a busy week.</div>
+    </div>
+    <div class="what-is-card">
+      <div class="what-is-card-icon">&#127919;</div>
+      <div class="what-is-card-title">Aligned to SWPBS</div>
+      <div class="what-is-card-desc">Built around School-Wide Positive Behaviour Support — the framework most Australian schools already use. Tiers, expectations, restorative prompts.</div>
+    </div>
+    <div class="what-is-card">
+      <div class="what-is-card-icon">&#128274;</div>
+      <div class="what-is-card-title">Completely private</div>
+      <div class="what-is-card-desc">No accounts, no cloud, no internet required. Your data saves as a file on your computer. Nothing is ever uploaded.</div>
+    </div>
+  </div>
+
+  <div class="how-it-works">
+    <h3>How does a typical day look?</h3>
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-text"><strong>Morning:</strong> Open the app. Glance at the dashboard — are there any overdue follow-ups or students you need to check in with?</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-text"><strong>During the day:</strong> When you notice something — good or bad — tap Log, pick the student, pick a category. 10 seconds. You might log 5-15 entries on a typical day.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-text"><strong>End of week:</strong> Check student profiles. The app shows you who's trending well, who needs more positive attention, and who might need a targeted intervention — with specific, evidence-based suggestions.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">4</div>
+      <div class="how-step-text"><strong>Save:</strong> Hit Save to download your data as a file. Open it next time to pick up where you left off. Back it up like any important document.</div>
+    </div>
+  </div>
+
+  <div class="key-concepts">
+    <h3>Key concepts you'll see in the stories below</h3>
+    <div class="concept">
+      <span class="concept-badge" style="background: #EDF5EF; color: var(--sage);">4:1 Ratio</span>
+      <div class="concept-text">Research says students need <strong>at least 4 positive interactions for every 1 negative</strong> to thrive. The app tracks this ratio for each student and flags when it drops too low — a prompt to increase encouragement, not a punishment.</div>
+    </div>
+    <div class="concept">
+      <span class="concept-badge" style="background: #EDF5EF; color: var(--sage);">Tier 1</span>
+      <div class="concept-text"><strong>Universal support.</strong> Most students (~80%). Few or no concerns. Keep doing what you're doing.</div>
+    </div>
+    <div class="concept">
+      <span class="concept-badge" style="background: #FDF3DC; color: var(--tier2);">Tier 2</span>
+      <div class="concept-text"><strong>Targeted support.</strong> Some students (~15%). Recurring minor issues. The app suggests check-ins, social skills groups, or parent contact.</div>
+    </div>
+    <div class="concept">
+      <span class="concept-badge" style="background: #F5E0DD; color: var(--tier3);">Tier 3</span>
+      <div class="concept-text"><strong>Intensive support.</strong> A few students (~5%). Frequent or severe incidents. The app suggests formal assessments, behaviour plans, and wellbeing team involvement.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Stories Intro -->
+<div class="section-divider">
+  <h2>Four stories from the classroom</h2>
+  <p>Real-world scenarios showing what Behaviour Book catches that a busy teacher might miss — and how it turns a vague concern into a clear next step.</p>
+</div>
+
+<!-- Stories -->
+<div class="container">
+
+  <!-- Story 1 -->
+  <div class="story">
+    <div class="story-header">
+      <div class="story-number">1</div>
+      <div class="story-label">Pattern Detection</div>
+    </div>
+    <h3>"I didn't realise it was the <em>same thing</em> every time."</h3>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-without">&#128196; The problem</div>
+      <ul class="story-bullets">
+        <li>Liam's off-task a lot — you've tried quiet words, moved his seat, a checklist</li>
+        <li>The learning support teacher asks <em>"what's the pattern?"</em></li>
+        <li>You can't answer with specifics. Just a vague "he's off-task a lot."</li>
+      </ul>
+    </div>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-with">&#128218; What the app catches</div>
+      <p>After 2 weeks of 10-second entries, Liam's profile shows:</p>
+    </div>
+
+    <div class="mock-ui">
+      <div class="mock-header">&#128200; Liam's Pattern Analysis</div>
+      <div class="mock-body">
+        <div class="mock-alert mock-alert-warn">
+          <span class="mock-alert-icon">&#128260;</span>
+          <div class="mock-alert-text"><strong>"Off Task" — 5 times in 4 weeks</strong></div>
+        </div>
+        <div class="mock-alert mock-alert-warn">
+          <span class="mock-alert-icon">&#128205;</span>
+          <div class="mock-alert-text"><strong>All in the Classroom</strong> (not playground, not library)</div>
+        </div>
+        <div class="mock-alert mock-alert-warn">
+          <span class="mock-alert-icon">&#9888;&#65039;</span>
+          <div class="mock-alert-text"><strong>Ratio: 0.4:1</strong> — far more corrections than encouragement</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-takeaway">
+      <strong>Result:</strong> Now you can say <em>"Off-task 5 times, all in the classroom, all 'Be a Learner', ratio at 0.4:1."</em> That's a conversation that leads to a plan — in seconds, not hours of write-ups.
+    </div>
+  </div>
+
+  <!-- Story 2 -->
+  <div class="story">
+    <div class="story-header">
+      <div class="story-number">2</div>
+      <div class="story-label">Positive Ratio Tracking</div>
+    </div>
+    <h3>"I thought I was being positive. Turns out I was 1:1."</h3>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-without">&#128196; The problem</div>
+      <ul class="story-bullets">
+        <li>Maya's having a tough fortnight — incidents, refusals, shutting down</li>
+        <li>You've been praising her when she gets it right</li>
+        <li>But the relationship still feels strained. What's going wrong?</li>
+      </ul>
+    </div>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-with">&#128218; What the app catches</div>
+      <p>Friday afternoon — you glance at the class overview:</p>
+    </div>
+
+    <div class="mock-ui">
+      <div class="mock-header">&#128101; Class Overview</div>
+      <div class="mock-body">
+        <div class="mock-table-header">
+          <div class="mock-th-avatar"></div>
+          <div class="mock-th-name">Student</div>
+          <div class="mock-th-tier">Tier</div>
+          <div class="mock-th-ratio">+/- Ratio</div>
+        </div>
+        <div class="mock-student-row">
+          <div class="mock-avatar" style="background: #C75B7A;">MK</div>
+          <div class="mock-name">Maya Kowalski</div>
+          <span class="mock-badge badge-t2">Tier 2</span>
+          <div class="mock-ratio-col" style="color: var(--clay);">1.0:1<div class="mock-ratio-bar"><div class="mock-ratio-bar-fill" style="width: 50%; background: var(--sage);"></div></div></div>
+        </div>
+        <div class="mock-student-row">
+          <div class="mock-avatar" style="background: #7A9E7E;">ET</div>
+          <div class="mock-name">Emma Thompson</div>
+          <span class="mock-badge badge-t1">Tier 1</span>
+          <div class="mock-ratio-col" style="color: var(--sage);">5.0:1<div class="mock-ratio-bar"><div class="mock-ratio-bar-fill" style="width: 83%; background: var(--sage);"></div></div></div>
+        </div>
+        <div class="mock-student-row">
+          <div class="mock-avatar" style="background: #5B8FA8;">JR</div>
+          <div class="mock-name">James Rivera</div>
+          <span class="mock-badge badge-t1">Tier 1</span>
+          <div class="mock-ratio-col" style="color: var(--sage);">8.0:1<div class="mock-ratio-bar"><div class="mock-ratio-bar-fill" style="width: 89%; background: var(--sage);"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-takeaway">
+      <strong>Result:</strong> Maya's at 1:1 — every correction matched by just one positive. Emma's at 5:1, James at 8:1. The problem is obvious instantly. You increase positives on Monday; by Friday she's smiling again.
+    </div>
+  </div>
+
+  <!-- Story 3 -->
+  <div class="story">
+    <div class="story-header">
+      <div class="story-number">3</div>
+      <div class="story-label">Tiered Support &amp; Next Steps</div>
+    </div>
+    <h3>"The deputy asked what I'd tried. I showed my phone."</h3>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-without">&#128196; The problem</div>
+      <ul class="story-bullets">
+        <li>Ethan: 2 major incidents + a string of minors this month</li>
+        <li>Deputy calls you in: <em>"What have you tried? What's the timeline?"</em></li>
+        <li>You flip through scribbled diary notes for 20 minutes</li>
+        <li>Can't remember if you called parents after the first incident or second</li>
+      </ul>
+    </div>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-with">&#128218; What the app catches</div>
+      <p>Ethan's profile — auto-classified Tier 3 with generated next steps:</p>
+    </div>
+
+    <div class="mock-ui">
+      <div class="mock-header">&#127919; Suggested Next Steps — Ethan (Tier 3)</div>
+      <div class="mock-body">
+        <div class="mock-step"><div class="mock-step-border urgent">Functional Behaviour Assessment (FBA) — identify triggers</div></div>
+        <div class="mock-step"><div class="mock-step-border urgent">Individual Behaviour Support Plan with Wellbeing Team</div></div>
+        <div class="mock-step"><div class="mock-step-border urgent">Parent/carer meeting to plan supports</div></div>
+        <div class="mock-step"><div class="mock-step-border warn">Re-teach "Be Respectful" — Disruption logged 3 times</div></div>
+      </div>
+    </div>
+
+    <div class="story-takeaway">
+      <strong>Result:</strong> The meeting takes 5 minutes. Timeline, tier status, follow-ups completed — all on your phone. The deputy sees what's been tried. You have the data to support an FBA referral.
+    </div>
+  </div>
+
+  <!-- Story 4 -->
+  <div class="story">
+    <div class="story-header">
+      <div class="story-number">4</div>
+      <div class="story-label">Follow-up Reminders</div>
+    </div>
+    <h3>"Thursday, the app reminded me to call his mum."</h3>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-without">&#128196; The problem</div>
+      <ul class="story-bullets">
+        <li>You call Oliver's mum after a rough lunchtime, promise to update her Friday</li>
+        <li>Friday = photo day + chaos. By 3pm you've forgotten.</li>
+        <li>Monday: mum emails. You feel terrible.</li>
+      </ul>
+    </div>
+
+    <div class="story-scene">
+      <div class="story-scene-label scene-with">&#128218; What the app catches</div>
+      <p>You logged the incident with a follow-up: "In 2 days" + "Call mum." Thursday you open the app:</p>
+    </div>
+
+    <div class="mock-ui">
+      <div class="mock-header">&#9888;&#65039; Dashboard Alerts</div>
+      <div class="mock-body">
+        <div class="mock-alert mock-alert-warn">
+          <span class="mock-alert-icon">&#128681;</span>
+          <div class="mock-alert-text"><strong>Follow-up due tomorrow — Oliver G.</strong><br>Call Oliver's mum with update</div>
+        </div>
+        <div class="mock-alert mock-alert-info">
+          <span class="mock-alert-icon">&#128172;</span>
+          <div class="mock-alert-text"><strong>Check in with Jack M.</strong><br>Tier 3 — no entries for 6 days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-takeaway">
+      <strong>Result:</strong> You call Friday morning. Mum's impressed. And Jack — the quiet Tier 3 kid with no entries for a week? The app nudged you to check on him too. Nothing falls through the cracks.
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <h2>Ready to try it?</h2>
+  <p>Behaviour Book is free, private, and takes under a minute to set up. Open it in your browser, add your students, and start logging.</p>
+  <a href="behaviour-book.html" class="footer-cta">&#128218; Open Behaviour Book</a>
+  <div class="footer-demo">
+    <a href="behaviour-book.html">or try the interactive demo with sample data &#8594;</a>
+  </div>
+  <div class="footer-privacy">&#128274; No accounts. No cloud. No tracking. Just a file on your computer that you control.<br><a href="privacy.html" style="color: var(--upcoming); font-weight: 600; text-decoration: none;">Read the full Privacy &amp; Data Security policy &#8599;</a></div>
+</div>
+
+</body>
+</html>
