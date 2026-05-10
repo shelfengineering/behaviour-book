@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Behaviour Book</title>
-<meta name="description" content="Free, private behaviour tracking for Australian primary school teachers. Log behaviour, spot patterns, track ratios, and get evidence-based next steps. No cloud, no accounts — data stays on your device.">
+<meta name="description" content="Free, private behaviour tracking for primary school teachers. Log incidents, spot patterns, and get evidence-based next steps. No cloud, no accounts — data stays on your device.">
 <meta property="og:title" content="Behaviour Book">
 <meta property="og:description" content="Track student behaviour, spot patterns, and support every student. Free and private.">
 <meta property="og:type" content="website">
@@ -114,9 +114,6 @@ button:focus:not(:focus-visible), a:focus:not(:focus-visible) { outline: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 .top-bar-title {
   font-family: var(--font-display);
@@ -335,12 +332,30 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   border-radius: 2px;
   margin: 0 auto 16px;
 }
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--warm-grey);
+  background: var(--sand-dark);
+  transition: all var(--transition);
+}
+.modal-close:hover { background: var(--sand-darker); color: var(--charcoal); }
+.modal-content { position: relative; }
 .modal-title {
   font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 16px;
   letter-spacing: -0.01em;
+  padding-right: 36px;
 }
 
 /* ===== Student Grid ===== */
@@ -408,6 +423,26 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .chip:hover { border-color: var(--clay-light); }
 .chip.selected { border-color: var(--clay); background: var(--negative-bg); color: var(--clay-dark); }
 .chip.chip-positive.selected { border-color: var(--sage); background: var(--positive-bg); color: var(--sage-dark); }
+.chip-sm { padding: 5px 11px; font-size: 0.72rem; }
+
+/* ===== Student Pick List ===== */
+.pick-list { max-height: 50dvh; overflow-y: auto; padding-right: 8px; }
+.pick-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--sand-dark);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pick-row:hover { background: var(--sand); }
+.pick-row.picked { background: var(--positive-bg); }
+.pick-info { display: flex; align-items: center; gap: 8px; }
+.pick-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--sand-darker); background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pick-row.picked .pick-check { border-color: var(--sage); background: var(--sage); }
+.pick-check svg { display: none; }
+.pick-row.picked .pick-check svg { display: block; }
 
 /* ===== Button Group (for location/expectation) ===== */
 .btn-group {
@@ -532,18 +567,169 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   flex-wrap: wrap;
 }
 .timeline-category { font-weight: 700; font-size: 0.85rem; }
+.timeline-item { position: relative; }
+.copy-entry-btn {
+  position: absolute;
+  top: 8px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sand-dark);
+  color: var(--warm-grey);
+  font-size: 0.8rem;
+  transition: all var(--transition);
+  opacity: 0.6;
+}
+.copy-entry-btn:hover { background: var(--sand-darker); color: var(--charcoal); opacity: 1; }
+@media (hover: none) { .copy-entry-btn { opacity: 0.8; } }
+
+/* ===== Export View ===== */
+.export-entry {
+  background: white;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border: 1px solid var(--sand-dark);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.export-entry-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  color: var(--charcoal);
+  font-family: var(--font);
+}
+.export-entry-copy {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--sand-dark);
+  color: var(--charcoal);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.export-entry-copy:hover { background: var(--sand-darker); }
+.field-config-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--sand-dark);
+}
+.field-config-item input[type="text"] {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+.field-config-item input[type="text"]:focus { outline: none; border-bottom: 2px solid var(--clay-light); }
+.field-toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--sand-darker);
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.field-toggle.active { background: var(--sage); }
+.field-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: transform var(--transition);
+}
+.field-toggle.active::after { transform: translateX(18px); }
+.field-reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.field-reorder button {
+  width: 24px;
+  height: 16px;
+  font-size: 0.6rem;
+  color: var(--warm-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+.field-reorder button:hover { background: var(--sand-dark); color: var(--charcoal); }
+
+/* ===== Recent Entries (compact) ===== */
+.recent-day-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--warm-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--sand-dark);
+  margin-bottom: 4px;
+}
+.recent-day-label:first-child { padding-top: 0; }
+.recent-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+}
+@media (max-width: 600px) { .recent-grid { grid-template-columns: 1fr; } }
+.recent-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.recent-row:hover { background: var(--sand); border-radius: var(--radius-xs); }
+.recent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.recent-dot.positive { background: var(--positive); }
+.recent-dot.negative { background: var(--negative); }
+.recent-dot.major { background: var(--major); }
+.recent-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-cat { color: var(--warm-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
 
 /* ===== Alerts ===== */
+.alert-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 600px) { .alert-grid { grid-template-columns: 1fr; } }
 .alert-item {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  margin-bottom: 8px;
   font-size: 0.85rem;
 }
-.alert-item:last-child { margin-bottom: 0; }
 .alert-overdue { background: #FDE8E5; color: var(--major); }
 .alert-warning { background: var(--tier2-bg); color: #6B4E10; }
 .alert-info { background: #E3EFF5; color: var(--upcoming); }
@@ -828,6 +1014,11 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .onboarding-tip strong { color: var(--charcoal); }
 
 /* ===== Demo Banner ===== */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 150;
+}
 .demo-banner {
   background: linear-gradient(90deg, var(--upcoming) 0%, #4A7A8F 100%);
   color: white;
@@ -838,9 +1029,6 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   gap: 10px;
   font-size: 0.8rem;
   font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 150;
 }
 .demo-banner-text { flex: 1; }
 .demo-banner-text strong { font-weight: 800; }
@@ -855,7 +1043,6 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   white-space: nowrap;
 }
 .demo-banner-btn:hover { background: rgba(255,255,255,0.35); }
-.demo-banner + .top-bar { top: 40px; }
 
 /* ===== Demo Callout ===== */
 .demo-callout {
@@ -1089,6 +1276,27 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 .remove-btn { color: var(--warm-grey-light); font-size: 1.2rem; padding: 4px; transition: color var(--transition); }
 .remove-btn:hover { color: var(--major); }
 
+.settings-list-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--sand-dark);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-list-row:last-child { border-bottom: none; }
+.settings-list-row:active { opacity: 0.7; }
+.settings-list-row-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--charcoal);
+}
+.settings-list-row-count {
+  font-size: 0.75rem;
+  color: var(--warm-grey);
+  margin-top: 1px;
+}
+
 /* ===== Search ===== */
 .search-input {
   width: 100%;
@@ -1186,6 +1394,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 /* ===== Responsive ===== */
 @media (min-width: 768px) {
   .modal-content { border-radius: var(--radius); margin-bottom: 40px; max-height: 85dvh; }
+  .modal-quicklog { max-width: 800px; }
   .modal-overlay { align-items: center; }
   .main-content { padding: 24px; padding-bottom: 80px; }
   .student-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
@@ -1193,6 +1402,18 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   .chart-bar-label { width: 110px; }
   .nav-item { font-size: 0.7rem; min-width: 56px; }
   .nav-item svg { width: 22px; height: 22px; }
+  .quicklog-steps12 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .quicklog-students {
+    max-height: 65dvh;
+    overflow-y: auto;
+    border-right: 1px solid var(--sand-dark);
+    padding-right: 16px;
+  }
 }
 @media (min-width: 1024px) {
   .student-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
@@ -1220,6 +1441,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
   background-size: 256px 256px;
 }
 .app-shell > *, .welcome-screen > *, .onboarding-shell > * { position: relative; z-index: 1; }
+.app-shell > .sticky-header { position: sticky; top: 0; z-index: 150; }
+.app-shell > .modal-overlay { position: fixed; z-index: 200; }
+.app-shell > .bottom-nav { position: fixed; z-index: 100; }
 
 /* ===== Animations ===== */
 .fade-in { animation: fadeIn 0.25s ease-out; }
@@ -1277,7 +1501,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <div class="welcome-logo">&#128218;</div>
       <div class="welcome-title">Behaviour Book</div>
       <div class="welcome-subtitle">Track behaviour. Spot patterns.<br>Support every student.</div>
-      <div style="font-size: 0.82rem; color: var(--warm-grey); margin-top: -20px; margin-bottom: 0;">Built for Australian primary school teachers</div>
+      <div style="font-size: 0.82rem; color: var(--warm-grey); margin-top: -20px; margin-bottom: 0;">Built for primary school teachers</div>
     </div>
 
     <div class="welcome-actions" style="margin-bottom: 28px;">
@@ -1303,12 +1527,12 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <div class="welcome-feature">
         <div class="welcome-feature-icon">&#128202;</div>
         <div class="welcome-feature-title">Automatic patterns</div>
-        <div class="welcome-feature-desc">Flags recurring behaviours, hotspot locations, and ratio drops.</div>
+        <div class="welcome-feature-desc">Flags recurring behaviours, hotspot locations, and students needing support.</div>
       </div>
       <div class="welcome-feature">
         <div class="welcome-feature-icon">&#127919;</div>
         <div class="welcome-feature-title">Evidence-based steps</div>
-        <div class="welcome-feature-desc">Tier classification + strategy suggestions matched to each student.</div>
+        <div class="welcome-feature-desc">Support level classification + strategy suggestions matched to each student.</div>
       </div>
       <div class="welcome-feature">
         <div class="welcome-feature-icon">&#128274;</div>
@@ -1329,7 +1553,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div class="onboarding-header">
       <div class="top-bar-title" style="justify-content: center;">&#128218; Setting Up Your Behaviour Book</div>
       <div class="onboarding-progress">
-        <template x-for="dot in 4" :key="dot">
+        <template x-for="dot in 5" :key="dot">
           <div class="onboarding-dot" :class="onboardingStep > dot ? 'done' : (onboardingStep === dot ? 'active' : '')"></div>
         </template>
       </div>
@@ -1337,54 +1561,59 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
     <div class="onboarding-body">
 
-      <!-- Step 1: Choose Your Approach -->
+      <!-- Step 1: Country -->
       <div x-show="onboardingStep === 1" class="fade-in">
+        <div class="onboarding-step-title">Where is your school?</div>
+        <div class="onboarding-step-desc">We'll set up the right frameworks, categories, and terminology for your region.</div>
+        <div class="approach-grid stagger-in">
+          <div class="approach-card" :class="{ selected: selectedCountry === 'AU' }" @click="selectedCountry = 'AU'; selectedApproach = '';">
+            <div class="approach-icon" style="background: #EDF5EF; font-size: 1.8rem;">&#127462;&#127482;</div>
+            <div class="approach-body">
+              <div class="approach-name">Australia</div>
+              <div class="approach-desc">SWPBS, Berry Street, Restorative Practices and more.</div>
+            </div>
+          </div>
+          <div class="approach-card" :class="{ selected: selectedCountry === 'NZ' }" @click="selectedCountry = 'NZ'; selectedApproach = '';">
+            <div class="approach-icon" style="background: #E3EFF5; font-size: 1.8rem;">&#127475;&#127487;</div>
+            <div class="approach-body">
+              <div class="approach-name">New Zealand</div>
+              <div class="approach-desc">PB4L School-Wide, Restorative Practice / Hui Whakatika and more.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Choose Your Approach -->
+      <div x-show="onboardingStep === 2" class="fade-in">
         <div class="onboarding-step-title">What approach does your school use?</div>
         <div class="onboarding-step-desc">
           Pick the framework closest to your school and we'll set up the right expectations, categories, and language. You can customise everything afterwards.
         </div>
 
-        <div class="approach-grid stagger-in">
+        <!-- Australia frameworks -->
+        <div class="approach-grid stagger-in" x-show="selectedCountry === 'AU'">
           <div class="approach-card" :class="{ selected: selectedApproach === 'swpbs' }" @click="applyApproach('swpbs')">
             <div class="approach-icon" style="background: #EDF5EF;">&#127919;</div>
             <div class="approach-body">
-              <div class="approach-name"><span class="tip" data-tip="School-Wide Positive Behaviour Support — a whole-school framework where you define 3-5 positive expectations (like 'Be Safe'), teach them explicitly, and use data to track how students are going.">SWPBS</span> / <span class="tip" data-tip="Positive Behaviour for Learning — the NSW name for the same SWPBS framework. Same approach, different branding.">PBL</span></div>
+              <div class="approach-name">SWPBS / PBL</div>
               <div class="approach-desc">The most widely used behaviour framework in Australian schools. You define school-wide expectations and track behaviour against them.</div>
               <span class="approach-tag" style="background: #EDF5EF; color: var(--sage-dark);">Most common</span>
-              <div class="mt-4">
-                <a href="https://www.vic.gov.au/school-wide-positive-behaviour-support" target="_blank" class="source-link" @click.stop>VIC official guide &#8599;</a>
-                <span style="margin: 0 4px; color: var(--sand-darker);">|</span>
-                <a href="https://pbl.schools.nsw.gov.au/" target="_blank" class="source-link" @click.stop>NSW PBL &#8599;</a>
-                <span style="margin: 0 4px; color: var(--sand-darker);">|</span>
-                <a href="https://behaviour.education.qld.gov.au/supporting-student-behaviour/positive-behaviour-for-learning/positive-behaviour-for-learning-in-practice" target="_blank" class="source-link" @click.stop>QLD PBL &#8599;</a>
-              </div>
             </div>
           </div>
 
           <div class="approach-card" :class="{ selected: selectedApproach === 'berry' }" @click="applyApproach('berry')">
             <div class="approach-icon" style="background: #E3EFF5;">&#128156;</div>
             <div class="approach-body">
-              <div class="approach-name"><span class="tip" data-tip="Berry Street Education Model — a trauma-informed teaching approach developed in Australia. Focuses on five domains that help students become ready to learn: Body, Stamina, Character, Engagement, and Relationships.">Berry Street</span> / <span class="tip" data-tip="Trauma-informed practice recognises that some students' behaviour is shaped by past experiences of adversity. The approach focuses on safety, relationships, and self-regulation rather than compliance.">Trauma-Informed</span></div>
-              <div class="approach-desc">Focuses on self-regulation, relationships, and wellbeing. Uses five <span class="tip" data-tip="Body (physical regulation), Stamina (emotional resilience), Character (strengths and values), Engagement (academic motivation), Relationships (social connection).">domains</span> rather than fixed expectations.</div>
-              <span class="approach-tag" style="background: #E3EFF5; color: var(--upcoming);">92,000+ educators trained</span>
-              <div class="mt-4">
-                <a href="https://www.berrystreet.org.au/learning-and-resources/berry-street-education-model/about-bsem" target="_blank" class="source-link" @click.stop>Berry Street official &#8599;</a>
-                <span style="margin: 0 4px; color: var(--sand-darker);">|</span>
-                <a href="https://www.vic.gov.au/trauma-informed-practice-berry-street-education-model" target="_blank" class="source-link" @click.stop>VIC gov guide &#8599;</a>
-              </div>
+              <div class="approach-name">Berry Street / Trauma-Informed</div>
+              <div class="approach-desc">Focuses on self-regulation, relationships, and wellbeing. Uses five domains rather than fixed expectations.</div>
             </div>
           </div>
 
           <div class="approach-card" :class="{ selected: selectedApproach === 'restorative' }" @click="applyApproach('restorative')">
             <div class="approach-icon" style="background: #F5EDE3;">&#129309;</div>
             <div class="approach-body">
-              <div class="approach-name"><span class="tip" data-tip="Restorative Practices focus on building and repairing relationships. When harm happens, the response centres on who was affected, how, and what needs to happen to make things right — rather than just applying a consequence.">Restorative Practices</span></div>
-              <div class="approach-desc">Relationship-focused approach centred on <span class="tip" data-tip="Agreements that the class develops together about how they want to treat each other. Unlike top-down rules, these are co-created and owned by students.">community agreements</span>, repair, and student voice.</div>
-              <div class="mt-4">
-                <a href="https://education.nsw.gov.au/schooling/school-community/attendance-behaviour-and-engagement/behaviour-support-toolkit/support-for-teachers/restorative-practices" target="_blank" class="source-link" @click.stop>NSW guide &#8599;</a>
-                <span style="margin: 0 4px; color: var(--sand-darker);">|</span>
-                <a href="https://www.education.sa.gov.au/parents-and-families/safety-and-wellbeing/behaviour-support/restorative-practices" target="_blank" class="source-link" @click.stop>SA guide &#8599;</a>
-              </div>
+              <div class="approach-name">Restorative Practices</div>
+              <div class="approach-desc">Relationship-focused approach centred on community agreements, repair, and student voice.</div>
             </div>
           </div>
 
@@ -1400,14 +1629,50 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             <div class="approach-icon" style="background: var(--sand-dark);">&#128221;</div>
             <div class="approach-body">
               <div class="approach-name">Just track behaviour</div>
-              <div class="approach-desc">Skip framework setup. Log entries without linking to expectations. You can add them later in Settings.</div>
+              <div class="approach-desc">Skip framework setup. Log entries without linking to expectations.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Zealand frameworks -->
+        <div class="approach-grid stagger-in" x-show="selectedCountry === 'NZ'">
+          <div class="approach-card" :class="{ selected: selectedApproach === 'pb4l' }" @click="applyApproach('pb4l')">
+            <div class="approach-icon" style="background: #EDF5EF;">&#127919;</div>
+            <div class="approach-body">
+              <div class="approach-name">PB4L School-Wide</div>
+              <div class="approach-desc">Positive Behaviour for Learning — NZ's school-wide framework. Define expectations, track incidents, and use data to support students.</div>
+              <span class="approach-tag" style="background: #EDF5EF; color: var(--sage-dark);">1,050+ schools</span>
+            </div>
+          </div>
+
+          <div class="approach-card" :class="{ selected: selectedApproach === 'restorative-nz' }" @click="applyApproach('restorative-nz')">
+            <div class="approach-icon" style="background: #F5EDE3;">&#129309;</div>
+            <div class="approach-body">
+              <div class="approach-name">Restorative / Hui Whakatika</div>
+              <div class="approach-desc">Relational approach grounded in mana, whanaungatanga, and manaakitanga. Focuses on responsibility, restoration, and building community.</div>
+            </div>
+          </div>
+
+          <div class="approach-card" :class="{ selected: selectedApproach === 'values' }" @click="applyApproach('values')">
+            <div class="approach-icon" style="background: #FDF3DC;">&#11088;</div>
+            <div class="approach-body">
+              <div class="approach-name">School Values / Custom</div>
+              <div class="approach-desc">Your school has its own values or kaupapa. Start blank and enter your own.</div>
+            </div>
+          </div>
+
+          <div class="approach-card" :class="{ selected: selectedApproach === 'none' }" @click="applyApproach('none')">
+            <div class="approach-icon" style="background: var(--sand-dark);">&#128221;</div>
+            <div class="approach-body">
+              <div class="approach-name">Just track behaviour</div>
+              <div class="approach-desc">Skip framework setup. Log entries without linking to expectations.</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Step 2: Customise Expectations -->
-      <div x-show="onboardingStep === 2" class="fade-in">
+      <div x-show="onboardingStep === 3" class="fade-in">
         <div class="onboarding-step-title" x-text="selectedApproach === 'none' ? 'Quick Setup' : 'Customise Your Expectations'"></div>
 
         <!-- Approach-specific guidance -->
@@ -1420,8 +1685,14 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <div x-show="selectedApproach === 'restorative'" class="onboarding-tip">
           <strong>Common restorative agreements loaded.</strong> Many restorative schools co-create these with students each year. Edit these as a starting point and refine them with your class.
         </div>
+        <div x-show="selectedApproach === 'pb4l'" class="onboarding-tip">
+          <strong>PB4L School-Wide defaults loaded.</strong> These are common bilingual expectations used across NZ PB4L schools. Edit to match your school's values — add te reo Maori, English, or both.
+        </div>
+        <div x-show="selectedApproach === 'restorative-nz'" class="onboarding-tip">
+          <strong>Restorative values loaded.</strong> These draw on te reo Maori concepts of whanaungatanga, manaakitanga, and ako. Adjust to match your school's restorative kaupapa.
+        </div>
         <div x-show="selectedApproach === 'values'" class="onboarding-tip">
-          <strong>Enter your school's values below.</strong> These could be anything — an acronym like REACH, religious values, or your school motto broken into parts.
+          <strong>Enter your school's values below.</strong> These could be anything — an acronym like PRIDE, te reo Maori values, or your school motto broken into parts.
         </div>
         <div x-show="selectedApproach === 'none'" class="onboarding-step-desc">
           You can start logging straight away. If you decide to add expectations later, go to Settings.
@@ -1429,7 +1700,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
         <!-- Editable expectations (hidden for 'none') -->
         <div x-show="selectedApproach !== 'none'" class="card">
-          <div class="form-label" x-text="selectedApproach === 'berry' ? 'Domains' : (selectedApproach === 'restorative' ? 'Agreements' : 'Expectations')"></div>
+          <div class="form-label" x-text="selectedApproach === 'berry' ? 'Domains' : (selectedApproach === 'restorative' || selectedApproach === 'restorative-nz' ? 'Values / Uara' : 'Expectations')"></div>
           <template x-for="(exp, index) in settings.expectations" :key="index">
             <div class="editable-list-item">
               <input type="text" :value="exp" @input="settings.expectations[index] = $event.target.value" style="font-size: 1rem;">
@@ -1443,7 +1714,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       </div>
 
       <!-- Step 3: Add Students -->
-      <div x-show="onboardingStep === 3" class="fade-in">
+      <div x-show="onboardingStep === 4" class="fade-in">
         <div class="onboarding-step-title">Add Your Students</div>
         <div class="onboarding-step-desc">
           Paste your class list below — one name per line. Copy straight from a spreadsheet, email, or class roster.
@@ -1469,7 +1740,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       </div>
 
       <!-- Step 4: You're Ready -->
-      <div x-show="onboardingStep === 4" class="fade-in">
+      <div x-show="onboardingStep === 5" class="fade-in">
         <div class="onboarding-step-title">You're All Set!</div>
         <div class="onboarding-step-desc">Here's how Behaviour Book works day-to-day:</div>
 
@@ -1486,7 +1757,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             <div style="font-size: 1.5rem; line-height: 1;">&#128200;</div>
             <div>
               <div class="fw-800" style="font-size: 0.9rem;">Watch for patterns</div>
-              <div class="text-sm text-muted">The app flags recurring categories, hotspot locations, and students whose ratio drops below target.</div>
+              <div class="text-sm text-muted">The app flags recurring categories, hotspot locations, and students who need extra support.</div>
             </div>
           </div>
           <div class="divider"></div>
@@ -1500,7 +1771,10 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         </div>
 
         <div class="onboarding-tip">
-          <strong>Tier System:</strong> Students are automatically sorted into <span class="tip" data-tip="Few or no behaviour concerns. Standard classroom strategies are working. About 80% of students.">Tier 1</span> (universal), <span class="tip" data-tip="Recurring minor issues. Benefits from extra check-ins, a mentor, or small group support. About 15% of students.">Tier 2</span> (targeted), or <span class="tip" data-tip="Frequent or severe incidents. Needs a formal behaviour assessment and an individual support plan. About 5% of students.">Tier 3</span> (intensive) based on their recent behaviour data. This drives suggested next steps on each student's profile.
+          <strong>Support Levels:</strong> Students are automatically sorted based on their recent incidents:<br>
+          <strong style="color: #3D6B42;">On Track</strong> — Responding well to everyday classroom support.<br>
+          <strong style="color: #6B4E10;">Watch</strong> — Recurring minor incidents suggest extra check-ins or small group intervention.<br>
+          <strong style="color: #8B2E24;">Urgent</strong> — Frequent or severe incidents. Consider a behaviour plan and family contact.
         </div>
 
         <div x-show="bulkStudentText.trim()" class="text-sm text-muted mt-8" style="text-align: center;">
@@ -1512,11 +1786,11 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div class="onboarding-footer">
       <button x-show="onboardingStep > 1" class="btn btn-secondary" @click="onboardingStep--">Back</button>
       <div style="flex: 1;"></div>
-      <button x-show="onboardingStep === 3" class="btn btn-secondary" @click="onboardingStep = 4">Skip</button>
-      <button x-show="onboardingStep < 4 && !(onboardingStep === 1 && !selectedApproach)" class="btn btn-primary" @click="onboardingStep++">
+      <button x-show="onboardingStep === 4" class="btn btn-secondary" @click="onboardingStep = 5">Skip</button>
+      <button x-show="onboardingStep < 5 && !(onboardingStep === 1 && !selectedCountry) && !(onboardingStep === 2 && !selectedApproach)" class="btn btn-primary" @click="onboardingStep++">
         Continue
       </button>
-      <button x-show="onboardingStep === 4" class="btn btn-primary" @click="finishOnboarding()" style="padding: 12px 28px;">
+      <button x-show="onboardingStep === 5" class="btn btn-primary" @click="finishOnboarding()" style="padding: 12px 28px;">
         Open My Behaviour Book
       </button>
     </div>
@@ -1526,6 +1800,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 <!-- ===== App Shell ===== -->
 <template x-if="started">
   <div class="app-shell">
+    <!-- Sticky Header (demo banner + top bar) -->
+    <div class="sticky-header">
     <!-- Demo Banner -->
     <div x-show="demoMode" class="demo-banner">
       <div class="demo-banner-text">&#128065; <strong>Demo Mode</strong> — Exploring with sample data</div>
@@ -1533,7 +1809,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <button class="demo-banner-btn" @click="onboarding = true; onboardingStep = 1; demoMode = false; started = false;">Start My Own</button>
     </div>
     <!-- Top Bar -->
-    <div class="top-bar" :style="demoMode ? 'top: 40px' : ''">
+    <div class="top-bar">
       <div class="top-bar-title">&#128218; Behaviour Book</div>
       <div class="top-bar-actions">
         <button class="save-btn" :class="{ 'has-changes': unsavedChanges, 'wiggle': saveWiggle }" @click="saveFile()" @animationend="if ($event.animationName === 'wiggle') saveWiggle = false">
@@ -1549,6 +1825,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <a aria-label="Send feedback via email" :href="'mailto:nicolas@shelfengineering.com?subject=Behaviour%20Book%20Feedback&body=%0A%0A---%0AStudents%3A%20' + students.length + '%20%7C%20Entries%3A%20' + entries.length" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--warm-grey); font-size: 0.85rem; background: var(--sand-dark); text-decoration: none;" role="link">&#9993;</a>
       </div>
     </div>
+    </div><!-- /sticky-header -->
 
     <!-- Main Content -->
     <main class="main-content">
@@ -1557,7 +1834,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <div x-show="currentView === 'dashboard'" class="fade-in">
         <!-- Demo orientation -->
         <div x-show="demoMode" class="demo-callout">
-          <strong>&#128161; You're exploring a sample Year 3 class.</strong> Notice how students are colour-coded by tier, alerts surface follow-ups, and ratios flag who needs more positive attention. Tap any student to see their patterns and suggested next steps. Try the <strong>Analytics</strong> tab too!
+          <strong>&#128161; You're exploring a sample Year 3 class.</strong> Notice how students are colour-coded by tier and alerts surface follow-ups. Tap any student to see their patterns and suggested next steps. Try the <strong>Analytics</strong> tab too!
         </div>
         <!-- Alerts -->
         <div x-show="getAlerts().length > 0" class="card mb-16">
@@ -1565,7 +1842,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             <span>&#9888;&#65039; Attention Needed</span>
             <span class="badge badge-major" x-text="getAlerts().length"></span>
           </div>
-          <template x-for="alert in getAlerts().slice(0, 5)" :key="alert.id">
+          <div class="alert-grid">
+          <template x-for="alert in getAlerts().slice(0, 6)" :key="alert.id">
             <div class="alert-item" :class="'alert-' + alert.level">
               <span class="alert-icon" x-text="alert.icon"></span>
               <div>
@@ -1574,7 +1852,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               </div>
             </div>
           </template>
-          <button x-show="getAlerts().length > 5" class="btn btn-sm btn-secondary mt-8" @click="currentView = 'followups'">
+          </div>
+          <button x-show="getAlerts().length > 6" class="btn btn-sm btn-secondary mt-8" @click="currentView = 'followups'">
             View all <span x-text="getAlerts().length"></span> alerts
           </button>
         </div>
@@ -1611,9 +1890,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               <div class="getting-started-num" x-text="students.length > 0 ? '\u2713' : '1'"></div>
               <span>Add your students</span>
             </div>
-            <div class="getting-started-step" :class="{ done: entries.filter(e => e.type === 'positive').length > 0 }" @click="openQuickLog()">
-              <div class="getting-started-num" x-text="entries.filter(e => e.type === 'positive').length > 0 ? '\u2713' : '2'"></div>
-              <span>Log your first positive entry</span>
+            <div class="getting-started-step" :class="{ done: entries.length > 0 }" @click="openQuickLog()">
+              <div class="getting-started-num" x-text="entries.length > 0 ? '\u2713' : '2'"></div>
+              <span>Log your first behaviour entry</span>
             </div>
             <div class="getting-started-step" :class="{ done: unsavedChanges === false && entries.length > 0 }" @click="saveFile()">
               <div class="getting-started-num" x-text="unsavedChanges === false && entries.length > 0 ? '\u2713' : '3'"></div>
@@ -1629,21 +1908,16 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         </div>
         <div x-show="students.length > 0" class="student-grid mb-16 stagger-in">
           <template x-for="student in sortedStudents()" :key="student.id">
-            <div class="student-card" role="button" tabindex="0" :aria-label="student.name + ', Tier ' + getTier(student.id)" :class="{ 'log-success': lastLoggedStudentId === student.id }" @click="openStudentDetail(student.id)" @keydown.enter="openStudentDetail(student.id)" @keydown.space.prevent="openStudentDetail(student.id)" @animationend="if (lastLoggedStudentId === student.id) lastLoggedStudentId = null">
+            <div class="student-card" role="button" tabindex="0" :aria-label="student.name + ', Tier ' + getTier(student.id)" :class="{ 'log-success': lastLoggedStudentId === student.id }" :style="getTier(student.id) === 3 ? 'border-color: #D4928A; background: #FDF5F4;' : getTier(student.id) === 2 ? 'border-color: #E0CC8A; background: #FEFCF4;' : ''" @click="openStudentDetail(student.id)" @keydown.enter="openStudentDetail(student.id)" @keydown.space.prevent="openStudentDetail(student.id)" @animationend="if (lastLoggedStudentId === student.id) lastLoggedStudentId = null">
               <div class="student-avatar" :style="'background:' + avatarColor(student.name)">
                 <span x-text="initials(student.name)"></span>
               </div>
               <div class="student-name" x-text="student.name"></div>
               <div class="student-grade" x-text="student.grade"></div>
               <div class="mt-8">
-                <span class="badge" :class="'badge-tier' + getTier(student.id)" x-text="'Tier ' + getTier(student.id)"></span>
+                <span class="badge" :class="'badge-tier' + getTier(student.id)" x-text="tierLabel(getTier(student.id))"></span>
               </div>
-              <div class="mt-8" style="display: flex; gap: 3px; align-items: center; justify-content: center;">
-                <div style="height: 6px; border-radius: 3px; flex: 1; max-width: 80px; background: var(--sand-dark); overflow: hidden; display: flex;">
-                  <div :style="'width:' + getRatioPercent(student.id) + '%; background: var(--sage);'" style="height: 100%;"></div>
-                </div>
-                <span class="text-xs" :style="getRatio(student.id) < 4 ? 'color: var(--clay)' : 'color: var(--sage)'" x-text="hasEntries(student.id) ? getRatio(student.id).toFixed(1) + ':1' : '\u2014'"></span>
-              </div>
+              <div class="mt-4 text-xs" style="text-align: center;" :style="getTier(student.id) >= 2 ? 'color: #8B4420; font-weight: 600;' : 'color: var(--warm-grey-light);'" x-text="getStudentNegativeCount(student.id) > 0 ? getStudentNegativeCount(student.id) + ' incidents' : ''"></div>
             </div>
           </template>
         </div>
@@ -1654,21 +1928,17 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             <span>Recent Entries</span>
             <span class="text-xs text-muted" x-text="entries.length + ' total'"></span>
           </div>
-          <template x-for="entry in recentEntries()" :key="entry.id">
-            <div class="timeline-item">
-              <div class="timeline-dot" :class="entry.type === 'positive' ? 'positive' : (entry.severity === 'major' ? 'major' : 'negative')"></div>
-              <div class="timeline-body">
-                <div class="timeline-category">
-                  <span x-text="getStudentName(entry.studentId)"></span>
-                  <span class="text-muted"> — </span>
-                  <span x-text="entry.category"></span>
-                </div>
-                <div class="timeline-meta">
-                  <span x-text="formatDate(entry.date)"></span>
-                  <span x-text="entry.location"></span>
-                  <span class="badge" :class="entry.type === 'positive' ? 'badge-positive' : (entry.severity === 'major' ? 'badge-major' : 'badge-minor')" x-text="entry.type === 'positive' ? 'Positive' : (entry.severity === 'major' ? 'Major' : 'Minor')"></span>
-                </div>
-                <div x-show="entry.description" class="text-sm text-muted mt-4" x-text="entry.description"></div>
+          <template x-for="group in recentEntriesByDay()" :key="group.label">
+            <div>
+              <div class="recent-day-label" x-text="group.label"></div>
+              <div class="recent-grid">
+                <template x-for="entry in group.entries" :key="entry.id">
+                  <div class="recent-row" @click="selectedStudentId = entry.studentId; currentView = 'student-detail'">
+                    <div class="recent-dot" :class="entry.type === 'positive' ? 'positive' : (entry.severity === 'major' ? 'major' : 'negative')"></div>
+                    <span class="recent-name" x-text="getStudentName(entry.studentId)"></span>
+                    <span class="recent-cat" x-text="entry.category"></span>
+                  </div>
+                </template>
               </div>
             </div>
           </template>
@@ -1677,26 +1947,33 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
       <!-- ===== STUDENTS LIST VIEW ===== -->
       <div x-show="currentView === 'students'" class="fade-in">
-        <div class="flex items-center justify-between mb-16">
+        <div class="flex items-center justify-between mb-8">
           <h2 class="section-title" style="margin-bottom: 0;">Students</h2>
           <button class="btn btn-sm btn-primary" @click="showAddStudent = true">+ Add</button>
         </div>
-        <input type="text" class="search-input mb-16" placeholder="Search students..." x-model="studentSearch">
+        <input type="text" class="search-input mb-8" placeholder="Search students..." x-model="studentSearch">
+        <div class="chip-grid mb-16">
+          <button class="chip" :class="{ selected: studentListFilter === 'all' }" @click="studentListFilter = 'all'" x-text="'All (' + students.length + ')'"></button>
+          <button class="chip" :class="{ selected: studentListFilter === 'concern' }" @click="studentListFilter = 'concern'">
+            <span x-text="'Needs Support (' + students.filter(s => getTier(s.id) >= 2).length + ')'"></span>
+          </button>
+          <button class="chip" :class="{ selected: studentListFilter === 'tier1' }" @click="studentListFilter = 'tier1'" x-text="'On Track (' + students.filter(s => getTier(s.id) === 1).length + ')'"></button>
+        </div>
         <div x-show="filteredStudents().length === 0" class="empty-state">
           <div class="empty-state-text" x-text="students.length === 0 ? 'No students yet.' : 'No matching students.'"></div>
         </div>
         <template x-for="student in filteredStudents()" :key="student.id">
-          <div class="card" role="button" tabindex="0" style="cursor: pointer; display: flex; align-items: center; gap: 12px;" @click="openStudentDetail(student.id)" @keydown.enter="openStudentDetail(student.id)">
-            <div class="student-avatar" :style="'background:' + avatarColor(student.name) + '; width: 40px; height: 40px; font-size: 0.9rem; flex-shrink: 0;'">
+          <div role="button" tabindex="0" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--sand-dark);" :style="getTier(student.id) >= 3 ? 'border-left: 3px solid #8B2E24;' : getTier(student.id) === 2 ? 'border-left: 3px solid #D4A843;' : 'border-left: 3px solid transparent;'" @click="openStudentDetail(student.id)" @keydown.enter="openStudentDetail(student.id)">
+            <div class="student-avatar" :style="'background:' + avatarColor(student.name) + '; width: 34px; height: 34px; font-size: 0.75rem; flex-shrink: 0;'">
               <span x-text="initials(student.name)"></span>
             </div>
             <div style="flex: 1; min-width: 0;">
-              <div class="fw-700" x-text="student.name"></div>
+              <div class="fw-700 text-sm" x-text="student.name"></div>
               <div class="text-xs text-muted" x-text="student.grade"></div>
             </div>
-            <span class="badge" :class="'badge-tier' + getTier(student.id)" x-text="'Tier ' + getTier(student.id)"></span>
-            <span class="text-sm fw-700" :style="getRatio(student.id) < 4 ? 'color: var(--clay)' : 'color: var(--sage)'" x-text="hasEntries(student.id) ? getRatio(student.id).toFixed(1) + ':1' : '\u2014'"></span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warm-grey-light)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            <span x-show="getStudentNegativeCount(student.id) > 0" class="text-xs" style="color: var(--warm-grey-light);" x-text="getStudentNegativeCount(student.id) + ' incidents'"></span>
+            <span class="badge" :class="'badge-tier' + getTier(student.id)" x-text="tierLabel(getTier(student.id))" style="font-size: 0.65rem; padding: 2px 8px;"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--warm-grey-light)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </template>
       </div>
@@ -1721,21 +1998,33 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
                   <div class="text-sm text-muted" x-text="selectedStudent().grade"></div>
                 </div>
                 <div style="text-align: right;">
-                  <span class="badge tip" :class="'badge-tier' + getTier(selectedStudentId)" style="font-size: 0.85rem; padding: 4px 14px;" x-text="'Tier ' + getTier(selectedStudentId)" :data-tip="getTier(selectedStudentId) === 1 ? 'Universal support — this student is doing well with standard classroom strategies.' : getTier(selectedStudentId) === 2 ? 'Targeted support needed — recurring minor issues suggest this student would benefit from extra check-ins or a small group intervention.' : 'Intensive support needed — frequent or severe incidents. Consider a formal assessment and individual behaviour plan.'"></span>
-                  <div class="mt-8 ratio-display tip" style="font-size: 0.95rem;" :style="getRatio(selectedStudentId) < 4 ? 'color: var(--clay)' : 'color: var(--sage)'" x-text="getRatio(selectedStudentId).toFixed(1) + ':1 ratio'" data-tip="Positive-to-negative ratio over the last 4 weeks. Research recommends at least 4 positives for every 1 negative to build a strong relationship."></div>
+                  <span class="badge" :class="'badge-tier' + getTier(selectedStudentId)" style="font-size: 0.85rem; padding: 4px 14px;" x-text="tierLabel(getTier(selectedStudentId))"></span>
+                  <div class="mt-4 text-xs" x-show="getTier(selectedStudentId) === 1" style="color: var(--sage-dark);">Responding well to universal support.</div>
+                  <div class="mt-4 text-xs" x-show="getTier(selectedStudentId) === 2" style="color: #6B4E10;">Recurring minor incidents — extra check-ins or small group intervention recommended.</div>
+                  <div class="mt-4 text-xs" x-show="getTier(selectedStudentId) === 3" style="color: #8B2E24;">Frequent or severe incidents — consider a behaviour plan and whānau/parent contact.</div>
                 </div>
               </div>
-              <div class="mt-12">
-                <div class="ratio-bar">
-                  <div class="ratio-bar-positive" :style="'width:' + getRatioPercent(selectedStudentId) + '%'"></div>
-                  <div class="ratio-bar-negative" :style="'width:' + (100 - getRatioPercent(selectedStudentId)) + '%'"></div>
+
+              <!-- Quick summary stats -->
+              <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 70px; background: var(--negative-bg); border-radius: 8px; padding: 6px 10px; text-align: center;">
+                  <div class="fw-800" style="font-size: 1.1rem; color: var(--clay);" x-text="getStudentNegativeCount(selectedStudentId)"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">INCIDENTS</div>
                 </div>
-                <div class="flex justify-between text-xs text-muted mt-4">
-                  <span x-text="getStudentPositiveCount(selectedStudentId) + ' positive'"></span>
-                  <span>Rolling 4 weeks</span>
-                  <span x-text="getStudentNegativeCount(selectedStudentId) + ' negative'"></span>
+                <div style="flex: 1; min-width: 70px; background: var(--sand); border-radius: 8px; padding: 6px 10px; text-align: center;">
+                  <div class="fw-800" style="font-size: 1.1rem;" x-text="getStudentEntries(selectedStudentId).length > 0 ? studentDaysSinceLastEntry(selectedStudentId) + 'd' : '—'"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">LAST ENTRY</div>
+                </div>
+                <div style="flex: 1; min-width: 70px; border-radius: 8px; padding: 6px 10px; text-align: center;" :style="studentTrend(selectedStudentId) === 'improving' ? 'background: var(--tier1-bg);' : studentTrend(selectedStudentId) === 'worsening' ? 'background: var(--tier3-bg);' : 'background: var(--sand);'">
+                  <div class="fw-800" style="font-size: 1.1rem;" :style="studentTrend(selectedStudentId) === 'improving' ? 'color: #3D6B42;' : studentTrend(selectedStudentId) === 'worsening' ? 'color: #8B2E24;' : ''" x-text="studentTrend(selectedStudentId) === 'improving' ? '\u2193' : studentTrend(selectedStudentId) === 'worsening' ? '\u2191' : '\u2014'"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">TREND</div>
+                </div>
+                <div x-show="studentPendingFollowUps(selectedStudentId) > 0" style="flex: 1; min-width: 70px; background: var(--major-bg); border-radius: 8px; padding: 6px 10px; text-align: center;">
+                  <div class="fw-800" style="font-size: 1.1rem; color: #8B2E24;" x-text="studentPendingFollowUps(selectedStudentId)"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">FOLLOW-UPS</div>
                 </div>
               </div>
+
               <div class="flex gap-8 mt-12">
                 <button class="btn btn-sm btn-primary" @click="openQuickLog(selectedStudentId)">+ Log Entry</button>
                 <button class="btn btn-sm btn-secondary" @click="editingStudent = {...selectedStudent()}; showEditStudent = true">Edit Student</button>
@@ -1773,16 +2062,13 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               </template>
             </div>
 
-            <!-- Restorative Prompts (Tier 2/3 or major incident) -->
+            <!-- Restorative Prompts (Watch/Urgent or major incident) -->
             <div x-show="getTier(selectedStudentId) >= 2 || hasRecentMajor(selectedStudentId)" class="card mb-16">
-              <div class="card-header"><span>Restorative Practice Prompts</span></div>
+              <div class="card-header"><span x-text="getFrameworkText().reflectionTitle"></span></div>
               <ol class="restorative-list">
-                <li>What happened?</li>
-                <li>What were you thinking at the time?</li>
-                <li>What have you thought about since?</li>
-                <li>Who has been affected by what you did?</li>
-                <li>In what way have they been affected?</li>
-                <li>What do you think you need to do to make things right?</li>
+                <template x-for="q in getFrameworkText().reflectionQuestions" :key="q">
+                  <li x-text="q"></li>
+                </template>
               </ol>
             </div>
 
@@ -1818,6 +2104,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               </div>
               <template x-for="entry in filteredStudentEntries()" :key="entry.id">
                 <div class="timeline-item" role="button" tabindex="0" style="cursor: pointer;" @click="openEditEntry(entry)" @keydown.enter="openEditEntry(entry)">
+                  <button class="copy-entry-btn" title="Copy entry" @click.stop="copyEntryToClipboard(entry)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                  </button>
                   <div class="timeline-dot" :class="entry.type === 'positive' ? 'positive' : (entry.severity === 'major' ? 'major' : 'negative')"></div>
                   <div class="timeline-body">
                     <div class="timeline-category" x-text="entry.category"></div>
@@ -1861,18 +2150,31 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               <div class="empty-state-text" x-text="followupTab === 'overdue' ? 'No overdue follow-ups!' : followupTab === 'today' ? 'Nothing due today.' : 'No upcoming follow-ups.'"></div>
             </div>
             <template x-for="item in getFollowUps(followupTab)" :key="item.entry.id">
-              <div class="card" style="display: flex; align-items: flex-start; gap: 12px;">
-                <div class="student-avatar" :style="'background:' + avatarColor(item.studentName) + '; width: 36px; height: 36px; font-size: 0.75rem; flex-shrink: 0;'">
-                  <span x-text="initials(item.studentName)"></span>
+              <div class="card">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <div class="student-avatar" :style="'background:' + avatarColor(item.studentName) + '; width: 36px; height: 36px; font-size: 0.75rem; flex-shrink: 0;'">
+                    <span x-text="initials(item.studentName)"></span>
+                  </div>
+                  <div style="flex: 1; min-width: 0;">
+                    <div class="fw-700" x-text="item.studentName"></div>
+                    <div class="text-sm" x-text="item.entry.category + ' — ' + (item.entry.followUp.note || 'No note')"></div>
+                    <div class="text-xs text-muted mt-4">
+                      <span class="followup-status" :class="'followup-' + followupTab" x-text="followupTab === 'overdue' ? 'Overdue' : followupTab === 'today' ? 'Due Today' : formatDate(item.entry.followUp.date)"></span>
+                      <span x-show="followupTab === 'overdue'" class="text-xs" style="color: var(--warm-grey); margin-left: 4px;" x-text="getOverdueDays(item.entry) + ' days ago'"></span>
+                    </div>
+                    <div x-show="followupTab === 'overdue' && getOverdueDays(item.entry) >= 3" class="text-xs mt-4" style="color: #8B2E24; font-weight: 600;" x-text="getEscalationSuggestion(item.entry)"></div>
+                  </div>
+                  <button class="btn btn-sm btn-positive" x-show="completingFollowUpId !== item.entry.id" @click="completingFollowUpId = item.entry.id; completingFollowUpNote = ''">Done</button>
                 </div>
-                <div style="flex: 1; min-width: 0;">
-                  <div class="fw-700" x-text="item.studentName"></div>
-                  <div class="text-sm" x-text="item.entry.category + ' — ' + item.entry.followUp.note"></div>
-                  <div class="text-xs text-muted mt-4">
-                    <span class="followup-status" :class="'followup-' + followupTab" x-text="followupTab === 'overdue' ? 'Overdue' : followupTab === 'today' ? 'Due Today' : formatDate(item.entry.followUp.date)"></span>
+                <!-- Completion note prompt -->
+                <div x-show="completingFollowUpId === item.entry.id" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--sand-dark);">
+                  <label class="form-label" style="font-size: 0.75rem;">What happened? <span class="text-muted" style="font-weight: 400;">(optional)</span></label>
+                  <input type="text" class="form-input" x-model="completingFollowUpNote" placeholder="e.g. Calmed down with support, returned to class" style="font-size: 0.82rem;">
+                  <div class="flex gap-8 mt-8">
+                    <button class="btn btn-sm btn-secondary" @click="completingFollowUpId = null">Cancel</button>
+                    <button class="btn btn-sm btn-positive" style="flex: 1;" @click="completeFollowUp(item.entry, completingFollowUpNote); completingFollowUpId = null">Complete</button>
                   </div>
                 </div>
-                <button class="btn btn-sm btn-positive" @click="completeFollowUp(item.entry)">Done</button>
               </div>
             </template>
           </div>
@@ -1882,16 +2184,17 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <div>
             <div x-show="getCheckInReminders().length === 0" class="empty-state card">
               <div class="empty-state-icon">&#128077;</div>
-              <div class="empty-state-text">All Tier 2/3 students have been checked on recently.</div>
+              <div class="empty-state-text">All Watch/Urgent students have been checked on recently.</div>
             </div>
             <template x-for="reminder in getCheckInReminders()" :key="reminder.student.id">
-              <div class="card" style="display: flex; align-items: center; gap: 12px;">
+              <div class="card" style="display: flex; align-items: flex-start; gap: 12px;">
                 <div class="student-avatar" :style="'background:' + avatarColor(reminder.student.name) + '; width: 36px; height: 36px; font-size: 0.75rem; flex-shrink: 0;'">
                   <span x-text="initials(reminder.student.name)"></span>
                 </div>
                 <div style="flex: 1;">
                   <div class="fw-700" x-text="'Check in with ' + reminder.student.name"></div>
-                  <div class="text-xs text-muted" x-text="'Tier ' + getTier(reminder.student.id) + ' — last entry ' + reminder.daysSince + ' days ago'"></div>
+                  <div class="text-xs text-muted" x-text="tierLabel(getTier(reminder.student.id)) + ' — last entry ' + reminder.daysSince + ' days ago'"></div>
+                  <div x-show="getCheckInSuggestion(reminder.student.id)" class="text-xs mt-4" style="color: var(--clay-dark);" x-text="getCheckInSuggestion(reminder.student.id)"></div>
                 </div>
                 <button class="btn btn-sm btn-primary" @click="openQuickLog(reminder.student.id)">Log</button>
               </div>
@@ -1915,60 +2218,47 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <button class="chip" :class="{ selected: analyticsRange === 'all' }" @click="analyticsRange = 'all'">All Time</button>
         </div>
 
-        <!-- Summary Stats -->
-        <div class="stat-grid mb-16 stagger-in">
-          <div class="stat-card positive">
-            <div class="stat-value" x-text="getFilteredEntries().filter(e => e.type === 'positive').length"></div>
-            <div class="stat-label">Positive Entries</div>
-          </div>
+        <!-- Summary Stats — compact 4-card layout -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" class="mb-16 stagger-in">
           <div class="stat-card negative">
             <div class="stat-value" x-text="getFilteredEntries().filter(e => e.type === 'negative').length"></div>
-            <div class="stat-label">Negative Entries</div>
-          </div>
-          <div class="stat-card neutral">
-            <div class="stat-value" x-text="getFilteredEntries().length"></div>
-            <div class="stat-label">Total Entries</div>
-          </div>
-          <div class="stat-card" :class="getOverallRatio() >= 4 ? 'positive' : 'warning'">
-            <div class="stat-value" x-text="getOverallRatio().toFixed(1) + ':1'"></div>
-            <div class="stat-label">Overall Ratio</div>
+            <div class="stat-label">Incidents</div>
           </div>
           <div class="stat-card positive">
-            <div class="stat-value" x-text="students.filter(s => getTier(s.id) === 1).length"></div>
-            <div class="stat-label">Tier 1</div>
+            <div class="stat-value" x-text="getFilteredEntries().filter(e => e.type === 'positive').length"></div>
+            <div class="stat-label">Positive</div>
           </div>
           <div class="stat-card warning">
             <div class="stat-value" x-text="students.filter(s => getTier(s.id) === 2).length"></div>
-            <div class="stat-label">Tier 2</div>
+            <div class="stat-label">Watch</div>
           </div>
           <div class="stat-card negative">
             <div class="stat-value" x-text="students.filter(s => getTier(s.id) === 3).length"></div>
-            <div class="stat-label">Tier 3</div>
-          </div>
-          <div class="stat-card neutral">
-            <div class="stat-value" x-text="students.length"></div>
-            <div class="stat-label">Students</div>
+            <div class="stat-label">Urgent</div>
           </div>
         </div>
 
-        <!-- Top Positive Categories -->
+        <!-- Students Needing Most Support — moved to top -->
         <div class="card mb-16">
-          <div class="card-header"><span>Top Positive Categories</span></div>
-          <template x-for="item in getTopCategories('positive')" :key="item.category">
-            <div class="chart-bar-row">
-              <div class="chart-bar-label" x-text="item.category"></div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--sage);'"></div>
+          <div class="card-header"><span>Students Needing Support</span></div>
+          <div x-show="getStudentsNeedingSupport().length === 0" class="text-sm text-muted">All students are doing well.</div>
+          <template x-for="item in getStudentsNeedingSupport()" :key="item.student.id">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--sand-dark);">
+              <div class="student-avatar" :style="'background:' + avatarColor(item.student.name) + '; width: 32px; height: 32px; font-size: 0.7rem; flex-shrink: 0;'">
+                <span x-text="initials(item.student.name)"></span>
               </div>
-              <div class="chart-bar-value" x-text="item.count"></div>
+              <div style="flex: 1;">
+                <div class="fw-700 text-sm" x-text="item.student.name"></div>
+                <div class="text-xs text-muted" x-text="item.reason"></div>
+              </div>
+              <span class="badge" :class="'badge-tier' + item.tier" x-text="tierLabel(item.tier)"></span>
             </div>
           </template>
-          <div x-show="getTopCategories('positive').length === 0" class="text-sm text-muted">No positive entries yet.</div>
         </div>
 
         <!-- Top Negative Categories -->
         <div class="card mb-16">
-          <div class="card-header"><span>Top Negative Categories</span></div>
+          <div class="card-header"><span>Top Incident Categories</span></div>
           <template x-for="item in getTopCategories('negative')" :key="item.category">
             <div class="chart-bar-row">
               <div class="chart-bar-label" x-text="item.category"></div>
@@ -1981,38 +2271,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <div x-show="getTopCategories('negative').length === 0" class="text-sm text-muted">No negative entries yet.</div>
         </div>
 
-        <!-- Top Locations for Negative Behaviour -->
+        <!-- Negative Entries by Time of Day — high value, moved up -->
         <div class="card mb-16">
-          <div class="card-header"><span>Hotspot Locations (Negative)</span></div>
-          <template x-for="item in getTopLocations()" :key="item.location">
-            <div class="chart-bar-row">
-              <div class="chart-bar-label" x-text="item.location"></div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--tier2);'"></div>
-              </div>
-              <div class="chart-bar-value" x-text="item.count"></div>
-            </div>
-          </template>
-          <div x-show="getTopLocations().length === 0" class="text-sm text-muted">No location data yet.</div>
-        </div>
-
-        <!-- Busiest Days -->
-        <div class="card mb-16">
-          <div class="card-header"><span>Entries by Day of Week</span></div>
-          <template x-for="item in getEntriesByDay()" :key="item.day">
-            <div class="chart-bar-row">
-              <div class="chart-bar-label" x-text="item.day"></div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--upcoming);'"></div>
-              </div>
-              <div class="chart-bar-value" x-text="item.count"></div>
-            </div>
-          </template>
-        </div>
-
-        <!-- Time of Day -->
-        <div class="card mb-16">
-          <div class="card-header"><span>Negative Entries by Time of Day</span></div>
+          <div class="card-header"><span>Incidents by Time of Day</span></div>
           <template x-for="item in getEntriesByTimeOfDay()" :key="item.period">
             <div class="chart-bar-row">
               <div class="chart-bar-label" x-text="item.period"></div>
@@ -2025,22 +2286,112 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <div x-show="getEntriesByTimeOfDay().every(i => i.count === 0)" class="text-sm text-muted">No negative entries in this period.</div>
         </div>
 
-        <!-- Students Needing Most Support -->
-        <div class="card">
-          <div class="card-header"><span>Students Needing Most Support</span></div>
-          <div x-show="getStudentsNeedingSupport().length === 0" class="text-sm text-muted">All students are doing well.</div>
-          <template x-for="item in getStudentsNeedingSupport()" :key="item.student.id">
-            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--sand-dark);">
-              <div class="student-avatar" :style="'background:' + avatarColor(item.student.name) + '; width: 32px; height: 32px; font-size: 0.7rem; flex-shrink: 0;'">
-                <span x-text="initials(item.student.name)"></span>
+        <!-- Hotspot Locations -->
+        <div class="card mb-16">
+          <div class="card-header"><span>Hotspot Locations</span></div>
+          <template x-for="item in getTopLocations()" :key="item.location">
+            <div class="chart-bar-row">
+              <div class="chart-bar-label" x-text="item.location"></div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--tier2);'"></div>
               </div>
-              <div style="flex: 1;">
-                <div class="fw-700 text-sm" x-text="item.student.name"></div>
-                <div class="text-xs text-muted" x-text="item.reason"></div>
-              </div>
-              <span class="badge" :class="'badge-tier' + item.tier" x-text="'Tier ' + item.tier"></span>
+              <div class="chart-bar-value" x-text="item.count"></div>
             </div>
           </template>
+          <div x-show="getTopLocations().length === 0" class="text-sm text-muted">No location data yet.</div>
+        </div>
+
+        <!-- Entries by Day of Week -->
+        <div class="card mb-16">
+          <div class="card-header"><span>Incidents by Day of Week</span></div>
+          <template x-for="item in getEntriesByDay()" :key="item.day">
+            <div class="chart-bar-row">
+              <div class="chart-bar-label" x-text="item.day"></div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--upcoming);'"></div>
+              </div>
+              <div class="chart-bar-value" x-text="item.count"></div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Top Positive Categories -->
+        <div class="card">
+          <div class="card-header"><span>Top Positive Categories</span></div>
+          <template x-for="item in getTopCategories('positive')" :key="item.category">
+            <div class="chart-bar-row">
+              <div class="chart-bar-label" x-text="item.category"></div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--sage);'"></div>
+              </div>
+              <div class="chart-bar-value" x-text="item.count"></div>
+            </div>
+          </template>
+          <div x-show="getTopCategories('positive').length === 0" class="text-sm text-muted">No positive entries yet.</div>
+        </div>
+      </div>
+
+      <!-- ===== EXPORT VIEW ===== -->
+      <div x-show="currentView === 'export'" class="fade-in">
+        <h2 class="section-title">Export for SMS</h2>
+        <p class="text-xs text-muted" style="margin-bottom: 16px;">Format entries for easy copy-paste into Hero, KAMAR, or any student management system.</p>
+
+        <!-- Template selector -->
+        <div class="card mb-16">
+          <div class="settings-section-title">Template</div>
+          <div x-show="settings.exportTemplates && settings.exportTemplates.length > 0" class="flex gap-8" style="align-items: center; margin-bottom: 8px;">
+            <select class="form-input" x-model="exportSelectedTemplate" style="flex: 1;">
+              <template x-for="tpl in settings.exportTemplates" :key="tpl.id">
+                <option :value="tpl.id" x-text="tpl.name"></option>
+              </template>
+            </select>
+            <button class="btn btn-sm btn-secondary" @click="editTemplate(getSelectedTemplate())" x-show="getSelectedTemplate()">Edit</button>
+          </div>
+          <button class="btn btn-sm btn-secondary" @click="createTemplate()">+ New Template</button>
+          <p class="text-xs text-muted mt-8">Templates let you choose which fields to include and what to call them, so the output matches your school's SMS.</p>
+        </div>
+
+        <!-- Filters (show when template selected) -->
+        <div x-show="getSelectedTemplate()" class="card mb-16">
+          <div class="settings-section-title">Filters</div>
+          <div class="form-label" style="font-size: 0.75rem; margin-bottom: 6px;">Date Range</div>
+          <div class="btn-group" style="margin-bottom: 12px;">
+            <button class="btn-group-item" :class="{ selected: exportDateRange === 'week' }" @click="exportDateRange = 'week'">This Week</button>
+            <button class="btn-group-item" :class="{ selected: exportDateRange === '2weeks' }" @click="exportDateRange = '2weeks'">2 Weeks</button>
+            <button class="btn-group-item" :class="{ selected: exportDateRange === '4weeks' }" @click="exportDateRange = '4weeks'">4 Weeks</button>
+            <button class="btn-group-item" :class="{ selected: exportDateRange === 'all' }" @click="exportDateRange = 'all'">All Time</button>
+          </div>
+          <div x-show="students.length > 0">
+            <label class="form-label" style="font-size: 0.75rem; margin-bottom: 6px;">Students <span class="text-muted">(none selected = all)</span></label>
+            <div class="btn-group">
+              <template x-for="s in students.slice().sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                <button class="btn-group-item" :class="{ selected: exportSelectedStudents.includes(s.id) }" @click="toggleExportStudent(s.id)" x-text="s.name" style="font-size: 0.75rem; padding: 5px 10px;"></button>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div x-show="getSelectedTemplate()" class="card">
+          <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div class="text-sm fw-700" x-text="getExportEntries().length + ' entries'"></div>
+            <button class="btn btn-sm btn-primary" @click="copyAllExportEntries()" x-show="getExportEntries().length > 0">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy All
+            </button>
+          </div>
+          <template x-for="entry in getExportEntries().slice(0, 50)" :key="entry.id">
+            <div class="export-entry">
+              <div class="export-entry-text" x-text="formatEntryForTemplate(entry, getSelectedTemplate())"></div>
+              <button class="export-entry-copy" @click="copyExportEntry(entry)">Copy</button>
+            </div>
+          </template>
+          <div x-show="getExportEntries().length === 0" class="text-sm text-muted" style="text-align: center; padding: 16px;">
+            No entries match your filters.
+          </div>
+          <div x-show="getExportEntries().length > 50" class="text-xs text-muted mt-8" style="text-align: center;">
+            Showing first 50. Use "Copy All" to copy all <span x-text="getExportEntries().length"></span> entries.
+          </div>
         </div>
       </div>
 
@@ -2048,84 +2399,65 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <div x-show="currentView === 'settings'" class="fade-in">
         <h2 class="section-title">Settings</h2>
 
-        <!-- Expectations -->
+        <!-- Customise (compact rows → modal editor) -->
         <div class="card settings-section">
-          <div class="settings-section-title">School-Wide Expectations</div>
-          <template x-for="(exp, index) in settings.expectations" :key="index">
-            <div class="editable-list-item">
-              <input type="text" :value="exp" @input="settings.expectations[index] = $event.target.value; markChanged()">
-              <button class="remove-btn" @click="settings.expectations.splice(index, 1); markChanged()">&times;</button>
+          <div class="settings-section-title">Customise</div>
+
+          <div class="settings-list-row" @click="openListEditor('expectations')">
+            <div style="flex:1;">
+              <div class="settings-list-row-title">School-Wide Expectations</div>
+              <div class="settings-list-row-count" x-text="settings.expectations.length + ' items'"></div>
             </div>
-          </template>
-          <button class="btn btn-sm btn-secondary mt-8" @click="settings.expectations.push('New Expectation'); markChanged()">+ Add Expectation</button>
+            <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
+
+          <div class="settings-list-row" @click="openListEditor('positive')">
+            <div style="flex:1;">
+              <div class="settings-list-row-title">Positive Categories</div>
+              <div class="settings-list-row-count" x-text="settings.categories.positive.length + ' items'"></div>
+            </div>
+            <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
+
+          <div class="settings-list-row" @click="openListEditor('minor')">
+            <div style="flex:1;">
+              <div class="settings-list-row-title">Minor Behaviour Categories</div>
+              <div class="settings-list-row-count" x-text="settings.categories.minor.length + ' items'"></div>
+            </div>
+            <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
+
+          <div class="settings-list-row" @click="openListEditor('major')">
+            <div style="flex:1;">
+              <div class="settings-list-row-title">Major Behaviour Categories</div>
+              <div class="settings-list-row-count" x-text="settings.categories.major.length + ' items'"></div>
+            </div>
+            <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
+
+          <div class="settings-list-row" @click="openListEditor('locations')">
+            <div style="flex:1;">
+              <div class="settings-list-row-title">Locations</div>
+              <div class="settings-list-row-count" x-text="settings.locations.length + ' items'"></div>
+            </div>
+            <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
         </div>
 
-        <!-- Positive Categories -->
+        <!-- Support Thresholds -->
         <div class="card settings-section">
-          <div class="settings-section-title">Positive Categories</div>
-          <template x-for="(cat, index) in settings.categories.positive" :key="'p'+index">
-            <div class="editable-list-item">
-              <input type="text" :value="cat" @input="settings.categories.positive[index] = $event.target.value; markChanged()">
-              <button class="remove-btn" @click="settings.categories.positive.splice(index, 1); markChanged()">&times;</button>
-            </div>
-          </template>
-          <button class="btn btn-sm btn-secondary mt-8" @click="settings.categories.positive.push('New Category'); markChanged()">+ Add Category</button>
-        </div>
-
-        <!-- Minor Categories -->
-        <div class="card settings-section">
-          <div class="settings-section-title">Minor Behaviour Categories</div>
-          <template x-for="(cat, index) in settings.categories.minor" :key="'mi'+index">
-            <div class="editable-list-item">
-              <input type="text" :value="cat" @input="settings.categories.minor[index] = $event.target.value; markChanged()">
-              <button class="remove-btn" @click="settings.categories.minor.splice(index, 1); markChanged()">&times;</button>
-            </div>
-          </template>
-          <button class="btn btn-sm btn-secondary mt-8" @click="settings.categories.minor.push('New Category'); markChanged()">+ Add Category</button>
-        </div>
-
-        <!-- Major Categories -->
-        <div class="card settings-section">
-          <div class="settings-section-title">Major Behaviour Categories</div>
-          <template x-for="(cat, index) in settings.categories.major" :key="'ma'+index">
-            <div class="editable-list-item">
-              <input type="text" :value="cat" @input="settings.categories.major[index] = $event.target.value; markChanged()">
-              <button class="remove-btn" @click="settings.categories.major.splice(index, 1); markChanged()">&times;</button>
-            </div>
-          </template>
-          <button class="btn btn-sm btn-secondary mt-8" @click="settings.categories.major.push('New Category'); markChanged()">+ Add Category</button>
-        </div>
-
-        <!-- Locations -->
-        <div class="card settings-section">
-          <div class="settings-section-title">Locations</div>
-          <template x-for="(loc, index) in settings.locations" :key="'l'+index">
-            <div class="editable-list-item">
-              <input type="text" :value="loc" @input="settings.locations[index] = $event.target.value; markChanged()">
-              <button class="remove-btn" @click="settings.locations.splice(index, 1); markChanged()">&times;</button>
-            </div>
-          </template>
-          <button class="btn btn-sm btn-secondary mt-8" @click="settings.locations.push('New Location'); markChanged()">+ Add Location</button>
-        </div>
-
-        <!-- Tier Thresholds -->
-        <div class="card settings-section">
-          <div class="settings-section-title">Tier Thresholds (Rolling 4-week window)</div>
+          <div class="settings-section-title">Support Thresholds (Rolling 4-week window)</div>
           <div class="form-group">
-            <label class="form-label">Tier 2: Minimum minor incidents</label>
+            <label class="form-label">Watch: Minimum minor incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier2MinorMin" @input="markChanged()" min="1" max="20">
           </div>
           <div class="form-group">
-            <label class="form-label">Tier 3: Minimum minor incidents</label>
+            <label class="form-label">Urgent: Minimum minor incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier3MinorMin" @input="markChanged()" min="1" max="30">
           </div>
           <div class="form-group">
-            <label class="form-label">Tier 3: Minimum major incidents</label>
+            <label class="form-label">Urgent: Minimum major incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier3MajorMin" @input="markChanged()" min="1" max="10">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Positive:Negative ratio target</label>
-            <input type="number" class="form-input" x-model.number="settings.ratioTarget" @input="markChanged()" min="1" max="10" step="0.5">
           </div>
         </div>
 
@@ -2146,7 +2478,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <div class="card">
           <div class="settings-section-title">About Behaviour Book</div>
           <p class="text-sm text-muted">
-            A supportive tool for Australian primary school teachers. Works with SWPBS, Berry Street, Restorative Practices, or your own school values.
+            A supportive tool for primary school teachers. Works with SWPBS, PB4L, Berry Street, Restorative Practices, or your own school values.
           </p>
           <p class="text-sm text-muted mt-8">
             <strong>Privacy:</strong> All data stays on your device. Nothing is uploaded, stored online, or shared.
@@ -2162,6 +2494,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           </div>
         </div>
       </div>
+
     </main>
 
     <!-- ===== Bottom Navigation ===== -->
@@ -2183,6 +2516,10 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         Follow-ups
         <span class="nav-badge" x-show="getFollowUps('overdue').length > 0" x-text="getFollowUps('overdue').length"></span>
       </button>
+      <button class="nav-item" :class="{ active: currentView === 'export' }" @click="currentView = 'export'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Export
+      </button>
       <button class="nav-item" :class="{ active: currentView === 'analytics' }" @click="currentView = 'analytics'">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
         Analytics
@@ -2195,95 +2532,132 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
     <!-- ===== Quick Log Modal ===== -->
     <div x-show="showQuickLog" class="modal-overlay" @click.self="showQuickLog = false" style="display: none;">
-      <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
+      <div class="modal-content modal-quicklog slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showQuickLog = false" aria-label="Close">&times;</button>
         <div class="modal-title" x-text="batchMode ? 'Batch Log' : 'Log Behaviour Entry'"></div>
 
-        <!-- Step 1: Select Student(s) -->
-        <div x-show="logStep === 1">
-          <div class="flex items-center justify-between mb-12">
-            <input type="text" class="search-input" style="flex: 1;" placeholder="Search student..." x-model="logStudentSearch">
-            <button class="btn btn-sm" :class="batchMode ? 'btn-primary' : 'btn-secondary'" style="margin-left: 8px; white-space: nowrap;" @click="batchMode = !batchMode; batchStudentIds = []" x-text="batchMode ? 'Batch ON' : 'Batch'"></button>
-          </div>
-          <div x-show="batchMode" class="text-xs text-muted mb-8">Tap multiple students, then continue. One entry will be created for each.</div>
-          <div class="student-grid" style="max-height: 50dvh; overflow-y: auto;">
-            <template x-for="student in logFilteredStudents()" :key="student.id">
-              <div class="student-card" :class="{ selected: batchMode ? batchStudentIds.includes(student.id) : logEntry.studentId === student.id }" @click="batchMode ? toggleBatchStudent(student.id) : (logEntry.studentId = student.id, logStep = 2)">
-                <div class="student-avatar" :style="'background:' + avatarColor(student.name) + '; width: 36px; height: 36px; font-size: 0.85rem;'">
-                  <span x-text="initials(student.name)"></span>
-                </div>
-                <div class="student-name" x-text="student.name"></div>
-              </div>
-            </template>
-          </div>
-          <button x-show="batchMode && batchStudentIds.length > 0" class="btn btn-primary btn-block mt-12" @click="logStep = 2" x-text="'Continue (' + batchStudentIds.length + ' students)'"></button>
-        </div>
+        <!-- Steps 1+2 combined (side-by-side on desktop) -->
+        <div class="quicklog-steps12" x-show="logStep === 1 || logStep === 2">
 
-        <!-- Step 2: Type + Category -->
-        <div x-show="logStep === 2">
-          <!-- Student context (single mode) -->
-          <div x-show="!batchMode && logEntry.studentId" style="background: var(--sand); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div class="student-avatar" :style="'background:' + avatarColor(getStudentName(logEntry.studentId)) + '; width: 30px; height: 30px; font-size: 0.7rem;'">
+          <!-- Left: Student selection -->
+          <div class="quicklog-students" x-show="logStep === 1 || isDesktopQuickLog()">
+            <div class="flex items-center justify-between mb-12">
+              <input type="text" class="search-input" style="flex: 1;" placeholder="Search student..." x-model="logStudentSearch">
+              <button class="btn btn-sm" :class="batchMode ? 'btn-primary' : 'btn-secondary'" style="margin-left: 8px; white-space: nowrap;" @click="if (!batchMode && logEntry.studentId) { batchStudentIds = [logEntry.studentId]; } else if (batchMode) { batchStudentIds = []; } batchMode = !batchMode;" x-text="batchMode ? 'Batch ON' : 'Batch'"></button>
+            </div>
+            <!-- Grade filter -->
+            <div x-show="logUniqueGrades().length > 0" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
+              <button class="chip chip-sm" :class="{ selected: logGradeFilter === '' }" @click="logGradeFilter = ''">All</button>
+              <template x-for="g in logUniqueGrades()" :key="g">
+                <button class="chip chip-sm" :class="{ selected: logGradeFilter === g }" @click="logGradeFilter = (logGradeFilter === g ? '' : g)" x-text="g"></button>
+              </template>
+            </div>
+            <div x-show="batchMode" class="text-xs text-muted mb-8">Tap names to select. One entry will be created for each.</div>
+            <!-- Student list (shared for single + batch) -->
+            <div class="pick-list">
+              <template x-for="student in logFilteredStudents().slice().sort((a,b) => a.name.localeCompare(b.name))" :key="student.id">
+                <div class="pick-row" :class="{ picked: batchMode ? batchStudentIds.includes(student.id) : logEntry.studentId === student.id }" @click="batchMode ? toggleBatchStudent(student.id) : selectLogStudent(student.id)">
+                  <div class="pick-info">
+                    <span class="fw-600 text-sm" x-text="student.name"></span>
+                    <span class="text-xs text-muted" x-text="student.grade || ''"></span>
+                    <span class="badge" :class="'badge-tier' + getTier(student.id)" x-text="tierLabel(getTier(student.id))" style="font-size: 0.6rem; padding: 1px 6px;"></span>
+                  </div>
+                  <div class="pick-check">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <button x-show="batchMode && batchStudentIds.length > 0 && !isDesktopQuickLog()" class="btn btn-primary btn-block mt-12" @click="logStep = 2" x-text="'Continue (' + batchStudentIds.length + ' students)'"></button>
+          </div>
+
+          <!-- Right: Type + Category -->
+          <div x-show="logStep === 2 || (isDesktopQuickLog() && (logEntry.studentId || (batchMode && batchStudentIds.length > 0)))">
+            <!-- Student context (single mode, mobile only) -->
+            <div x-show="!batchMode && logEntry.studentId && !isDesktopQuickLog()" style="background: var(--sand); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="student-avatar" :style="'background:' + avatarColor(getStudentName(logEntry.studentId)) + '; width: 30px; height: 30px; font-size: 0.7rem;'">
+                  <span x-text="initials(getStudentName(logEntry.studentId))"></span>
+                </div>
+                <span class="fw-700 text-sm" x-text="getStudentName(logEntry.studentId)"></span>
+                <span class="badge" :class="'badge-tier' + getTier(logEntry.studentId)" x-text="tierLabel(getTier(logEntry.studentId))" style="font-size: 0.65rem; padding: 1px 7px;"></span>
+                <button class="text-xs" style="color: var(--clay); margin-left: auto;" @click="logStep = 1; logEntry.studentId = '';">Change</button>
+              </div>
+              <template x-if="getStudentEntries(logEntry.studentId).length > 0">
+                <div style="border-top: 1px solid var(--sand-dark); margin-top: 6px; padding-top: 4px;">
+                  <template x-for="e in getStudentEntries(logEntry.studentId).slice(0, 3)" :key="e.id">
+                    <div class="text-xs" style="display: flex; gap: 6px; padding: 1px 0; color: var(--warm-grey);">
+                      <span :style="e.type==='positive' ? 'color:var(--sage)' : 'color:var(--clay)'" x-text="e.type==='positive' ? '+' : '\u2013'"></span>
+                      <span x-text="e.category"></span>
+                      <span x-text="formatDate(e.date)"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+            <!-- Desktop compact student header -->
+            <div x-show="!batchMode && logEntry.studentId && isDesktopQuickLog()" class="fw-700 text-sm mb-12" style="display: flex; align-items: center; gap: 8px;">
+              <div class="student-avatar" :style="'background:' + avatarColor(getStudentName(logEntry.studentId)) + '; width: 24px; height: 24px; font-size: 0.6rem;'">
                 <span x-text="initials(getStudentName(logEntry.studentId))"></span>
               </div>
-              <span class="fw-700 text-sm" x-text="getStudentName(logEntry.studentId)"></span>
-              <span class="badge" :class="'badge-tier' + getTier(logEntry.studentId)" x-text="'T' + getTier(logEntry.studentId)" style="font-size: 0.65rem; padding: 1px 7px;"></span>
+              <span x-text="getStudentName(logEntry.studentId)"></span>
+              <span class="badge" :class="'badge-tier' + getTier(logEntry.studentId)" x-text="tierLabel(getTier(logEntry.studentId))" style="font-size: 0.65rem; padding: 1px 7px;"></span>
               <span class="text-xs" :style="getRatio(logEntry.studentId) < 4 ? 'color:var(--clay)' : 'color:var(--sage)'" x-text="hasEntries(logEntry.studentId) ? getRatio(logEntry.studentId).toFixed(1)+':1' : ''"></span>
-              <button class="text-xs" style="color: var(--clay); margin-left: auto;" @click="logStep = 1; logEntry.studentId = '';">Change</button>
             </div>
-            <template x-if="getStudentEntries(logEntry.studentId).length > 0">
-              <div style="border-top: 1px solid var(--sand-dark); margin-top: 6px; padding-top: 4px;">
-                <template x-for="e in getStudentEntries(logEntry.studentId).slice(0, 3)" :key="e.id">
-                  <div class="text-xs" style="display: flex; gap: 6px; padding: 1px 0; color: var(--warm-grey);">
-                    <span :style="e.type==='positive' ? 'color:var(--sage)' : 'color:var(--clay)'" x-text="e.type==='positive' ? '+' : '\u2013'"></span>
-                    <span x-text="e.category"></span>
-                    <span x-text="formatDate(e.date)"></span>
-                  </div>
+            <!-- Batch mode header -->
+            <div x-show="batchMode" class="text-sm text-muted mb-8">
+              Logging for <span class="fw-700" x-text="batchStudentIds.length"></span> students
+            </div>
+
+            <div class="type-toggle mb-16">
+              <button class="type-btn" :class="{ 'positive-selected': logEntry.type === 'positive' }" @click="logEntry.type = 'positive'; logEntry.severity = null;">
+                <span class="type-icon">&#128077;</span>
+                Positive
+              </button>
+              <button class="type-btn" :class="{ 'negative-selected': logEntry.type === 'negative' }" @click="logEntry.type = 'negative'; logEntry.severity = 'minor';">
+                <span class="type-icon">&#9888;&#65039;</span>
+                Negative
+              </button>
+            </div>
+
+            <!-- Positive categories -->
+            <div x-show="logEntry.type === 'positive'">
+              <div class="form-label">What did they do well?</div>
+              <div class="chip-grid">
+                <template x-for="cat in settings.categories.positive" :key="cat">
+                  <button class="chip chip-positive" :class="{ selected: logEntry.category === cat }" @click="logEntry.category = cat; logEntry.severity = null;">
+                    <span x-text="cat"></span>
+                  </button>
                 </template>
               </div>
-            </template>
-          </div>
-          <!-- Batch mode header -->
-          <div x-show="batchMode" class="text-sm text-muted mb-8">
-            Logging for <span class="fw-700" x-text="batchStudentIds.length"></span> students
-          </div>
-
-          <div class="type-toggle mb-16">
-            <button class="type-btn" :class="{ 'positive-selected': logEntry.type === 'positive' }" @click="logEntry.type = 'positive'; logEntry.severity = null;">
-              <span class="type-icon">&#128077;</span>
-              Positive
-            </button>
-            <button class="type-btn" :class="{ 'negative-selected': logEntry.type === 'negative' }" @click="logEntry.type = 'negative'; logEntry.severity = 'minor';">
-              <span class="type-icon">&#9888;&#65039;</span>
-              Negative
-            </button>
-          </div>
-
-          <div x-show="logEntry.type === 'negative'" class="severity-toggle mb-16">
-            <button class="severity-btn" :class="{ 'minor-selected': logEntry.severity === 'minor' }" @click="logEntry.severity = 'minor'">Minor</button>
-            <button class="severity-btn" :class="{ 'major-selected': logEntry.severity === 'major' }" @click="logEntry.severity = 'major'">Major</button>
-          </div>
-
-          <div class="form-label" x-text="logEntry.type === 'positive' ? 'What did they do well?' : (logEntry.severity === 'major' ? 'Major behaviour:' : 'Minor behaviour:')"></div>
-          <div class="chip-grid">
-            <template x-for="cat in getLogCategories()" :key="cat">
-              <button class="chip" :class="{ selected: logEntry.category === cat, 'chip-positive': logEntry.type === 'positive' }" @click="logEntry.category = cat">
-                <span x-text="cat"></span>
-              </button>
-            </template>
-          </div>
-
-          <!-- Quick-save for positives / Continue for negatives -->
-          <div x-show="logEntry.category" class="mt-16">
-            <div x-show="logEntry.type === 'positive'" class="flex gap-8">
-              <button class="btn btn-positive" style="flex: 1;" @click="quickSaveEntry()">Save Now</button>
-              <button class="btn btn-secondary" @click="logStep = 3">Add Details</button>
             </div>
+
+            <!-- Negative categories: minor + major shown together -->
             <div x-show="logEntry.type === 'negative'">
-              <button class="btn btn-primary btn-block" @click="logStep = 3">Continue</button>
+              <div class="form-label">Minor</div>
+              <div class="chip-grid" style="margin-bottom: 12px;">
+                <template x-for="cat in settings.categories.minor" :key="'minor-' + cat">
+                  <button class="chip" :class="{ selected: logEntry.category === cat && logEntry.severity === 'minor' }" @click="logEntry.category = cat; logEntry.severity = 'minor';">
+                    <span x-text="cat"></span>
+                  </button>
+                </template>
+              </div>
+              <div class="form-label">Major</div>
+              <div class="chip-grid">
+                <template x-for="cat in settings.categories.major" :key="'major-' + cat">
+                  <button class="chip" :class="{ selected: logEntry.category === cat && logEntry.severity === 'major' }" @click="logEntry.category = cat; logEntry.severity = 'major';">
+                    <span x-text="cat"></span>
+                  </button>
+                </template>
+              </div>
+            </div>
+
+            <div x-show="logEntry.category" class="mt-16">
+              <button class="btn btn-primary btn-block" @click="logStep = 3; if (logEntry.type === 'negative') applySmartFollowUp()">Continue</button>
             </div>
           </div>
+
         </div>
 
         <!-- Step 3: Details -->
@@ -2349,6 +2723,9 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               <input type="checkbox" x-model="logHasFollowUp" style="width: 18px; height: 18px;">
               Schedule a follow-up
             </label>
+            <div x-show="logHasFollowUp && logFollowUpNote && logEntry.type === 'negative'" class="text-xs" style="color: var(--sage-dark); margin-top: 4px; margin-bottom: 8px;">
+              Suggested based on incident type — edit or remove if not needed.
+            </div>
             <div x-show="logHasFollowUp">
               <div class="followup-presets">
                 <button class="followup-preset-btn" :class="{ selected: logFollowUpPreset === 'tomorrow' }" @click="setFollowUpPreset('tomorrow')">Tomorrow</button>
@@ -2376,6 +2753,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showAddStudent" class="modal-overlay" @click.self="showAddStudent = false" style="display: none;">
       <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showAddStudent = false" aria-label="Close">&times;</button>
         <div class="modal-title">Add Students</div>
 
         <!-- Tab: Single or Bulk -->
@@ -2431,6 +2809,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showEditStudent" class="modal-overlay" @click.self="showEditStudent = false" style="display: none;">
       <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showEditStudent = false" aria-label="Close">&times;</button>
         <div class="modal-title">Edit Student</div>
         <div class="form-group">
           <label class="form-label">Student Name</label>
@@ -2457,6 +2836,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showSaveHelp" class="modal-overlay" @click.self="showSaveHelp = false" style="display: none;">
       <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showSaveHelp = false" aria-label="Close">&times;</button>
         <div class="modal-title">How Saving &amp; Loading Works</div>
 
         <p class="text-sm text-muted mb-16">Behaviour Book keeps your data <strong>completely private</strong> — nothing is uploaded to the internet. Instead, you save and load a file from your own device.</p>
@@ -2550,6 +2930,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showAddNote" class="modal-overlay" @click.self="showAddNote = false" style="display: none;">
       <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showAddNote = false" aria-label="Close">&times;</button>
         <div class="modal-title">Add Note</div>
         <p class="text-sm text-muted mb-12">Record a parent meeting, observation, plan update, or anything else that isn't a behaviour entry.</p>
         <div class="form-group">
@@ -2566,6 +2947,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showEditEntry" class="modal-overlay" @click.self="showEditEntry = false" style="display: none;">
       <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showEditEntry = false" aria-label="Close">&times;</button>
         <div class="modal-title">Edit Entry</div>
         <template x-if="editingEntry">
           <div>
@@ -2609,6 +2991,10 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             </div>
             <div class="flex gap-8 mt-16">
               <button class="btn btn-danger btn-sm" @click="deleteEntry(editingEntry.id)">Delete</button>
+              <button class="btn btn-sm btn-secondary" @click="copyEntryToClipboard(editingEntry)" title="Copy entry to clipboard">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy
+              </button>
               <div style="flex: 1;"></div>
               <button class="btn btn-secondary" @click="showEditEntry = false">Cancel</button>
               <button class="btn btn-primary" @click="saveEditEntry()">Save</button>
@@ -2618,11 +3004,67 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       </div>
     </div>
 
+    <!-- ===== Template Editor Modal ===== -->
+    <div x-show="showTemplateEditor" class="modal-overlay" @click.self="showTemplateEditor = false" style="display: none;">
+      <div class="modal-content slide-up" @click.stop style="max-height: 90dvh;">
+        <div class="modal-handle"></div>
+        <button class="modal-close" @click="showTemplateEditor = false; editingTemplate = null;" aria-label="Close">&times;</button>
+        <div class="modal-title">Edit Export Template</div>
+        <template x-if="editingTemplate">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Template Name</label>
+              <input type="text" class="form-input" x-model="editingTemplate.name" placeholder="e.g. Hero Export">
+            </div>
+            <div class="form-label" style="margin-bottom: 8px;">Fields <span class="text-muted" style="font-weight: 400;">(toggle on/off, rename labels, reorder)</span></div>
+            <template x-for="(field, index) in editingTemplate.fields" :key="field.key">
+              <div class="field-config-item">
+                <div class="field-toggle" :class="{ active: field.enabled }" @click="field.enabled = !field.enabled"></div>
+                <input type="text" x-model="field.label" :style="!field.enabled ? 'opacity: 0.4' : ''">
+                <div class="text-xs text-muted" style="width: 70px; text-align: right; flex-shrink: 0;" x-text="field.key"></div>
+                <div class="field-reorder">
+                  <button @click="moveTemplateField(index, -1)" :style="index === 0 ? 'opacity: 0.2' : ''">&#9650;</button>
+                  <button @click="moveTemplateField(index, 1)" :style="index === editingTemplate.fields.length - 1 ? 'opacity: 0.2' : ''">&#9660;</button>
+                </div>
+              </div>
+            </template>
+            <div class="flex gap-8 mt-16">
+              <button class="btn btn-danger btn-sm" @click="deleteTemplate(editingTemplate.id)">Delete</button>
+              <div style="flex: 1;"></div>
+              <button class="btn btn-secondary" @click="showTemplateEditor = false; editingTemplate = null;">Cancel</button>
+              <button class="btn btn-primary" @click="saveTemplate()">Save Template</button>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ===== List Editor Modal ===== -->
+    <div x-show="showListEditor" class="modal-overlay" @click.self="showListEditor = false" style="display: none;">
+      <div class="modal-content slide-up" role="dialog" aria-modal="true" @click.stop>
+        <div class="modal-handle"></div>
+        <button class="modal-close" @click="showListEditor = false" aria-label="Close">&times;</button>
+        <div class="modal-title" x-text="listEditorKey ? listEditorConfig[listEditorKey].title : ''"></div>
+
+        <template x-for="(item, index) in getListEditorItems()" :key="listEditorKey + '-' + index">
+          <div class="editable-list-item">
+            <input type="text" :value="item" @input="getListEditorItems()[index] = $event.target.value; markChanged()">
+            <button class="remove-btn" @click="getListEditorItems().splice(index, 1); markChanged()">&times;</button>
+          </div>
+        </template>
+
+        <button class="btn btn-sm btn-secondary mt-8" @click="getListEditorItems().push(listEditorConfig[listEditorKey].addDefault); markChanged()" x-text="listEditorKey ? listEditorConfig[listEditorKey].addLabel : ''"></button>
+
+        <button class="btn btn-primary mt-16" style="width: 100%;" @click="showListEditor = false">Done</button>
+      </div>
+    </div>
+
     <!-- ===== Report Modal ===== -->
     <div x-show="showReport" class="modal-overlay" @click.self="showReport = false" style="display: none;">
       <div class="modal-content slide-up" @click.stop style="max-height: 95dvh;">
         <div class="modal-handle"></div>
-        <div class="modal-title">Weekly Summary Report</div>
+        <button class="modal-close" @click="showReport = false" aria-label="Close">&times;</button>
+        <div class="modal-title">Behaviour Report</div>
         <div x-html="reportHtml" style="font-size: 0.82rem; line-height: 1.55;"></div>
         <div class="flex gap-8 mt-16">
           <button class="btn btn-secondary" @click="copyReport()">Copy as Text</button>
@@ -2636,13 +3078,14 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div x-show="showStrategyBrowser" class="modal-overlay" @click.self="showStrategyBrowser = false" style="display: none;">
       <div class="modal-content slide-up" @click.stop style="max-height: 92dvh;">
         <div class="modal-handle"></div>
+        <button class="modal-close" @click="showStrategyBrowser = false" aria-label="Close">&times;</button>
         <div class="modal-title">Strategy Guide</div>
         <p class="text-sm text-muted mb-16">Evidence-based strategies from the SWPBS framework. Tap any strategy to learn more about how and when to use it.</p>
 
         <div class="tab-bar mb-16">
-          <button class="tab-item" :class="{ active: strategyBrowserTab === 'universal' }" @click="strategyBrowserTab = 'universal'">Tier 1</button>
-          <button class="tab-item" :class="{ active: strategyBrowserTab === 'targeted' }" @click="strategyBrowserTab = 'targeted'">Tier 2</button>
-          <button class="tab-item" :class="{ active: strategyBrowserTab === 'intensive' }" @click="strategyBrowserTab = 'intensive'">Tier 3</button>
+          <button class="tab-item" :class="{ active: strategyBrowserTab === 'universal' }" @click="strategyBrowserTab = 'universal'">On Track</button>
+          <button class="tab-item" :class="{ active: strategyBrowserTab === 'targeted' }" @click="strategyBrowserTab = 'targeted'">Watch</button>
+          <button class="tab-item" :class="{ active: strategyBrowserTab === 'intensive' }" @click="strategyBrowserTab = 'intensive'">Urgent</button>
           <button class="tab-item" :class="{ active: strategyBrowserTab === 'all' }" @click="strategyBrowserTab = 'all'">All</button>
         </div>
 
@@ -2685,7 +3128,10 @@ const DEFAULT_SETTINGS = {
     rollingWindowDays: 28
   },
   ratioTarget: 4.0,
-  checkInReminderDays: 5
+  checkInReminderDays: 5,
+  exportTemplates: [],
+  country: '',
+  approach: ''
 };
 
 const AVATAR_COLORS = ['#C17248', '#7A9E7E', '#5B8FA8', '#D4A843', '#9B7EB8', '#C75B7A', '#6B8E6B', '#B87333', '#708090', '#8B6F5E'];
@@ -2769,6 +3215,7 @@ function app() {
     started: false,
     onboarding: false,
     onboardingStep: 1,
+    selectedCountry: '',
     selectedApproach: '',
     demoMode: false,
     students: [],
@@ -2780,8 +3227,11 @@ function app() {
     currentView: 'dashboard',
     selectedStudentId: null,
     studentSearch: '',
+    studentListFilter: 'all',
     detailFilter: 'all',
     followupTab: 'overdue',
+    completingFollowUpId: null,
+    completingFollowUpNote: '',
 
     // Modals
     showQuickLog: false,
@@ -2794,6 +3244,17 @@ function app() {
     bulkStudentText: '',
     bulkStudentGrade: '',
     editingStudent: { id: '', name: '', grade: '', notes: '' },
+
+    // List editor modal
+    showListEditor: false,
+    listEditorKey: null,
+    listEditorConfig: {
+      expectations: { title: 'School-Wide Expectations', path: 'expectations', addLabel: '+ Add Expectation', addDefault: 'New Expectation' },
+      positive:     { title: 'Positive Categories', path: 'categories.positive', addLabel: '+ Add Category', addDefault: 'New Category' },
+      minor:        { title: 'Minor Behaviour Categories', path: 'categories.minor', addLabel: '+ Add Category', addDefault: 'New Category' },
+      major:        { title: 'Major Behaviour Categories', path: 'categories.major', addLabel: '+ Add Category', addDefault: 'New Category' },
+      locations:    { title: 'Locations', path: 'locations', addLabel: '+ Add Location', addDefault: 'New Location' },
+    },
 
     // Strategy state
     expandedStrategy: null,
@@ -2817,12 +3278,20 @@ function app() {
     showReport: false,
     reportHtml: '',
 
+    // Export
+    exportSelectedTemplate: null,
+    exportDateRange: 'week',
+    exportSelectedStudents: [],
+    showTemplateEditor: false,
+    editingTemplate: null,
+
     // Analytics
     analyticsRange: '4weeks',
 
     // Quick Log State
     logStep: 1,
     logStudentSearch: '',
+    logGradeFilter: '',
     logEntry: {},
     logHasFollowUp: false,
     logFollowUpPreset: '',
@@ -2889,6 +3358,18 @@ function app() {
           positive: ['On Task', 'Helping Others', 'Following Instructions', 'Being Kind', 'Problem Solving', 'Showing Respect', 'Being Organised', 'Leadership'],
           minor: ['Disruption', 'Off Task', 'Late', 'Unprepared', 'Inappropriate Language', 'Non-Compliance', 'Out of Bounds', 'Technology Misuse'],
           major: ['Physical Aggression', 'Bullying', 'Property Damage', 'Abusive Language', 'Leaving School Grounds', 'Defiance (Sustained)', 'Theft', 'Harassment'],
+        },
+        pb4l: {
+          expectations: ['Be Safe / Kia Haumaru', 'Be Respectful / Kia Whakaute', 'Be a Learner / Kia Ako'],
+          positive: ['On Task', 'Helping Others', 'Following Instructions', 'Manaakitanga', 'Problem Solving', 'Showing Respect', 'Being Organised', 'Leadership'],
+          minor: ['Disruption', 'Off Task', 'Defiance', 'Late', 'Inappropriate Language', 'Non-Compliance', 'Out of Bounds', 'Property Misuse'],
+          major: ['Physical Aggression', 'Bullying', 'Property Damage', 'Abusive Language', 'Leaving School Grounds', 'Defiance (Sustained)', 'Theft', 'Harassment'],
+        },
+        'restorative-nz': {
+          expectations: ['Whanaungatanga', 'Manaakitanga', 'Kaitiakitanga', 'Ako'],
+          positive: ['Active Listening', 'Helping Others', 'Taking Responsibility', 'Including Others', 'Problem Solving', 'Showing Empathy', 'Contributing to Group', 'Self-Reflection'],
+          minor: ['Disruption', 'Not Listening', 'Unkind Words', 'Excluding Others', 'Off Task', 'Not Taking Turns', 'Rough Play', 'Not Following Agreements'],
+          major: ['Physical Harm', 'Bullying', 'Property Damage', 'Verbal Abuse', 'Leaving Unsafely', 'Sustained Defiance', 'Theft', 'Harassment'],
         }
       };
       const p = presets[approach];
@@ -2899,11 +3380,23 @@ function app() {
     },
 
     finishOnboarding() {
+      // Save country
+      this.settings.country = this.selectedCountry;
+      this.settings.approach = this.selectedApproach;
+
+      // Apply country-specific locations
+      if (this.selectedCountry === 'NZ') {
+        this.settings.locations = ['Classroom', 'Playground', 'Hall', 'Library', 'Wh\u0101nau Room', 'Toilets', 'Courts', 'Corridor', 'Before School', 'After School'];
+      }
+
       // Clean up expectations (remove empty ones)
       this.settings.expectations = this.settings.expectations.filter(e => e.trim().length > 0);
       // Only force defaults if they had expectations but deleted them all (not if they chose 'none')
       if (this.settings.expectations.length === 0 && this.selectedApproach !== 'none') {
-        this.settings.expectations = ['Be Respectful', 'Be Responsible', 'Be Safe', 'Be a Learner'];
+        const fallback = this.selectedCountry === 'NZ'
+          ? ['Be Safe / Kia Haumaru', 'Be Respectful / Kia Whakaute', 'Be a Learner / Kia Ako']
+          : ['Be Respectful', 'Be Responsible', 'Be Safe', 'Be a Learner'];
+        this.settings.expectations = fallback;
       }
 
       // Add bulk students if any were entered
@@ -2947,6 +3440,8 @@ function app() {
       };
 
       this.settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+      this.settings.approach = 'swpbs';
+      this.settings.country = 'AU';
 
       this.students = [
         { id: 'demo_s1', name: 'Emma Thompson', grade: 'Year 3', notes: '' },
@@ -3164,6 +3659,17 @@ function app() {
       this.triggerSaveWiggle();
     },
 
+    openListEditor(key) {
+      this.listEditorKey = key;
+      this.showListEditor = true;
+    },
+
+    getListEditorItems() {
+      if (!this.listEditorKey) return [];
+      const path = this.listEditorConfig[this.listEditorKey].path;
+      return path.split('.').reduce((obj, k) => obj[k], this.settings);
+    },
+
     triggerSaveWiggle() {
       this.saveWiggle = false;
       setTimeout(() => { this.saveWiggle = true; }, 10);
@@ -3251,9 +3757,12 @@ function app() {
     },
 
     filteredStudents() {
+      let list = this.sortedStudents();
+      if (this.studentListFilter === 'concern') list = list.filter(s => this.getTier(s.id) >= 2);
+      else if (this.studentListFilter === 'tier1') list = list.filter(s => this.getTier(s.id) === 1);
       const q = this.studentSearch.toLowerCase();
-      if (!q) return this.sortedStudents();
-      return this.sortedStudents().filter(s => s.name.toLowerCase().includes(q) || s.grade.toLowerCase().includes(q));
+      if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || s.grade.toLowerCase().includes(q));
+      return list;
     },
 
     openStudentDetail(id) {
@@ -3275,6 +3784,21 @@ function app() {
 
     recentEntries() {
       return [...this.entries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+    },
+
+    recentEntriesByDay() {
+      const entries = [...this.entries].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+      const groups = [];
+      let currentLabel = null;
+      entries.forEach(e => {
+        const label = this.formatDate(e.date);
+        if (label !== currentLabel) {
+          currentLabel = label;
+          groups.push({ label, entries: [] });
+        }
+        groups[groups.length - 1].entries.push(e);
+      });
+      return groups;
     },
 
     getRecentEntries(studentId, days) {
@@ -3319,8 +3843,218 @@ function app() {
     getStudentNegativeCount(studentId) { return this.getRecentEntries(studentId).filter(e => e.type === 'negative').length; },
     hasEntries(studentId) { return this.getRecentEntries(studentId).length > 0; },
 
+    tierLabel(tier) { return { 1: 'On Track', 2: 'Watch', 3: 'Urgent' }[tier] || 'On Track'; },
+
+    getFrameworkGroup() {
+      const a = this.settings.approach;
+      if (a === 'swpbs' || a === 'pb4l') return 'pbl';
+      if (a === 'berry') return 'trauma';
+      if (a === 'restorative' || a === 'restorative-nz') return 'restorative';
+      return 'generic';
+    },
+
+    getFrameworkText() {
+      const g = this.getFrameworkGroup();
+      const isNZ = this.settings.country === 'NZ';
+      const family = isNZ ? 'wh\u0101nau' : 'parent/carer';
+
+      const configs = {
+        pbl: {
+          familyTerm: family,
+          expectationTerm: 'expectations',
+          reflectionTitle: 'Reflection Prompts',
+          reflectionQuestions: [
+            'What happened?',
+            'What were you thinking or feeling at the time?',
+            'Who was affected and how?',
+            'What could you do differently next time?',
+            'What do you need to make things right?'
+          ],
+          tier1Step: 'Universal supports appropriate. Continue positive reinforcement and explicit teaching of expectations.',
+          tier2Steps: [
+            { text: 'Consider implementing Check-In Check-Out (CICO), social skills group, or peer mentoring.', key: 'cico' },
+            { text: 'Schedule a restorative conversation with the student.', key: 'restorative-conversation' },
+            { text: 'Consider contacting ' + family + ' to discuss support strategies.', key: 'parent-contact' }
+          ],
+          tier3Steps: [
+            { text: 'Recommend a Functional Behaviour Assessment (FBA) to identify triggers and functions of behaviour.', key: 'fba' },
+            { text: 'Develop an individual Behaviour Support Plan in consultation with the Student Wellbeing Team.', key: 'bsp' },
+            { text: 'Schedule a ' + family + ' meeting to collaboratively plan supports.', key: 'parent-contact' }
+          ],
+          majorFollowUpDefault: 'Follow up after major incident \u2014 check in with student',
+          majorNotes: {
+            'Physical Aggression': 'Restorative conversation with both students',
+            'Bullying': 'Check in with target student, review details with leadership',
+            'Property Damage': 'Restorative action \u2014 discuss repair/replacement',
+            'Abusive Language': 'Check in \u2014 discuss impact and alternative responses',
+            'Leaving School Grounds': 'Review safety plan with student and ' + family,
+            'Defiance (Sustained)': 'Follow up after cool-down \u2014 restorative conversation',
+            'Theft': 'Restorative conversation \u2014 ensure item returned',
+            'Harassment': 'Check in with target student, review with leadership',
+          },
+          patternRecurring: 'Consider re-teaching the linked expectation or a targeted intervention.',
+          patternMajorNoFollowUp: 'Schedule a restorative conversation or ' + family + ' contact.',
+          escalateLeadership: 'escalate to leadership if not yet addressed',
+          strategyContext: null,
+        },
+        trauma: {
+          familyTerm: family,
+          expectationTerm: 'domains',
+          reflectionTitle: 'Regulation Check-in',
+          reflectionQuestions: [
+            'How are you feeling right now? (body check)',
+            'What was happening just before?',
+            'What did your body or feelings tell you?',
+            'What helped you calm down last time?',
+            'What support do you need right now?',
+            'What\u2019s one thing we can try next time?'
+          ],
+          tier1Step: 'Universal supports appropriate. Continue building relationships and co-regulation strategies.',
+          tier2Steps: [
+            { text: 'Consider a regulation check-in or co-regulation plan with a trusted adult.', key: 'cico' },
+            { text: 'Explore whether a small group social-emotional skills session would help.', key: 'social-skills' },
+            { text: 'Consider contacting ' + family + ' to discuss wellbeing and support strategies.', key: 'parent-contact' }
+          ],
+          tier3Steps: [
+            { text: 'Recommend a wellbeing assessment to understand underlying needs and triggers.', key: 'fba' },
+            { text: 'Develop an individual support plan with the wellbeing team, focusing on safety and regulation.', key: 'bsp' },
+            { text: 'Schedule a ' + family + ' meeting to collaboratively plan supports.', key: 'parent-contact' }
+          ],
+          majorFollowUpDefault: 'Regulation check-in \u2014 how is the student feeling now?',
+          majorNotes: {
+            'Physical Aggression': 'Regulation check-in with both students \u2014 explore triggers',
+            'Emotional Crisis': 'Follow-up \u2014 review safety plan and regulation strategies',
+            'Property Damage': 'Check in \u2014 explore what was happening emotionally',
+            'Abusive Language': 'Check in \u2014 practise alternative responses when dysregulated',
+            'Absconding': 'Review safety plan with student and ' + family,
+            'Sustained Refusal': 'Calm check-in \u2014 explore what was going on underneath',
+            'Self-Harm Risk': 'Urgent \u2014 notify wellbeing team and ' + family + ' immediately',
+            'Harassment': 'Check in with target student, review with wellbeing team',
+          },
+          patternRecurring: 'Review whether regulation supports and environmental adjustments are in place.',
+          patternMajorNoFollowUp: 'Plan a regulation check-in or ' + family + ' contact.',
+          escalateLeadership: 'refer to wellbeing team if not yet addressed',
+          strategyContext: 'Berry Street / trauma-informed',
+        },
+        restorative: {
+          familyTerm: family,
+          expectationTerm: isNZ ? 'values / uara' : 'community agreements',
+          reflectionTitle: isNZ ? 'Hui Whakatika Prompts' : 'Restorative Practice Prompts',
+          reflectionQuestions: isNZ ? [
+            'He aha te mea i puta? / What happened?',
+            'I te w\u0101 r\u0101, he aha \u014du whakaaro? / What were you thinking?',
+            'He aha \u014du whakaaro in\u0101ianei? / What do you think about it now?',
+            'Ko wai i p\u0101ngia? / Who was affected?',
+            'Me p\u0113hea e tika ai? / How can we make it right?',
+            'He aha t\u0101u e hiahia ana? / What do you need?'
+          ] : [
+            'What happened?',
+            'What were you thinking at the time?',
+            'What have you thought about since?',
+            'Who has been affected by what you did?',
+            'In what way have they been affected?',
+            'What do you think you need to do to make things right?'
+          ],
+          tier1Step: 'Community supports appropriate. Continue building relationships and reinforcing shared agreements.',
+          tier2Steps: [
+            { text: 'Consider a restorative circle or targeted check-in with a mentor.', key: 'cico' },
+            { text: 'Schedule a restorative conversation to explore impact and repair.', key: 'restorative-conversation' },
+            { text: 'Consider contacting ' + family + ' to discuss support strategies together.', key: 'parent-contact' }
+          ],
+          tier3Steps: [
+            { text: 'Facilitate a community conference to understand needs and plan support.', key: 'fba' },
+            { text: 'Develop a support plan in partnership with the student, ' + family + ', and wellbeing team.', key: 'bsp' },
+            { text: 'Schedule a ' + family + ' hui to collaboratively plan next steps.', key: 'parent-contact' }
+          ],
+          majorFollowUpDefault: 'Restorative conversation \u2014 explore impact and plan repair',
+          majorNotes: {
+            'Physical Harm': 'Restorative conference with both students \u2014 explore impact',
+            'Physical Aggression': 'Restorative conference with both students \u2014 explore impact',
+            'Bullying': 'Check in with affected student, plan restorative conference',
+            'Property Damage': 'Restorative action \u2014 discuss repair and making right',
+            'Verbal Abuse': 'Restorative conversation \u2014 discuss impact and repair',
+            'Abusive Language': 'Restorative conversation \u2014 discuss impact and repair',
+            'Leaving Unsafely': 'Review safety agreement with student and ' + family,
+            'Leaving School Grounds': 'Review safety agreement with student and ' + family,
+            'Sustained Defiance': 'Follow up after cool-down \u2014 restorative conversation',
+            'Defiance (Sustained)': 'Follow up after cool-down \u2014 restorative conversation',
+            'Theft': 'Restorative action \u2014 plan return and repair of relationship',
+            'Discrimination': 'Restorative conference \u2014 discuss impact on community',
+            'Harassment': 'Check in with affected student, plan restorative conference',
+          },
+          patternRecurring: 'Consider re-teaching the linked agreement or holding a restorative circle.',
+          patternMajorNoFollowUp: 'Schedule a restorative conversation or ' + family + ' hui.',
+          escalateLeadership: 'escalate to leadership if not yet addressed',
+          strategyContext: isNZ ? 'Restorative / Hui Whakatika' : 'Restorative Practices',
+        },
+        generic: {
+          familyTerm: family,
+          expectationTerm: 'values',
+          reflectionTitle: 'Reflection Prompts',
+          reflectionQuestions: [
+            'What happened?',
+            'How are you feeling about it?',
+            'Who was affected?',
+            'What could you do differently?',
+            'What support do you need?'
+          ],
+          tier1Step: 'Continue current supports. Reinforce positive behaviour and clear expectations.',
+          tier2Steps: [
+            { text: 'Consider regular check-ins with a trusted adult or small group support.', key: 'cico' },
+            { text: 'Schedule a conversation with the student to discuss what\u2019s going on.', key: 'restorative-conversation' },
+            { text: 'Consider contacting ' + family + ' to discuss support strategies.', key: 'parent-contact' }
+          ],
+          tier3Steps: [
+            { text: 'Recommend a formal assessment to understand triggers and needs.', key: 'fba' },
+            { text: 'Develop an individual support plan with the wellbeing team.', key: 'bsp' },
+            { text: 'Schedule a ' + family + ' meeting to collaboratively plan supports.', key: 'parent-contact' }
+          ],
+          majorFollowUpDefault: 'Follow up after major incident \u2014 check in with student',
+          majorNotes: {
+            'Physical Aggression': 'Follow up with both students involved',
+            'Bullying': 'Check in with target student, review details with leadership',
+            'Property Damage': 'Discuss repair/replacement and next steps',
+            'Abusive Language': 'Check in \u2014 discuss impact and alternative responses',
+            'Leaving School Grounds': 'Review safety plan with student and ' + family,
+            'Defiance (Sustained)': 'Follow up after cool-down \u2014 check in with student',
+            'Theft': 'Follow up \u2014 ensure item returned, discuss impact',
+            'Harassment': 'Check in with target student, review with leadership',
+          },
+          patternRecurring: 'Consider a targeted intervention or additional support for this area.',
+          patternMajorNoFollowUp: 'Schedule a follow-up conversation or ' + family + ' contact.',
+          escalateLeadership: 'escalate to leadership if not yet addressed',
+          strategyContext: null,
+        }
+      };
+      return configs[g] || configs.generic;
+    },
+
+    studentDaysSinceLastEntry(studentId) {
+      const entries = this.getStudentEntries(studentId);
+      if (entries.length === 0) return null;
+      return daysBetween(new Date(entries[0].date), new Date());
+    },
+
+    studentTrend(studentId) {
+      const now = new Date();
+      const mid = new Date(); mid.setDate(now.getDate() - 14);
+      const start = new Date(); start.setDate(now.getDate() - 28);
+      const all = this.entries.filter(e => e.studentId === studentId && e.type === 'negative');
+      const recent = all.filter(e => new Date(e.date) >= mid).length;
+      const prior = all.filter(e => { const d = new Date(e.date); return d >= start && d < mid; }).length;
+      if (recent === 0 && prior === 0) return 'stable';
+      if (recent < prior) return 'improving';
+      if (recent > prior) return 'worsening';
+      return 'stable';
+    },
+
+    studentPendingFollowUps(studentId) {
+      return this.entries.filter(e => e.studentId === studentId && e.followUp && !e.followUp.completed).length;
+    },
+
     // ===== Pattern Detection =====
     getPatterns(studentId) {
+      const fw = this.getFrameworkText();
       const patterns = [];
       const recent = this.getRecentEntries(studentId);
       const negatives = recent.filter(e => e.type === 'negative');
@@ -3328,7 +4062,7 @@ function app() {
       const catCounts = {};
       negatives.forEach(e => { catCounts[e.category] = (catCounts[e.category] || 0) + 1; });
       Object.entries(catCounts).forEach(([cat, count]) => {
-        if (count >= 3) patterns.push({ text: cat + ' logged ' + count + ' times in the last 4 weeks', detail: 'Consider re-teaching the linked expectation or a targeted intervention.', icon: '\u{1F504}', level: 'warning' });
+        if (count >= 3) patterns.push({ text: cat + ' logged ' + count + ' times in the last 4 weeks', detail: fw.patternRecurring, icon: '\u{1F504}', level: 'warning' });
       });
 
       const locCounts = {};
@@ -3337,13 +4071,8 @@ function app() {
         if (count >= 3 && loc) patterns.push({ text: 'Most incidents occurring at ' + loc + ' (' + count + ' times)', detail: 'Consider environmental adjustments or increased supervision.', icon: '\u{1F4CD}', level: 'info' });
       });
 
-      const ratio = this.getRatio(studentId);
-      if (negatives.length > 0 && ratio < this.settings.ratioTarget) {
-        patterns.push({ text: 'Positive ratio is ' + ratio.toFixed(1) + ':1 (target: ' + this.settings.ratioTarget + ':1)', detail: 'Increase positive acknowledgement to build the relationship.', icon: '\u{26A0}\u{FE0F}', level: 'warning' });
-      }
-
       const majorsNoFollowUp = negatives.filter(e => e.severity === 'major' && (!e.followUp || !e.followUp.completed));
-      if (majorsNoFollowUp.length > 0) patterns.push({ text: majorsNoFollowUp.length + ' major incident(s) without completed follow-up', detail: 'Schedule a restorative conversation or parent/carer contact.', icon: '\u{1F6A9}', level: 'overdue' });
+      if (majorsNoFollowUp.length > 0) patterns.push({ text: majorsNoFollowUp.length + ' major incident(s) without completed follow-up', detail: fw.patternMajorNoFollowUp, icon: '\u{1F6A9}', level: 'overdue' });
 
       return patterns;
     },
@@ -3351,22 +4080,22 @@ function app() {
     // ===== Next Steps =====
     getNextSteps(studentId) {
       const tier = this.getTier(studentId);
-      const ratio = this.getRatio(studentId);
+      const fw = this.getFrameworkText();
       const steps = [];
       let n = 0;
 
       if (tier === 1) {
-        steps.push({ id: 'ns-' + (n++), text: 'Universal supports appropriate. Continue positive reinforcement and explicit teaching of expectations.', level: '', strategyKey: 'positive-reinforcement' });
+        steps.push({ id: 'ns-' + (n++), text: fw.tier1Step, level: '', strategyKey: 'positive-reinforcement' });
       }
       if (tier === 2) {
-        steps.push({ id: 'ns-' + (n++), text: 'Consider implementing Check-In Check-Out (CICO), social skills group, or peer mentoring.', level: 'warning', strategyKey: 'cico' });
-        steps.push({ id: 'ns-' + (n++), text: 'Schedule a restorative conversation with the student.', level: 'warning', strategyKey: 'restorative-conversation' });
-        steps.push({ id: 'ns-' + (n++), text: 'Consider contacting parent/carer to discuss support strategies.', level: 'warning', strategyKey: 'parent-contact' });
+        fw.tier2Steps.forEach(s => {
+          steps.push({ id: 'ns-' + (n++), text: s.text, level: 'warning', strategyKey: s.key });
+        });
       }
       if (tier === 3) {
-        steps.push({ id: 'ns-' + (n++), text: 'Recommend a Functional Behaviour Assessment (FBA) to identify triggers and functions of behaviour.', level: 'urgent', strategyKey: 'fba' });
-        steps.push({ id: 'ns-' + (n++), text: 'Develop an individual Behaviour Support Plan in consultation with the Student Wellbeing Team.', level: 'urgent', strategyKey: 'bsp' });
-        steps.push({ id: 'ns-' + (n++), text: 'Schedule a parent/carer meeting to collaboratively plan supports.', level: 'urgent', strategyKey: 'parent-contact' });
+        fw.tier3Steps.forEach(s => {
+          steps.push({ id: 'ns-' + (n++), text: s.text, level: 'urgent', strategyKey: s.key });
+        });
       }
 
       const recent = this.getRecentEntries(studentId);
@@ -3379,10 +4108,6 @@ function app() {
           if (exps.length > 0) steps.push({ id: 'ns-' + (n++), text: 'Re-teach "' + exps[0] + '" \u2014 ' + cat + ' has been logged ' + count + ' times.', level: 'warning', strategyKey: 'reteach-expectation' });
         }
       });
-
-      if (ratio < this.settings.ratioTarget && negatives.length > 0) {
-        steps.push({ id: 'ns-' + (n++), text: 'Increase positive acknowledgement \u2014 current ratio is ' + ratio.toFixed(1) + ':1 (target: ' + this.settings.ratioTarget + ':1).', level: ratio < 2 ? 'urgent' : 'warning', strategyKey: 'increase-positives' });
-      }
 
       return steps;
     },
@@ -3405,6 +4130,53 @@ function app() {
         .sort((a, b) => new Date(a.entry.followUp.date) - new Date(b.entry.followUp.date));
     },
 
+    getOverdueDays(entry) {
+      if (!entry.followUp) return 0;
+      return daysBetween(new Date(entry.followUp.date), new Date());
+    },
+
+    getCheckInSuggestion(studentId) {
+      const tier = this.getTier(studentId);
+      const patterns = this.getPatterns(studentId);
+      const recent = this.getRecentEntries(studentId);
+      const negatives = recent.filter(e => e.type === 'negative');
+      const lastEntry = this.getStudentEntries(studentId)[0];
+
+      // Pattern-based suggestions
+      if (patterns.length > 0) {
+        const p = patterns[0];
+        if (p.text.includes('logged')) {
+          const cat = p.text.split(' logged')[0];
+          return 'Pattern: ' + cat + ' recurring — ask how strategies are going';
+        }
+        if (p.text.includes('occurring at')) return p.text.replace('Most incidents', 'Hotspot:') + ' — check if environment changes helped';
+      }
+
+      // Recent major
+      if (negatives.some(e => e.severity === 'major')) {
+        return 'Had a major incident recently — check in on how they\'re going';
+      }
+
+      // Tier-based
+      if (tier === 3) return 'Urgent — brief daily check-in recommended';
+      if (tier === 2) return 'Watch — aim for a check-in at least twice this week';
+      return '';
+    },
+
+    getEscalationSuggestion(entry) {
+      const days = this.getOverdueDays(entry);
+      const tier = this.getTier(entry.studentId);
+      const severity = entry.severity;
+      const fw = this.getFrameworkText();
+
+      if (severity === 'major' && days >= 3) return 'Major incident \u2014 ' + fw.escalateLeadership;
+      if (days >= 7 && tier >= 2) return 'Overdue 1+ week for ' + this.tierLabel(tier) + ' student \u2014 consider ' + fw.familyTerm + ' contact';
+      if (days >= 7) return 'Overdue 1+ week \u2014 prioritise this follow-up today';
+      if (days >= 3 && tier >= 2) return 'Consider escalating \u2014 this student needs consistent follow-through';
+      if (days >= 3) return 'Getting stale \u2014 try to action today';
+      return '';
+    },
+
     getFollowUpStatus(entry) {
       if (!entry.followUp) return '';
       if (entry.followUp.completed) return 'completed';
@@ -3424,11 +4196,12 @@ function app() {
       return 'Due ' + fmtDate(entry.followUp.date);
     },
 
-    completeFollowUp(entry) {
+    completeFollowUp(entry, note) {
       entry.followUp.completed = true;
       entry.followUp.completedDate = new Date().toISOString();
+      if (note) entry.followUp.completedNote = note;
       this.markChanged();
-      this.showToast('Follow-up marked as complete');
+      this.showToast('Follow-up completed');
     },
 
     getCheckInReminders() {
@@ -3450,26 +4223,21 @@ function app() {
       this.getFollowUps('overdue').forEach(item => {
         alerts.push({ id: 'fu-' + item.entry.id, level: 'overdue', icon: '\u{1F6A9}', title: 'Overdue follow-up for ' + item.studentName, subtitle: item.entry.followUp.note || item.entry.category });
       });
-      this.students.forEach(s => {
-        const neg = this.getRecentEntries(s.id).filter(e => e.type === 'negative').length;
-        if (neg > 0 && this.getRatio(s.id) < this.settings.ratioTarget) {
-          alerts.push({ id: 'ratio-' + s.id, level: 'warning', icon: '\u{26A0}\u{FE0F}', title: s.name + ' \u2014 positive ratio below target', subtitle: 'Current: ' + this.getRatio(s.id).toFixed(1) + ':1' });
-        }
-      });
       this.getCheckInReminders().forEach(r => {
-        alerts.push({ id: 'checkin-' + r.student.id, level: 'info', icon: '\u{1F4AC}', title: 'Check in with ' + r.student.name, subtitle: 'Tier ' + this.getTier(r.student.id) + ' \u2014 no entries for ' + r.daysSince + ' days' });
+        alerts.push({ id: 'checkin-' + r.student.id, level: 'info', icon: '\u{1F4AC}', title: 'Check in with ' + r.student.name, subtitle: this.tierLabel(this.getTier(r.student.id)) + ' \u2014 no entries for ' + r.daysSince + ' days' });
       });
       return alerts;
     },
 
     // ===== Quick Log =====
     freshLogEntry() {
-      return { id: '', studentId: '', date: '', type: '', severity: null, category: '', location: (this.settings ? this.settings.locations[0] : 'Classroom'), expectation: '', description: '', action: '' };
+      return { id: '', studentId: '', date: '', type: 'negative', severity: 'minor', category: '', location: (this.settings ? this.settings.locations[0] : 'Classroom'), expectation: '', description: '', action: '' };
     },
 
     openQuickLog(preselectedStudentId) {
       this.logEntry = this.freshLogEntry();
       this.logStudentSearch = '';
+      this.logGradeFilter = '';
       this.logHasFollowUp = false;
       this.logFollowUpPreset = '';
       this.logFollowUpDate = '';
@@ -3490,14 +4258,94 @@ function app() {
 
     logFilteredStudents() {
       const q = this.logStudentSearch.toLowerCase();
-      if (!q) return this.students;
-      return this.students.filter(s => s.name.toLowerCase().includes(q));
+      let list = this.students;
+      if (this.logGradeFilter) {
+        list = list.filter(s => s.grade === this.logGradeFilter);
+      }
+      if (q) {
+        list = list.filter(s => s.name.toLowerCase().includes(q));
+      }
+      return list;
+    },
+
+    logUniqueGrades() {
+      const grades = [...new Set(this.students.map(s => s.grade).filter(Boolean))];
+      grades.sort();
+      return grades;
+    },
+
+    selectLogStudent(id) {
+      this.logEntry.studentId = id;
+      this.logEntry.category = '';
+      if (!this.isDesktopQuickLog()) {
+        this.logStep = 2;
+      }
+    },
+
+    isDesktopQuickLog() {
+      return window.innerWidth >= 768;
     },
 
     getLogCategories() {
       if (this.logEntry.type === 'positive') return this.settings.categories.positive;
       if (this.logEntry.severity === 'major') return this.settings.categories.major;
       return this.settings.categories.minor;
+    },
+
+    getSmartFollowUp(category, severity, studentId) {
+      // Returns { preset, note } based on category, severity, and student patterns
+      const tier = studentId ? this.getTier(studentId) : 1;
+      const fw = this.getFrameworkText();
+
+      // Major incidents always get a follow-up
+      if (severity === 'major') {
+        return { preset: 'tomorrow', note: fw.majorNotes[category] || fw.majorFollowUpDefault };
+      }
+
+      // Pattern-based: if this is the 3rd+ incident in the same category
+      if (studentId) {
+        const recent = this.getRecentEntries(studentId).filter(e => e.type === 'negative' && e.category === category);
+        if (recent.length >= 3) {
+          return { preset: '2days', note: category + ' recurring (' + (recent.length + 1) + 'th time) — consider targeted intervention' };
+        }
+        if (recent.length >= 2 && tier >= 2) {
+          return { preset: 'tomorrow', note: 'Check in — ' + category.toLowerCase() + ' pattern emerging for ' + this.tierLabel(tier) + ' student' };
+        }
+      }
+
+      // Tier-based defaults for minors
+      if (tier >= 2) {
+        const tierNotes = {
+          'Disruption': 'Check if classroom adjustments are helping',
+          'Off Task': 'Review task difficulty and support — is work accessible?',
+          'Non-Compliance': 'Calm check-in — explore what was going on',
+          'Inappropriate Language': 'Quick check-in — practise alternative responses',
+        };
+        return { preset: '2days', note: tierNotes[category] || 'Check in with student' };
+      }
+
+      // Category-specific for tier 1
+      const catNotes = {
+        'Disruption': 'Quick check-in — is the behaviour continuing?',
+        'Off Task': 'Check if task adjustments helped',
+        'Non-Compliance': 'Brief check-in next day',
+        'Unprepared': 'Check if materials issue is resolved',
+        'Late': 'Monitor punctuality this week',
+      };
+      if (catNotes[category]) {
+        return { preset: 'nextweek', note: catNotes[category] };
+      }
+
+      return null; // No suggestion for this combination
+    },
+
+    applySmartFollowUp() {
+      const suggestion = this.getSmartFollowUp(this.logEntry.category, this.logEntry.severity, this.logEntry.studentId);
+      if (suggestion) {
+        this.logHasFollowUp = true;
+        this.setFollowUpPreset(suggestion.preset);
+        this.logFollowUpNote = suggestion.note;
+      }
     },
 
     setFollowUpPreset(preset) {
@@ -3638,38 +4486,276 @@ function app() {
     // ===== Report =====
     generateReport() {
       const entries = this.getFilteredEntries();
-      const pos = entries.filter(e => e.type === 'positive').length;
       const neg = entries.filter(e => e.type === 'negative').length;
-      const ratio = neg > 0 ? (pos / neg).toFixed(1) : (pos > 0 ? pos + '.0' : '0.0');
+      const pos = entries.filter(e => e.type === 'positive').length;
+      const minors = entries.filter(e => e.severity === 'minor').length;
+      const majors = entries.filter(e => e.severity === 'major').length;
       const t1 = this.students.filter(s => this.getTier(s.id) === 1).length;
       const t2 = this.students.filter(s => this.getTier(s.id) === 2).length;
       const t3 = this.students.filter(s => this.getTier(s.id) === 3).length;
-
-      const overdue = this.getFollowUps('overdue').length;
-      const ratioWarnings = this.students.filter(s => {
-        const n = this.getRecentEntries(s.id).filter(e => e.type === 'negative').length;
-        return n > 0 && this.getRatio(s.id) < this.settings.ratioTarget;
-      });
-
-      const concern = this.students.filter(s => this.getTier(s.id) >= 2).map(s =>
-        '<li><strong>' + escHtml(s.name) + '</strong> — Tier ' + this.getTier(s.id) + ', ratio ' + this.getRatio(s.id).toFixed(1) + ':1, ' + this.getStudentNegativeCount(s.id) + ' negative entries</li>'
-      ).join('');
-
-      const topNeg = this.getTopCategories('negative').slice(0, 3).map(c => c.category + ' (' + c.count + ')').join(', ');
       const rangeName = { week: 'This Week', '2weeks': 'Last 2 Weeks', '4weeks': 'Last 4 Weeks', all: 'All Time' }[this.analyticsRange] || 'Last 4 Weeks';
+      const rangeDays = { week: 7, '2weeks': 14, '4weeks': 28 }[this.analyticsRange];
 
-      this.reportHtml = '<div style="margin-bottom:20px;"><h3 style="margin:0 0 4px;">Behaviour Book — Weekly Summary</h3><div style="color:#8C8279;font-size:0.8rem;">' + rangeName + ' &bull; ' + fmtDate(new Date()) + ' &bull; ' + this.students.length + ' students</div></div>' +
-        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;text-align:center;">' +
-        '<div style="background:#EDF5EF;padding:10px;border-radius:8px;"><div style="font-size:1.3rem;font-weight:800;color:#7A9E7E;">' + pos + '</div><div style="font-size:0.65rem;color:#8C8279;">POSITIVE</div></div>' +
-        '<div style="background:#F9EDE6;padding:10px;border-radius:8px;"><div style="font-size:1.3rem;font-weight:800;color:#C17248;">' + neg + '</div><div style="font-size:0.65rem;color:#8C8279;">NEGATIVE</div></div>' +
-        '<div style="background:#F5EDE3;padding:10px;border-radius:8px;"><div style="font-size:1.3rem;font-weight:800;">' + ratio + ':1</div><div style="font-size:0.65rem;color:#8C8279;">RATIO</div></div>' +
-        '<div style="background:#F5EDE3;padding:10px;border-radius:8px;"><div style="font-size:1.3rem;font-weight:800;">' + entries.length + '</div><div style="font-size:0.65rem;color:#8C8279;">TOTAL</div></div>' +
+      // --- Trend comparison (current vs previous period) ---
+      let trendHtml = '';
+      if (rangeDays) {
+        const now = new Date();
+        const prevStart = new Date(); prevStart.setDate(now.getDate() - rangeDays * 2);
+        const prevEnd = new Date(); prevEnd.setDate(now.getDate() - rangeDays);
+        const prevEntries = this.entries.filter(e => { const d = new Date(e.date); return d >= prevStart && d < prevEnd; });
+        const prevNeg = prevEntries.filter(e => e.type === 'negative').length;
+        const prevMaj = prevEntries.filter(e => e.severity === 'major').length;
+        const arrow = (curr, prev) => {
+          if (prev === 0 && curr === 0) return '<span style="color:#8C8279;">—</span>';
+          if (prev === 0) return '<span style="color:#B94A3E;">\u2191 new</span>';
+          const pct = Math.round(((curr - prev) / prev) * 100);
+          if (pct > 0) return '<span style="color:#B94A3E;">\u2191 ' + pct + '%</span>';
+          if (pct < 0) return '<span style="color:#3D6B42;">\u2193 ' + Math.abs(pct) + '%</span>';
+          return '<span style="color:#8C8279;">no change</span>';
+        };
+        trendHtml = '<div style="display:flex;gap:12px;margin-bottom:20px;">' +
+          '<div style="flex:1;background:#F5EDE3;border-radius:8px;padding:10px;text-align:center;">' +
+          '<div style="font-size:0.65rem;color:#8C8279;margin-bottom:2px;">INCIDENTS VS PRIOR ' + rangeDays + ' DAYS</div>' +
+          '<div style="font-size:0.95rem;font-weight:700;">' + neg + ' vs ' + prevNeg + '</div>' +
+          '<div style="font-size:0.8rem;">' + arrow(neg, prevNeg) + '</div></div>' +
+          '<div style="flex:1;background:#F5EDE3;border-radius:8px;padding:10px;text-align:center;">' +
+          '<div style="font-size:0.65rem;color:#8C8279;margin-bottom:2px;">MAJORS VS PRIOR ' + rangeDays + ' DAYS</div>' +
+          '<div style="font-size:0.95rem;font-weight:700;">' + majors + ' vs ' + prevMaj + '</div>' +
+          '<div style="font-size:0.8rem;">' + arrow(majors, prevMaj) + '</div></div>' +
+          '</div>';
+      }
+
+      // --- Executive summary ---
+      const topCat = this.getTopCategories('negative').slice(0, 1);
+      const topCatName = topCat.length > 0 ? topCat[0].category : null;
+      const peakTime = this.getEntriesByTimeOfDay().sort((a, b) => b.count - a.count)[0];
+      const peakTimeName = peakTime && peakTime.count > 0 ? peakTime.period.split('(')[0].trim().toLowerCase() : null;
+      let summaryParts = [];
+      summaryParts.push(neg + ' incident' + (neg !== 1 ? 's' : '') + ' recorded across ' + this.students.length + ' students');
+      if (majors > 0) summaryParts.push(majors + ' major');
+      if (t2 + t3 > 0) summaryParts.push((t2 + t3) + ' student' + (t2 + t3 !== 1 ? 's' : '') + ' needing additional support (Watch/Urgent)');
+      if (topCatName) summaryParts.push('most common category: ' + topCatName);
+      if (peakTimeName) summaryParts.push('peak time: ' + peakTimeName);
+      const summaryHtml = '<div style="background:#F5EDE3;border-radius:8px;padding:12px 14px;margin-bottom:20px;font-size:0.82rem;line-height:1.6;color:#5C4B3A;">' +
+        summaryParts.join('. ') + '.' +
+        '</div>';
+
+      // --- Top categories ---
+      const topNeg = this.getTopCategories('negative').slice(0, 5);
+      const topNegHtml = topNeg.length > 0 ? topNeg.map(c =>
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+        '<div style="flex:1;font-size:0.85rem;">' + c.category + '</div>' +
+        '<div style="width:100px;height:8px;background:#F0E6DE;border-radius:4px;overflow:hidden;">' +
+        '<div style="width:' + c.percent + '%;height:100%;background:#C17248;border-radius:4px;"></div></div>' +
+        '<div style="font-size:0.8rem;font-weight:700;width:24px;text-align:right;color:#C17248;">' + c.count + '</div></div>'
+      ).join('') : '<div style="color:#8C8279;font-size:0.85rem;">No incidents recorded.</div>';
+
+      // --- Severity breakdown by category ---
+      const negEntries = entries.filter(e => e.type === 'negative');
+      const catSeverity = {};
+      negEntries.forEach(e => {
+        if (!catSeverity[e.category]) catSeverity[e.category] = { minor: 0, major: 0 };
+        catSeverity[e.category][e.severity]++;
+      });
+      const catSevSorted = Object.entries(catSeverity).sort((a, b) => (b[1].minor + b[1].major) - (a[1].minor + a[1].major)).slice(0, 5);
+      const sevBreakdownHtml = catSevSorted.length > 0 ? '<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 12px;font-size:0.8rem;">' +
+        '<div style="font-weight:600;color:#8C8279;font-size:0.7rem;">CATEGORY</div><div style="font-weight:600;color:#8C8279;font-size:0.7rem;text-align:right;">MINOR</div><div style="font-weight:600;color:#8C8279;font-size:0.7rem;text-align:right;">MAJOR</div>' +
+        catSevSorted.map(([cat, sev]) =>
+          '<div>' + cat + '</div>' +
+          '<div style="text-align:right;color:#6B4E10;">' + sev.minor + '</div>' +
+          '<div style="text-align:right;color:' + (sev.major > 0 ? '#8B2E24' : '#8C8279') + ';font-weight:' + (sev.major > 0 ? '700' : '400') + ';">' + sev.major + '</div>'
+        ).join('') + '</div>' : '';
+
+      // --- Top locations ---
+      const topLocs = this.getTopLocations().slice(0, 5);
+      const topLocsHtml = topLocs.length > 0 ? topLocs.map(l =>
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+        '<div style="flex:1;font-size:0.85rem;">' + l.location + '</div>' +
+        '<div style="width:100px;height:8px;background:#E3EFF5;border-radius:4px;overflow:hidden;">' +
+        '<div style="width:' + l.percent + '%;height:100%;background:#5B8FA8;border-radius:4px;"></div></div>' +
+        '<div style="font-size:0.8rem;font-weight:700;width:24px;text-align:right;color:#5B8FA8;">' + l.count + '</div></div>'
+      ).join('') : '';
+
+      // --- Time of day ---
+      const times = this.getEntriesByTimeOfDay();
+      const timesHtml = times.some(t => t.count > 0) ? times.map(t =>
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+        '<div style="flex:1;font-size:0.8rem;min-width:110px;">' + t.period.split('(')[0].trim() + '</div>' +
+        '<div style="width:80px;height:8px;background:#FDF3DC;border-radius:4px;overflow:hidden;">' +
+        '<div style="width:' + t.percent + '%;height:100%;background:#D4A843;border-radius:4px;"></div></div>' +
+        '<div style="font-size:0.8rem;font-weight:700;width:24px;text-align:right;color:#6B4E10;">' + t.count + '</div></div>'
+      ).join('') : '';
+
+      // --- Day of week ---
+      const days = this.getEntriesByDay();
+      const daysHtml = days.some(d => d.count > 0) ? '<div style="display:flex;gap:4px;align-items:flex-end;height:50px;">' +
+        days.filter(d => ['Mon','Tue','Wed','Thu','Fri'].includes(d.day)).map(d =>
+          '<div style="flex:1;text-align:center;">' +
+          '<div style="height:' + Math.max(d.percent * 0.4, 2) + 'px;background:#C17248;border-radius:3px 3px 0 0;margin:0 2px;"></div>' +
+          '<div style="font-size:0.65rem;color:#8C8279;margin-top:2px;">' + d.day + '</div>' +
+          '<div style="font-size:0.7rem;font-weight:700;">' + d.count + '</div></div>'
+        ).join('') + '</div>' : '';
+
+      // --- Grade/class breakdown ---
+      const grades = [...new Set(this.students.map(s => s.grade).filter(Boolean))].sort();
+      let gradeHtml = '';
+      if (grades.length > 1) {
+        const gradeData = grades.map(g => {
+          const studentIds = this.students.filter(s => s.grade === g).map(s => s.id);
+          const gradeNeg = negEntries.filter(e => studentIds.includes(e.studentId)).length;
+          const gradeMaj = negEntries.filter(e => studentIds.includes(e.studentId) && e.severity === 'major').length;
+          const studentCount = studentIds.length;
+          return { grade: g, neg: gradeNeg, maj: gradeMaj, students: studentCount };
+        }).filter(g => g.neg > 0);
+        if (gradeData.length > 0) {
+          const maxGradeNeg = Math.max(...gradeData.map(g => g.neg), 1);
+          gradeHtml = gradeData.map(g =>
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+            '<div style="min-width:60px;font-size:0.85rem;font-weight:600;">' + g.grade + '</div>' +
+            '<div style="width:100px;height:8px;background:#F0E6DE;border-radius:4px;overflow:hidden;">' +
+            '<div style="width:' + Math.round((g.neg / maxGradeNeg) * 100) + '%;height:100%;background:#C17248;border-radius:4px;"></div></div>' +
+            '<div style="font-size:0.8rem;color:#5C4B3A;">' + g.neg + ' incident' + (g.neg !== 1 ? 's' : '') + (g.maj > 0 ? ' <span style="color:#8B2E24;">(' + g.maj + ' major)</span>' : '') + '</div>' +
+            '</div>'
+          ).join('');
+        }
+      }
+
+      // --- Students of concern (Watch/Urgent) with richer profiles ---
+      const concernStudents = this.students
+        .filter(s => this.getTier(s.id) >= 2)
+        .sort((a, b) => this.getTier(b.id) - this.getTier(a.id) || this.getStudentNegativeCount(b.id) - this.getStudentNegativeCount(a.id));
+
+      const concernHtml = concernStudents.length > 0 ? concernStudents.map(s => {
+        const tier = this.getTier(s.id);
+        const negCount = this.getStudentNegativeCount(s.id);
+        const majCount = this.getRecentEntries(s.id).filter(e => e.severity === 'major').length;
+        const patterns = this.getPatterns(s.id).slice(0, 2);
+        const tierColor = tier === 3 ? '#8B2E24' : '#6B4E10';
+        const tierBg = tier === 3 ? '#F5E0DD' : '#FDF3DC';
+        const tierLabel = tier === 3 ? 'Urgent' : 'Watch';
+
+        // Top categories for this student
+        const studentNegs = this.getRecentEntries(s.id).filter(e => e.type === 'negative');
+        const studentCats = {};
+        studentNegs.forEach(e => { studentCats[e.category] = (studentCats[e.category] || 0) + 1; });
+        const topStudentCats = Object.entries(studentCats).sort((a, b) => b[1] - a[1]).slice(0, 3);
+        const studentCatHtml = topStudentCats.length > 0
+          ? '<div style="font-size:0.75rem;color:#5C4B3A;margin-top:4px;">Top categories: ' + topStudentCats.map(([c, n]) => c + ' (' + n + ')').join(', ') + '</div>'
+          : '';
+
+        // Next steps for this student
+        const nextSteps = this.getNextSteps(s.id).slice(0, 2);
+        const stepsHtml = nextSteps.length > 0
+          ? '<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.06);">' +
+            '<div style="font-size:0.7rem;font-weight:600;color:#8C8279;margin-bottom:3px;">RECOMMENDED</div>' +
+            nextSteps.map(step => '<div style="font-size:0.75rem;color:#5C4B3A;margin-bottom:2px;">\u2022 ' + step.text + '</div>').join('') +
+            '</div>'
+          : '';
+
+        return '<div style="background:' + tierBg + ';border-radius:8px;padding:10px 12px;margin-bottom:8px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
+          '<strong style="font-size:0.9rem;">' + s.name + (s.grade ? ' <span style="font-weight:400;font-size:0.75rem;color:#8C8279;">(' + s.grade + ')</span>' : '') + '</strong>' +
+          '<span style="font-size:0.7rem;font-weight:700;color:' + tierColor + ';background:white;padding:2px 8px;border-radius:10px;">' + tierLabel + '</span></div>' +
+          '<div style="font-size:0.8rem;color:' + tierColor + ';">' + tierLabel + ' \u2014 ' + negCount + ' incidents' + (majCount > 0 ? ' (' + majCount + ' major)' : '') + '</div>' +
+          (patterns.length > 0 ? '<div style="font-size:0.75rem;color:#8C8279;margin-top:4px;">' + patterns.map(p => p.icon + ' ' + p.text).join(' &bull; ') + '</div>' : '') +
+          studentCatHtml +
+          stepsHtml +
+          '</div>';
+      }).join('') : '<div style="background:#EDF5EF;border-radius:8px;padding:10px 12px;color:#3D6B42;font-size:0.85rem;"><strong>All students On Track</strong> \u2014 no students currently need additional support.</div>';
+
+      // --- Check-in reminders ---
+      const checkIns = this.getCheckInReminders();
+      let checkInHtml = '';
+      if (checkIns.length > 0) {
+        checkInHtml = checkIns.map(r =>
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:0.8rem;">' +
+          '<span style="color:#5B8FA8;font-weight:700;">&#x1F4AC;</span>' +
+          '<span>' + r.student.name + '</span>' +
+          '<span style="color:#8C8279;"> \u2014 ' + this.tierLabel(this.getTier(r.student.id)) + ', last entry ' + r.daysSince + ' days ago</span>' +
+          '</div>'
+        ).join('');
+      }
+
+      // --- Follow-ups ---
+      const overdue = this.getFollowUps('overdue');
+      const upcoming = this.getFollowUps('upcoming');
+      let followUpHtml = '';
+      if (overdue.length > 0) {
+        followUpHtml += '<div style="color:#B94A3E;font-size:0.85rem;margin-bottom:4px;"><strong>' + overdue.length + ' overdue</strong></div>';
+        followUpHtml += overdue.slice(0, 5).map(f =>
+          '<div style="font-size:0.8rem;margin-bottom:2px;color:#8C8279;">&bull; ' + f.studentName + ' \u2014 ' + (f.entry.followUp.note || f.entry.category) + '</div>'
+        ).join('');
+      }
+      if (upcoming.length > 0) {
+        followUpHtml += '<div style="color:#5B8FA8;font-size:0.85rem;margin-top:6px;margin-bottom:4px;"><strong>' + upcoming.length + ' upcoming</strong></div>';
+        followUpHtml += upcoming.slice(0, 3).map(f =>
+          '<div style="font-size:0.8rem;margin-bottom:2px;color:#8C8279;">&bull; ' + f.studentName + ' \u2014 ' + fmtDate(f.entry.followUp.date) + '</div>'
+        ).join('');
+      }
+      if (overdue.length === 0 && upcoming.length === 0) {
+        followUpHtml = '<div style="color:#7A9E7E;font-size:0.85rem;">All follow-ups complete. No pending actions.</div>';
+      }
+
+      // --- Section helper ---
+      const section = (title, body) => '<div style="margin-bottom:18px;"><div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;border-bottom:1px solid #E8DDD4;padding-bottom:4px;">' + title + '</div>' + body + '</div>';
+
+      // --- Build report ---
+      this.reportHtml =
+        // Header
+        '<div style="margin-bottom:20px;">' +
+        '<h3 style="margin:0 0 4px;font-size:1.15rem;">Behaviour Report</h3>' +
+        '<div style="color:#8C8279;font-size:0.8rem;">' + rangeName + ' &bull; Generated ' + fmtDate(new Date()) + ' &bull; ' + this.students.length + ' students</div>' +
         '</div>' +
-        '<div style="margin-bottom:12px;"><strong>Tier Distribution:</strong> Tier 1: ' + t1 + ' &bull; Tier 2: ' + t2 + ' &bull; Tier 3: ' + t3 + '</div>' +
-        (topNeg ? '<div style="margin-bottom:12px;"><strong>Top Negative Categories:</strong> ' + topNeg + '</div>' : '') +
-        (overdue > 0 ? '<div style="margin-bottom:12px;color:#B94A3E;"><strong>Overdue Follow-ups:</strong> ' + overdue + '</div>' : '<div style="margin-bottom:12px;color:#7A9E7E;"><strong>Follow-ups:</strong> All up to date</div>') +
-        (ratioWarnings.length > 0 ? '<div style="margin-bottom:12px;"><strong>Below Ratio Target (' + this.settings.ratioTarget + ':1):</strong> ' + ratioWarnings.map(s => escHtml(s.name) + ' (' + this.getRatio(s.id).toFixed(1) + ':1)').join(', ') + '</div>' : '') +
-        (concern ? '<div style="margin-bottom:8px;"><strong>Students of Concern:</strong></div><ul style="margin:0 0 12px 18px;">' + concern + '</ul>' : '<div style="margin-bottom:12px;color:#7A9E7E;"><strong>All students at Tier 1.</strong></div>');
+
+        // Executive summary
+        summaryHtml +
+
+        // Summary stats
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;text-align:center;">' +
+        '<div style="background:#F9EDE6;padding:10px;border-radius:8px;"><div style="font-size:1.4rem;font-weight:800;color:#C17248;">' + neg + '</div><div style="font-size:0.65rem;color:#8C8279;">INCIDENTS</div></div>' +
+        '<div style="background:#FDF3DC;padding:10px;border-radius:8px;"><div style="font-size:1.4rem;font-weight:800;color:#6B4E10;">' + minors + '</div><div style="font-size:0.65rem;color:#8C8279;">MINOR</div></div>' +
+        '<div style="background:#F5E0DD;padding:10px;border-radius:8px;"><div style="font-size:1.4rem;font-weight:800;color:#8B2E24;">' + majors + '</div><div style="font-size:0.65rem;color:#8C8279;">MAJOR</div></div>' +
+        '<div style="background:#F5EDE3;padding:10px;border-radius:8px;"><div style="font-size:1.4rem;font-weight:800;">' + entries.length + '</div><div style="font-size:0.65rem;color:#8C8279;">TOTAL</div></div>' +
+        '</div>' +
+
+        // Trend comparison
+        trendHtml +
+
+        // Tier distribution
+        section('Support Levels',
+          '<div style="display:flex;gap:12px;">' +
+          '<div style="flex:1;background:#EDF5EF;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#3D6B42;">' + t1 + '</div><div style="font-size:0.65rem;color:#8C8279;">On Track</div></div>' +
+          '<div style="flex:1;background:#FDF3DC;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#6B4E10;">' + t2 + '</div><div style="font-size:0.65rem;color:#8C8279;">Watch</div></div>' +
+          '<div style="flex:1;background:#F5E0DD;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#8B2E24;">' + t3 + '</div><div style="font-size:0.65rem;color:#8C8279;">Urgent</div></div>' +
+          '</div>'
+        ) +
+
+        // Students of concern
+        section('Students Needing Support', concernHtml) +
+
+        // Check-in reminders
+        (checkInHtml ? section('Check-in Reminders', checkInHtml) : '') +
+
+        // Top categories
+        section('Top Incident Categories', topNegHtml) +
+
+        // Severity breakdown
+        (sevBreakdownHtml ? section('Severity by Category', sevBreakdownHtml) : '') +
+
+        // Grade breakdown
+        (gradeHtml ? section('Incidents by Grade/Class', gradeHtml) : '') +
+
+        // Hotspot locations
+        (topLocsHtml ? section('Hotspot Locations', topLocsHtml) : '') +
+
+        // When incidents happen
+        (timesHtml || daysHtml ? section('When Incidents Happen',
+          (timesHtml ? '<div style="margin-bottom:10px;"><div style="font-size:0.75rem;font-weight:600;color:#8C8279;margin-bottom:6px;">BY TIME OF DAY</div>' + timesHtml + '</div>' : '') +
+          (daysHtml ? '<div><div style="font-size:0.75rem;font-weight:600;color:#8C8279;margin-bottom:6px;">BY DAY OF WEEK</div>' + daysHtml + '</div>' : '')
+        ) : '') +
+
+        // Follow-ups
+        section('Follow-ups', followUpHtml);
 
       this.showReport = true;
     },
@@ -3686,6 +4772,153 @@ function app() {
       w.document.write('<html><head><title>Behaviour Book Report</title><style>body{font-family:system-ui,sans-serif;padding:24px;font-size:14px;line-height:1.5;max-width:700px;}</style></head><body>' + this.reportHtml + '</body></html>');
       w.document.close();
       w.print();
+    },
+
+    // ===== Copy Entry & Export =====
+    copyEntryToClipboard(entry) {
+      const student = this.students.find(s => s.id === entry.studentId);
+      const name = student ? student.name : 'Unknown';
+      let typeStr = entry.type === 'positive' ? 'Positive' : (entry.severity === 'major' ? 'Major' : 'Minor');
+      typeStr += ' — ' + entry.category;
+      let lines = ['Student: ' + name, 'Date: ' + fmtDateTime(entry.date), 'Type: ' + typeStr];
+      if (entry.location) lines.push('Location: ' + entry.location);
+      if (entry.expectation) lines.push('Expectation: ' + entry.expectation);
+      if (entry.description) lines.push('Description: ' + entry.description);
+      if (entry.action) lines.push('Action: ' + entry.action);
+      if (entry.followUp) lines.push('Follow-up: ' + (entry.followUp.note || '') + (entry.followUp.completed ? ' (Completed)' : ' (Due: ' + fmtDate(entry.followUp.date) + ')'));
+      navigator.clipboard.writeText(lines.join('\n')).then(() => this.showToast('Entry copied to clipboard!'));
+    },
+
+    getDefaultTemplateFields() {
+      return [
+        { key: 'student', label: 'Student', enabled: true },
+        { key: 'date', label: 'Date', enabled: true },
+        { key: 'type', label: 'Type', enabled: true },
+        { key: 'category', label: 'Category', enabled: true },
+        { key: 'severity', label: 'Severity', enabled: true },
+        { key: 'location', label: 'Location', enabled: true },
+        { key: 'expectation', label: 'Expectation', enabled: true },
+        { key: 'description', label: 'Description', enabled: true },
+        { key: 'action', label: 'Action', enabled: true },
+        { key: 'followUp', label: 'Follow-up', enabled: false }
+      ];
+    },
+
+    openExportView() {
+      if (!this.settings.exportTemplates) this.settings.exportTemplates = [];
+      if (this.settings.exportTemplates.length > 0 && !this.exportSelectedTemplate) {
+        this.exportSelectedTemplate = this.settings.exportTemplates[0].id;
+      }
+    },
+
+    createTemplate() {
+      const tpl = {
+        id: genId('tpl'),
+        name: 'New Template',
+        fields: this.getDefaultTemplateFields()
+      };
+      if (!this.settings.exportTemplates) this.settings.exportTemplates = [];
+      this.settings.exportTemplates.push(tpl);
+      this.editingTemplate = JSON.parse(JSON.stringify(tpl));
+      this.showTemplateEditor = true;
+      this.markChanged();
+    },
+
+    editTemplate(tpl) {
+      this.editingTemplate = JSON.parse(JSON.stringify(tpl));
+      this.showTemplateEditor = true;
+    },
+
+    saveTemplate() {
+      const idx = this.settings.exportTemplates.findIndex(t => t.id === this.editingTemplate.id);
+      if (idx !== -1) {
+        this.settings.exportTemplates[idx] = JSON.parse(JSON.stringify(this.editingTemplate));
+      }
+      this.exportSelectedTemplate = this.editingTemplate.id;
+      this.showTemplateEditor = false;
+      this.editingTemplate = null;
+      this.markChanged();
+    },
+
+    deleteTemplate(id) {
+      this.settings.exportTemplates = this.settings.exportTemplates.filter(t => t.id !== id);
+      if (this.exportSelectedTemplate === id) {
+        this.exportSelectedTemplate = this.settings.exportTemplates.length > 0 ? this.settings.exportTemplates[0].id : null;
+      }
+      this.showTemplateEditor = false;
+      this.editingTemplate = null;
+      this.markChanged();
+    },
+
+    moveTemplateField(index, direction) {
+      const fields = this.editingTemplate.fields;
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= fields.length) return;
+      const temp = fields[index];
+      fields[index] = fields[newIndex];
+      fields[newIndex] = temp;
+      this.editingTemplate.fields = [...fields];
+    },
+
+    getSelectedTemplate() {
+      if (!this.settings.exportTemplates) return null;
+      return this.settings.exportTemplates.find(t => t.id === this.exportSelectedTemplate) || null;
+    },
+
+    getExportEntries() {
+      const now = new Date();
+      let cutoff = null;
+      if (this.exportDateRange === 'week') cutoff = new Date(now - 7 * 86400000);
+      else if (this.exportDateRange === '2weeks') cutoff = new Date(now - 14 * 86400000);
+      else if (this.exportDateRange === '4weeks') cutoff = new Date(now - 28 * 86400000);
+      let filtered = this.entries.filter(e => !cutoff || new Date(e.date) >= cutoff);
+      if (this.exportSelectedStudents.length > 0) {
+        filtered = filtered.filter(e => this.exportSelectedStudents.includes(e.studentId));
+      }
+      return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+
+    formatEntryForTemplate(entry, template) {
+      if (!template) return '';
+      const student = this.students.find(s => s.id === entry.studentId);
+      const values = {
+        student: student ? student.name : 'Unknown',
+        date: fmtDateTime(entry.date),
+        type: entry.type === 'positive' ? 'Positive' : (entry.severity === 'major' ? 'Major' : 'Minor'),
+        category: entry.category || '',
+        severity: entry.severity || (entry.type === 'positive' ? 'Positive' : ''),
+        location: entry.location || '',
+        expectation: entry.expectation || '',
+        description: entry.description || '',
+        action: entry.action || '',
+        followUp: entry.followUp ? ((entry.followUp.note || '') + (entry.followUp.completed ? ' (Completed)' : ' (Due: ' + fmtDate(entry.followUp.date) + ')')) : ''
+      };
+      return template.fields
+        .filter(f => f.enabled && values[f.key])
+        .map(f => f.label + ': ' + values[f.key])
+        .join('\n');
+    },
+
+    copyExportEntry(entry) {
+      const tpl = this.getSelectedTemplate();
+      const text = tpl ? this.formatEntryForTemplate(entry, tpl) : '';
+      if (!text) { this.showToast('No template selected or entry is empty'); return; }
+      navigator.clipboard.writeText(text).then(() => this.showToast('Entry copied!'));
+    },
+
+    copyAllExportEntries() {
+      const tpl = this.getSelectedTemplate();
+      if (!tpl) { this.showToast('No template selected'); return; }
+      const entries = this.getExportEntries();
+      if (entries.length === 0) { this.showToast('No entries to copy'); return; }
+      const text = entries.map(e => this.formatEntryForTemplate(e, tpl)).filter(t => t).join('\n---\n');
+      navigator.clipboard.writeText(text).then(() => this.showToast(entries.length + ' entries copied!'));
+    },
+
+    toggleExportStudent(id) {
+      const idx = this.exportSelectedStudents.indexOf(id);
+      if (idx === -1) this.exportSelectedStudents.push(id);
+      else this.exportSelectedStudents.splice(idx, 1);
     },
 
     // ===== Time of Day Analytics =====
@@ -3767,23 +5000,41 @@ function app() {
 
         'peer-mentoring': '<h4>What is it?</h4><p>Pairing a student who needs support with a positive peer who can model expected behaviour. This isn\'t about making one student "fix" another — it\'s about creating natural, positive social connections.</p><h4>How to do it</h4><ul><li>Choose the mentor carefully: a kind, patient student who won\'t feel burdened</li><li>Brief the mentor: "You\'re not in charge of them — you\'re just sitting together and being a good example"</li><li>Structure the pairing: shared activities, partner work, buddy reading</li><li>Check in with both students regularly</li></ul><h4>When to use it</h4><p>For Tier 2 students, especially those who are new, socially isolated, or who respond well to peer relationships. Not appropriate when the student\'s behaviour might put the mentor at risk.</p>',
       };
-      return strategies[key] || '<p>No detailed guidance available for this strategy.</p>';
+      let content = strategies[key] || '<p>No detailed guidance available for this strategy.</p>';
+
+      // Add contextual note for non-PBL frameworks on PBL-specific strategies
+      const fw = this.getFrameworkText();
+      if (fw.strategyContext) {
+        const contextMap = {
+          'cico': { trauma: 'In a trauma-informed approach, the equivalent is a daily regulation check-in with a trusted adult, focusing on co-regulation and emotional safety rather than points cards.', restorative: 'In a restorative approach, consider a daily circle check-in with a mentor focused on relationships and belonging rather than a structured points system.' },
+          'explicit-teaching': { trauma: 'In Berry Street, this maps to explicitly teaching self-regulation strategies within the five domains (Body, Stamina, Character, Engagement, Relationships).', restorative: 'In a restorative approach, this maps to explicitly teaching and modelling your community agreements through circle practice.' },
+          'reteach-expectation': { trauma: 'In Berry Street, re-teaching focuses on the relevant domain (e.g. revisiting regulation strategies if the pattern relates to dysregulation).', restorative: 'In a restorative approach, re-teaching focuses on revisiting the relevant community agreement through a class circle or role-play.' },
+          'fba': { trauma: 'In Berry Street, this aligns with a wellbeing assessment — understanding which domain(s) a student is struggling in and what unmet needs drive the behaviour.', restorative: 'In a restorative approach, this aligns with a community conference — understanding the relational context and needs behind the behaviour.' },
+          'bsp': { trauma: 'In Berry Street, the equivalent is an individual wellbeing plan focused on safety, regulation, and relationship-building rather than behaviour targets.', restorative: 'In a restorative approach, the equivalent is a support agreement developed collaboratively with the student, their wh\u0101nau/family, and the school community.' },
+        };
+        const g = this.getFrameworkGroup();
+        if (contextMap[key] && contextMap[key][g]) {
+          content = '<div style="background:var(--sand);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:0.8rem;color:var(--clay-dark);"><strong>' + fw.strategyContext + ':</strong> ' + contextMap[key][g] + '</div>' + content;
+        }
+      }
+
+      return content;
     },
 
     getStrategiesForTab() {
       const all = [
-        { key: 'positive-reinforcement', title: 'Positive Reinforcement', tier: 'universal', tierLabel: 'All Tiers' },
-        { key: 'explicit-teaching', title: 'Explicit Teaching of Expectations', tier: 'universal', tierLabel: 'All Tiers' },
-        { key: 'reteach-expectation', title: 'Re-teach a Specific Expectation', tier: 'universal', tierLabel: 'Tier 1-2' },
-        { key: 'increase-positives', title: 'Increase Positive Acknowledgement', tier: 'universal', tierLabel: 'All Tiers' },
-        { key: 'cico', title: 'Check-In Check-Out (CICO)', tier: 'targeted', tierLabel: 'Tier 2' },
-        { key: 'social-skills', title: 'Social Skills Group', tier: 'targeted', tierLabel: 'Tier 2' },
-        { key: 'peer-mentoring', title: 'Peer Mentoring', tier: 'targeted', tierLabel: 'Tier 2' },
-        { key: 'restorative-conversation', title: 'Restorative Conversation', tier: 'targeted', tierLabel: 'Tier 2-3' },
-        { key: 'parent-contact', title: 'Parent/Carer Contact', tier: 'targeted', tierLabel: 'Tier 2-3' },
-        { key: 'fba', title: 'Functional Behaviour Assessment (FBA)', tier: 'intensive', tierLabel: 'Tier 3' },
-        { key: 'bsp', title: 'Behaviour Support Plan (BSP)', tier: 'intensive', tierLabel: 'Tier 3' },
-        { key: 'wellbeing-team', title: 'Student Wellbeing Team Involvement', tier: 'intensive', tierLabel: 'Tier 3' },
+        { key: 'positive-reinforcement', title: 'Positive Reinforcement', tier: 'universal', tierLabel: 'All Students' },
+        { key: 'explicit-teaching', title: 'Explicit Teaching of Expectations', tier: 'universal', tierLabel: 'All Students' },
+        { key: 'reteach-expectation', title: 'Re-teach a Specific Expectation', tier: 'universal', tierLabel: 'On Track / Watch' },
+        { key: 'increase-positives', title: 'Increase Positive Acknowledgement', tier: 'universal', tierLabel: 'All Students' },
+        { key: 'cico', title: 'Check-In Check-Out (CICO)', tier: 'targeted', tierLabel: 'Watch' },
+        { key: 'social-skills', title: 'Social Skills Group', tier: 'targeted', tierLabel: 'Watch' },
+        { key: 'peer-mentoring', title: 'Peer Mentoring', tier: 'targeted', tierLabel: 'Watch' },
+        { key: 'restorative-conversation', title: 'Restorative Conversation', tier: 'targeted', tierLabel: 'Watch / Urgent' },
+        { key: 'parent-contact', title: 'Parent/Carer Contact', tier: 'targeted', tierLabel: 'Watch / Urgent' },
+        { key: 'fba', title: 'Functional Behaviour Assessment (FBA)', tier: 'intensive', tierLabel: 'Urgent' },
+        { key: 'bsp', title: 'Behaviour Support Plan (BSP)', tier: 'intensive', tierLabel: 'Urgent' },
+        { key: 'wellbeing-team', title: 'Student Wellbeing Team Involvement', tier: 'intensive', tierLabel: 'Urgent' },
       ];
       if (this.strategyBrowserTab === 'all') return all;
       return all.filter(s => s.tier === this.strategyBrowserTab);
@@ -3829,14 +5080,11 @@ function app() {
         .filter(s => this.getTier(s.id) >= 2)
         .map(s => {
           const tier = this.getTier(s.id);
-          const ratio = this.getRatio(s.id);
           const neg = this.getStudentNegativeCount(s.id);
-          let reason = 'Tier ' + tier;
-          if (ratio < this.settings.ratioTarget && neg > 0) reason += ' \u2022 Ratio: ' + ratio.toFixed(1) + ':1';
-          reason += ' \u2022 ' + neg + ' negative entries (4 wks)';
-          return { student: s, tier, reason };
+          let reason = this.tierLabel(tier) + ' \u2022 ' + neg + ' incidents (4 wks)';
+          return { student: s, tier, neg, reason };
         })
-        .sort((a, b) => b.tier - a.tier || this.getRatio(a.student.id) - this.getRatio(b.student.id));
+        .sort((a, b) => b.tier - a.tier || b.neg - a.neg);
     },
 
     // ===== Toast =====
