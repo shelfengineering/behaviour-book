@@ -1532,7 +1532,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <div class="welcome-feature">
         <div class="welcome-feature-icon">&#127919;</div>
         <div class="welcome-feature-title">Evidence-based steps</div>
-        <div class="welcome-feature-desc">Support level classification + strategy suggestions matched to each student.</div>
+        <div class="welcome-feature-desc">Students are flagged as On Track, Watch, or Urgent with strategy suggestions for each.</div>
       </div>
       <div class="welcome-feature">
         <div class="welcome-feature-icon">&#128274;</div>
@@ -1680,7 +1680,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <strong>SWPBS defaults loaded.</strong> These are the most common expectations across Australian SWPBS schools. Edit to match your school's exact wording — some schools use "Be Kind" instead of "Be Respectful", or add a 5th value.
         </div>
         <div x-show="selectedApproach === 'berry'" class="onboarding-tip">
-          <strong>Berry Street domains loaded.</strong> These map to the BSEM's five domains of learning readiness. You can rename them to match your school's language.
+          <strong>Berry Street domains loaded.</strong> These are the five domains of learning readiness (Body, Stamina, Character, Engagement, Relationships). Rename them to match your school's language.
         </div>
         <div x-show="selectedApproach === 'restorative'" class="onboarding-tip">
           <strong>Common restorative agreements loaded.</strong> Many restorative schools co-create these with students each year. Edit these as a starting point and refine them with your class.
@@ -1884,7 +1884,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <!-- Getting Started Banner (shown when few entries) -->
         <div x-show="students.length > 0 && entries.length < 5" class="getting-started">
           <h3>Getting started with your class</h3>
-          <p>Log a few behaviour entries to see patterns, ratios, and tier classifications come to life.</p>
+          <p>Log a few behaviour entries to see patterns and support levels come to life.</p>
           <div class="getting-started-steps">
             <div class="getting-started-step" :class="{ done: students.length > 0 }">
               <div class="getting-started-num" x-text="students.length > 0 ? '\u2713' : '1'"></div>
@@ -2012,12 +2012,12 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
                   <div style="font-size: 0.6rem; color: var(--warm-grey-light);">INCIDENTS</div>
                 </div>
                 <div style="flex: 1; min-width: 70px; background: var(--sand); border-radius: 8px; padding: 6px 10px; text-align: center;">
-                  <div class="fw-800" style="font-size: 1.1rem;" x-text="getStudentEntries(selectedStudentId).length > 0 ? studentDaysSinceLastEntry(selectedStudentId) + 'd' : '—'"></div>
-                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">LAST ENTRY</div>
+                  <div class="fw-800" style="font-size: 0.85rem;" x-text="getStudentEntries(selectedStudentId).length > 0 ? (studentDaysSinceLastEntry(selectedStudentId) === 0 ? 'Today' : studentDaysSinceLastEntry(selectedStudentId) + ' days') : '—'"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">SINCE LAST</div>
                 </div>
                 <div style="flex: 1; min-width: 70px; border-radius: 8px; padding: 6px 10px; text-align: center;" :style="studentTrend(selectedStudentId) === 'improving' ? 'background: var(--tier1-bg);' : studentTrend(selectedStudentId) === 'worsening' ? 'background: var(--tier3-bg);' : 'background: var(--sand);'">
-                  <div class="fw-800" style="font-size: 1.1rem;" :style="studentTrend(selectedStudentId) === 'improving' ? 'color: #3D6B42;' : studentTrend(selectedStudentId) === 'worsening' ? 'color: #8B2E24;' : ''" x-text="studentTrend(selectedStudentId) === 'improving' ? '\u2193' : studentTrend(selectedStudentId) === 'worsening' ? '\u2191' : '\u2014'"></div>
-                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">TREND</div>
+                  <div class="fw-800" style="font-size: 0.75rem;" :style="studentTrend(selectedStudentId) === 'improving' ? 'color: #3D6B42;' : studentTrend(selectedStudentId) === 'worsening' ? 'color: #8B2E24;' : ''" x-text="studentTrend(selectedStudentId) === 'improving' ? 'Fewer' : studentTrend(selectedStudentId) === 'worsening' ? 'More' : 'Steady'"></div>
+                  <div style="font-size: 0.6rem; color: var(--warm-grey-light);">VS LAST 2 WKS</div>
                 </div>
                 <div x-show="studentPendingFollowUps(selectedStudentId) > 0" style="flex: 1; min-width: 70px; background: var(--major-bg); border-radius: 8px; padding: 6px 10px; text-align: center;">
                   <div class="fw-800" style="font-size: 1.1rem; color: #8B2E24;" x-text="studentPendingFollowUps(selectedStudentId)"></div>
@@ -2218,15 +2218,12 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           <button class="chip" :class="{ selected: analyticsRange === 'all' }" @click="analyticsRange = 'all'">All Time</button>
         </div>
 
-        <!-- Summary Stats — compact 4-card layout -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" class="mb-16 stagger-in">
+        <!-- Summary Stats -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;" class="mb-16 stagger-in">
           <div class="stat-card negative">
             <div class="stat-value" x-text="getFilteredEntries().filter(e => e.type === 'negative').length"></div>
             <div class="stat-label">Incidents</div>
-          </div>
-          <div class="stat-card positive">
-            <div class="stat-value" x-text="getFilteredEntries().filter(e => e.type === 'positive').length"></div>
-            <div class="stat-label">Positive</div>
+            <div style="font-size: 0.65rem; color: var(--warm-grey); margin-top: 2px;" x-text="getFilteredEntries().filter(e => e.severity === 'minor').length + ' minor · ' + getFilteredEntries().filter(e => e.severity === 'major').length + ' major'"></div>
           </div>
           <div class="stat-card warning">
             <div class="stat-value" x-text="students.filter(s => getTier(s.id) === 2).length"></div>
@@ -2238,7 +2235,16 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           </div>
         </div>
 
-        <!-- Students Needing Most Support — moved to top -->
+        <!-- Trend banner -->
+        <template x-if="getAnalyticsTrend()">
+          <div class="mb-16" style="border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; font-weight: 600;" :style="getAnalyticsTrend().direction === 'fewer' ? 'background: var(--tier1-bg); color: #3D6B42;' : getAnalyticsTrend().direction === 'more' ? 'background: var(--tier3-bg); color: #8B2E24;' : 'background: var(--sand); color: var(--warm-grey);'">
+            <span x-show="getAnalyticsTrend().direction === 'fewer'" x-text="'\u2193 ' + getAnalyticsTrend().pct + '% fewer incidents than the previous period (' + getAnalyticsTrend().previous + ' \u2192 ' + getAnalyticsTrend().current + ')'"></span>
+            <span x-show="getAnalyticsTrend().direction === 'more'" x-text="'\u2191 ' + getAnalyticsTrend().pct + '% more incidents than the previous period (' + getAnalyticsTrend().previous + ' \u2192 ' + getAnalyticsTrend().current + ')'"></span>
+            <span x-show="getAnalyticsTrend().direction === 'steady'">Steady \u2014 same number of incidents as the previous period</span>
+          </div>
+        </template>
+
+        <!-- Students Needing Support -->
         <div class="card mb-16">
           <div class="card-header"><span>Students Needing Support</span></div>
           <div x-show="getStudentsNeedingSupport().length === 0" class="text-sm text-muted">All students are doing well.</div>
@@ -2256,6 +2262,22 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           </template>
         </div>
 
+        <!-- Heads Up — students approaching Watch -->
+        <div x-show="getStudentsApproachingWatch().length > 0" class="card mb-16" style="border-left: 3px solid #D4A843;">
+          <div class="card-header"><span>Heads Up</span></div>
+          <template x-for="item in getStudentsApproachingWatch()" :key="item.student.id">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--sand-dark);" @click="openStudentDetail(item.student.id)" role="button" style="cursor: pointer;">
+              <div class="student-avatar" :style="'background:' + avatarColor(item.student.name) + '; width: 28px; height: 28px; font-size: 0.65rem; flex-shrink: 0;'">
+                <span x-text="initials(item.student.name)"></span>
+              </div>
+              <div style="flex: 1;">
+                <div class="fw-700 text-sm" x-text="item.student.name"></div>
+                <div class="text-xs" style="color: #6B4E10;" x-text="item.reason"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+
         <!-- Top Negative Categories -->
         <div class="card mb-16">
           <div class="card-header"><span>Top Incident Categories</span></div>
@@ -2265,7 +2287,11 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               <div class="chart-bar-track">
                 <div class="chart-bar-fill" :style="'width:' + item.percent + '%; background: var(--clay);'"></div>
               </div>
-              <div class="chart-bar-value" x-text="item.count"></div>
+              <div class="chart-bar-value" style="display: flex; align-items: center; gap: 3px;">
+                <span x-text="item.count"></span>
+                <span x-show="getCategoryTrend(item.category) === '\u2191'" style="color: #8B2E24; font-size: 0.7rem;">\u2191</span>
+                <span x-show="getCategoryTrend(item.category) === '\u2193'" style="color: #3D6B42; font-size: 0.7rem;">\u2193</span>
+              </div>
             </div>
           </template>
           <div x-show="getTopCategories('negative').length === 0" class="text-sm text-muted">No negative entries yet.</div>
@@ -2328,6 +2354,20 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             </div>
           </template>
           <div x-show="getTopCategories('positive').length === 0" class="text-sm text-muted">No positive entries yet.</div>
+        </div>
+
+        <!-- Doing Well -->
+        <div x-show="getStudentsDoingWell().length > 0" class="card mt-16" style="border-left: 3px solid var(--sage);">
+          <div class="card-header"><span>Doing Well</span></div>
+          <template x-for="item in getStudentsDoingWell()" :key="item.student.id">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--sand-dark);">
+              <div class="student-avatar" :style="'background:' + avatarColor(item.student.name) + '; width: 28px; height: 28px; font-size: 0.65rem; flex-shrink: 0;'">
+                <span x-text="initials(item.student.name)"></span>
+              </div>
+              <div class="fw-700 text-sm" x-text="item.student.name" style="flex: 1;"></div>
+              <div class="text-xs" style="color: var(--sage-dark);" x-text="item.note"></div>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -2446,17 +2486,18 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
         <!-- Support Thresholds -->
         <div class="card settings-section">
-          <div class="settings-section-title">Support Thresholds (Rolling 4-week window)</div>
+          <div class="settings-section-title">Support Thresholds</div>
+          <p class="text-xs text-muted" style="margin-bottom: 12px;">A student's support level is based on their incidents in the last 4 weeks.</p>
           <div class="form-group">
-            <label class="form-label">Watch: Minimum minor incidents</label>
+            <label class="form-label">Move to <strong>Watch</strong> after this many minor incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier2MinorMin" @input="markChanged()" min="1" max="20">
           </div>
           <div class="form-group">
-            <label class="form-label">Urgent: Minimum minor incidents</label>
+            <label class="form-label">Move to <strong>Urgent</strong> after this many minor incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier3MinorMin" @input="markChanged()" min="1" max="30">
           </div>
           <div class="form-group">
-            <label class="form-label">Urgent: Minimum major incidents</label>
+            <label class="form-label">Move to <strong>Urgent</strong> after this many major incidents</label>
             <input type="number" class="form-input" x-model.number="settings.tierThresholds.tier3MajorMin" @input="markChanged()" min="1" max="10">
           </div>
         </div>
@@ -2603,7 +2644,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               </div>
               <span x-text="getStudentName(logEntry.studentId)"></span>
               <span class="badge" :class="'badge-tier' + getTier(logEntry.studentId)" x-text="tierLabel(getTier(logEntry.studentId))" style="font-size: 0.65rem; padding: 1px 7px;"></span>
-              <span class="text-xs" :style="getRatio(logEntry.studentId) < 4 ? 'color:var(--clay)' : 'color:var(--sage)'" x-text="hasEntries(logEntry.studentId) ? getRatio(logEntry.studentId).toFixed(1)+':1' : ''"></span>
+              <span x-show="getStudentNegativeCount(logEntry.studentId) > 0" class="text-xs text-muted" x-text="getStudentNegativeCount(logEntry.studentId) + ' incidents'"></span>
             </div>
             <!-- Batch mode header -->
             <div x-show="batchMode" class="text-sm text-muted mb-8">
@@ -3590,7 +3631,7 @@ function app() {
             this.unsavedChanges = false;
             this.fileName = file.name;
             this.started = true;
-            this.showToast('Data loaded from ' + file.name);
+            this.showToast('Loaded from ' + file.name);
           } catch (err) {
             alert('Could not read file. Please check it is a valid Behaviour Book JSON file.');
           }
@@ -3623,7 +3664,7 @@ function app() {
         }).then(() => {
           this.unsavedChanges = false;
           this.fileName = fileName;
-          this.showToast('Data shared! Make sure you saved the file.');
+          this.showToast('Shared! Make sure you save the file too.');
         }).catch((err) => {
           // User cancelled the share sheet — that's fine, don't mark as saved
           if (err.name !== 'AbortError') {
@@ -3646,7 +3687,7 @@ function app() {
       URL.revokeObjectURL(url);
       this.unsavedChanges = false;
       this.fileName = fileName;
-      this.showToast('Data saved!');
+      this.showToast('Saved!');
     },
 
     handleBeforeUnload(e) {
@@ -3925,7 +3966,7 @@ function app() {
             'Physical Aggression': 'Regulation check-in with both students \u2014 explore triggers',
             'Emotional Crisis': 'Follow-up \u2014 review safety plan and regulation strategies',
             'Property Damage': 'Check in \u2014 explore what was happening emotionally',
-            'Abusive Language': 'Check in \u2014 practise alternative responses when dysregulated',
+            'Abusive Language': 'Check in \u2014 practise alternative responses when upset',
             'Absconding': 'Review safety plan with student and ' + family,
             'Sustained Refusal': 'Calm check-in \u2014 explore what was going on underneath',
             'Self-Harm Risk': 'Urgent \u2014 notify wellbeing team and ' + family + ' immediately',
@@ -3939,7 +3980,7 @@ function app() {
         restorative: {
           familyTerm: family,
           expectationTerm: isNZ ? 'values / uara' : 'community agreements',
-          reflectionTitle: isNZ ? 'Hui Whakatika Prompts' : 'Restorative Practice Prompts',
+          reflectionTitle: isNZ ? 'Hui Whakatika (Restorative Chat)' : 'Restorative Practice Prompts',
           reflectionQuestions: isNZ ? [
             'He aha te mea i puta? / What happened?',
             'I te w\u0101 r\u0101, he aha \u014du whakaaro? / What were you thinking?',
@@ -4062,7 +4103,7 @@ function app() {
       const catCounts = {};
       negatives.forEach(e => { catCounts[e.category] = (catCounts[e.category] || 0) + 1; });
       Object.entries(catCounts).forEach(([cat, count]) => {
-        if (count >= 3) patterns.push({ text: cat + ' logged ' + count + ' times in the last 4 weeks', detail: fw.patternRecurring, icon: '\u{1F504}', level: 'warning' });
+        if (count >= 3) patterns.push({ text: cat + ' \u2014 ' + count + ' times in 4 weeks', detail: fw.patternRecurring, icon: '\u{1F504}', level: 'warning' });
       });
 
       const locCounts = {};
@@ -5085,6 +5126,70 @@ function app() {
           return { student: s, tier, neg, reason };
         })
         .sort((a, b) => b.tier - a.tier || b.neg - a.neg);
+    },
+
+    // ===== Analytics Extras =====
+    getAnalyticsTrend() {
+      const rangeDays = { week: 7, '2weeks': 14, '4weeks': 28 }[this.analyticsRange];
+      if (!rangeDays) return null;
+      const now = new Date();
+      const prevStart = new Date(); prevStart.setDate(now.getDate() - rangeDays * 2);
+      const prevEnd = new Date(); prevEnd.setDate(now.getDate() - rangeDays);
+      const currentNeg = this.getFilteredEntries().filter(e => e.type === 'negative').length;
+      const prevNeg = this.entries.filter(e => { const d = new Date(e.date); return d >= prevStart && d < prevEnd && e.type === 'negative'; }).length;
+      if (currentNeg === 0 && prevNeg === 0) return { direction: 'steady', pct: 0, current: 0, previous: 0 };
+      if (prevNeg === 0) return { direction: 'more', pct: 100, current: currentNeg, previous: 0 };
+      const pct = Math.round(((currentNeg - prevNeg) / prevNeg) * 100);
+      return { direction: pct < 0 ? 'fewer' : pct > 0 ? 'more' : 'steady', pct: Math.abs(pct), current: currentNeg, previous: prevNeg };
+    },
+
+    getStudentsApproachingWatch() {
+      const threshold = this.settings.tierThresholds.tier2MinorMin;
+      return this.students
+        .filter(s => this.getTier(s.id) === 1)
+        .map(s => {
+          const recent = this.getRecentEntries(s.id);
+          const minors = recent.filter(e => e.type === 'negative' && e.severity === 'minor').length;
+          const majors = recent.filter(e => e.type === 'negative' && e.severity === 'major').length;
+          const gap = threshold - minors;
+          if (gap <= 1 && gap > 0) return { student: s, minors, gap, reason: minors + ' minor incidents \u2014 ' + gap + ' more will move to Watch' };
+          if (majors > 0 && this.getTier(s.id) === 1) return { student: s, minors, gap, reason: 'Has a recent major incident' };
+          return null;
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.gap - b.gap);
+    },
+
+    getCategoryTrend(category) {
+      const rangeDays = { week: 7, '2weeks': 14, '4weeks': 28 }[this.analyticsRange];
+      if (!rangeDays) return '';
+      const now = new Date();
+      const prevStart = new Date(); prevStart.setDate(now.getDate() - rangeDays * 2);
+      const prevEnd = new Date(); prevEnd.setDate(now.getDate() - rangeDays);
+      const current = this.getFilteredEntries().filter(e => e.type === 'negative' && e.category === category).length;
+      const prev = this.entries.filter(e => { const d = new Date(e.date); return d >= prevStart && d < prevEnd && e.type === 'negative' && e.category === category; }).length;
+      if (current > prev) return '\u2191';
+      if (current < prev) return '\u2193';
+      return '';
+    },
+
+    getStudentsDoingWell() {
+      const filtered = this.getFilteredEntries();
+      return this.students
+        .filter(s => this.getTier(s.id) === 1)
+        .map(s => {
+          const studentEntries = filtered.filter(e => e.studentId === s.id);
+          const negCount = studentEntries.filter(e => e.type === 'negative').length;
+          if (studentEntries.length === 0) return null; // no data = can't celebrate
+          let note = '';
+          if (negCount === 0) note = 'No incidents this period';
+          else if (negCount === 1) note = '1 minor only';
+          else return null; // more than 1 negative = not "doing well"
+          return { student: s, note, totalEntries: studentEntries.length };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.totalEntries - a.totalEntries)
+        .slice(0, 5);
     },
 
     // ===== Toast =====
