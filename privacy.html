@@ -24,12 +24,18 @@
     { "@type": "Question", "name": "Is student data encrypted?", "acceptedAnswer": { "@type": "Answer", "text": "The saved JSON file is plain text. For encryption, save it to an encrypted drive (BitLocker, FileVault, or encrypted school network share)." }},
     { "@type": "Question", "name": "Does the app work offline?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. After the first load (which fetches fonts and Alpine.js), the app runs entirely offline. No internet connection is needed." }},
     { "@type": "Question", "name": "Does the app comply with Australian Privacy Principles?", "acceptedAnswer": { "@type": "Answer", "text": "The app does not collect, transmit, or store data on any external system. All data stays on the teacher's device. It is designed to sit outside the scope of most data protection obligations." }},
-    { "@type": "Question", "name": "Does the app use cookies or tracking?", "acceptedAnswer": { "@type": "Answer", "text": "No. No cookies, no localStorage, no sessionStorage, no analytics, no tracking pixels, no advertising scripts." }},
-    { "@type": "Question", "name": "Can I audit the app's network activity?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Developer Tools (F12), go to Network tab. After initial page load, you will see zero network requests during normal use." }}
+    { "@type": "Question", "name": "Does the app use cookies or tracking?", "acceptedAnswer": { "@type": "Answer", "text": "We count anonymous page visits and button clicks using Plausible — a privacy-friendly analytics tool that uses no cookies, no fingerprinting, and never sees what you log. Student names, behaviour entries, and notes never leave your device." }},
+    { "@type": "Question", "name": "Can I audit the app's network activity?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Developer Tools (F12), go to Network tab. After the initial page load you will see only small, anonymous pings to plausible.io when pages or buttons are used. No student data is ever sent — you can inspect the request payload to verify." }}
   ]
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Plausible Analytics: anonymous, cookieless, never sees logged data. -->
+<script async src="https://plausible.io/js/pa-0tssIjGR-cEPl_a24WuR1.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <style>
 :root {
   --clay: #C17248;
@@ -299,19 +305,19 @@ body {
   <div class="privacy-hero">
     <h1>Privacy &amp; Data Security</h1>
     <p class="subtitle">A complete technical and legal overview of how Behaviour Book handles student data. Designed to be shared with IT administrators and school leadership.</p>
-    <p class="last-updated">Last updated: 10 May 2026</p>
+    <p class="last-updated">Last updated: 4 June 2026</p>
   </div>
 
   <!-- TL;DR -->
   <div class="tldr">
     <h2>Summary for Administrators</h2>
     <ul>
-      <li><strong>No data is transmitted anywhere.</strong> Behaviour Book runs entirely in the browser. There is no server, no database, no API, and no analytics.</li>
+      <li><strong>Your student data is never transmitted anywhere.</strong> Behaviour Book runs entirely in the browser — no server, no database, and no API ever sees what you log. We do use privacy-friendly analytics (Plausible) to count anonymous page visits and button clicks at the site level. It never sees student names, entries, or notes.</li>
       <li><strong>No user accounts.</strong> No email, no password, no sign-up. There is nothing to authenticate against.</li>
       <li><strong>Data is stored as a local file.</strong> The teacher saves a <code>.json</code> file to their device. Loading the app reads from that file. That's the only persistence mechanism.</li>
       <li><strong>No third-party data sharing.</strong> Student names, behaviour entries, and notes never leave the teacher's device.</li>
       <li><strong>No cookies, no localStorage, no sessionStorage.</strong> The app uses none of these browser storage mechanisms.</li>
-      <li><strong>Two external resources loaded:</strong> a font (Google Fonts) and a JS framework (Alpine.js via jsDelivr CDN). Neither receives any student data.</li>
+      <li><strong>Three external resources loaded:</strong> a font (Google Fonts), a JS framework (Alpine.js via jsDelivr CDN), and an anonymous analytics script (Plausible). None receive any student data — Plausible only sees which page you opened and which buttons you tapped.</li>
       <li><strong>The app is a single HTML file.</strong> It can be saved locally and run fully offline with no internet connection.</li>
     </ul>
   </div>
@@ -354,7 +360,7 @@ body {
     <h2>Network Activity</h2>
 
     <h3>What the app loads from the internet</h3>
-    <p>When a teacher opens the HTML file in a browser with internet access, two resources are loaded:</p>
+    <p>When a teacher opens the HTML file in a browser with internet access, three resources are loaded:</p>
 
     <table class="compliance-table">
       <thead>
@@ -373,6 +379,12 @@ body {
           <td>UI framework (reactivity)</td>
           <td>Standard HTTP request headers only. <strong>No student data.</strong></td>
         </tr>
+        <tr>
+          <td>Plausible Analytics</td>
+          <td>plausible.io</td>
+          <td>Anonymous usage counting</td>
+          <td>URL path of the page you opened, referrer URL, screen size bucket, browser, country (from IP, then IP discarded). <strong>Never any student data, entry content, or anything from your saved file.</strong></td>
+        </tr>
       </tbody>
     </table>
 
@@ -380,7 +392,7 @@ body {
     <ul>
       <li>No <code>fetch()</code> or <code>XMLHttpRequest</code> calls to any server</li>
       <li>No WebSocket connections</li>
-      <li>No analytics scripts (no Google Analytics, no Mixpanel, no tracking pixels)</li>
+      <li>No surveillance analytics, no Google Analytics, no Mixpanel, no tracking pixels, no advertising scripts (we use Plausible, which is cookieless and anonymous — see the table above)</li>
       <li>No error reporting services (no Sentry, no Bugsnag)</li>
       <li>No advertising scripts or trackers</li>
       <li>No social media widgets or embeds</li>
@@ -388,7 +400,7 @@ body {
 
     <div class="tech-detail">
       <div class="tech-detail-label">Verification</div>
-      <p style="margin: 0;">IT administrators can verify this by opening the browser's Developer Tools (F12) → Network tab while using the app. After the initial page load, you will see <strong>zero network requests</strong> during normal use (logging entries, viewing students, etc.). The Save function uses <code>URL.createObjectURL()</code> to generate a local download — no upload occurs.</p>
+      <p style="margin: 0;">IT administrators can verify this by opening the browser's Developer Tools (F12) → Network tab while using the app. The only outbound requests during normal use are small, anonymous pings to <code>plausible.io/api/event</code> when a page is opened or a key button is tapped. Inspect the request payload — it contains the URL path and an event name only, never student data. The Save function uses <code>URL.createObjectURL()</code> to generate a local download — no upload of student data ever occurs.</p>
     </div>
 
     <h3>Fully offline mode</h3>
@@ -405,7 +417,7 @@ body {
         <tr><th>Storage mechanism</th><th>Used?</th><th>Reason</th></tr>
       </thead>
       <tbody>
-        <tr><td>Cookies</td><td class="status-na">No</td><td>Not used. No tracking, no session management.</td></tr>
+        <tr><td>Cookies</td><td class="status-na">No</td><td>Not used. Our analytics tool (Plausible) is cookieless. No persistent identifiers, no session management.</td></tr>
         <tr><td>localStorage</td><td class="status-na">No</td><td>Deliberately avoided — not reliable across all school device configurations.</td></tr>
         <tr><td>sessionStorage</td><td class="status-na">No</td><td>Not used.</td></tr>
         <tr><td>IndexedDB</td><td class="status-na">No</td><td>Not used.</td></tr>
@@ -459,7 +471,7 @@ body {
       <li>No teacher name, email, or identity</li>
       <li>No school name or location</li>
       <li>No device information, IP address, or browser fingerprint</li>
-      <li>No usage analytics, session duration, or click tracking</li>
+      <li>No per-user analytics, no session duration tracking, no individual click tracking. (Aggregate, anonymous page-view and button-click counts only — see "What the app loads from the internet" above.)</li>
       <li>No student photos, IDs, or government identifiers</li>
       <li>No parent/carer contact details</li>
     </ul>

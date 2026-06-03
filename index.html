@@ -32,6 +32,12 @@
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Plausible Analytics: anonymous, cookieless, never sees logged data. -->
+<script async src="https://plausible.io/js/pa-0tssIjGR-cEPl_a24WuR1.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <style>
 :root {
   --clay: #C17248;
@@ -363,13 +369,13 @@ body > * { position: relative; z-index: 1; }
 </div>
 
 <div class="actions">
-  <a href="behaviour-book.html" class="action-card primary">
+  <a href="behaviour-book.html" class="action-card primary plausible-event-name=CTA+Open+App">
     <span class="action-card-icon">&#9889;</span>
     <h2>Open the App</h2>
     <p>Start tracking behaviour now. Free, private, runs in your browser. No account needed.</p>
     <span class="action-card-btn">Launch Behaviour Book</span>
   </a>
-  <a href="stories.html" class="action-card secondary">
+  <a href="stories.html" class="action-card secondary plausible-event-name=CTA+Open+Stories">
     <span class="action-card-icon">&#128214;</span>
     <h2>See How It Works</h2>
     <p>Four real classroom stories showing what the app catches and why it matters.</p>
