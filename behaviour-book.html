@@ -1556,7 +1556,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     <div class="onboarding-header">
       <div class="top-bar-title" style="justify-content: center;">&#128218; Setting Up Your Behaviour Book</div>
       <div class="onboarding-progress">
-        <template x-for="dot in 5" :key="dot">
+        <template x-for="dot in 6" :key="dot">
           <div class="onboarding-dot" :class="onboardingStep > dot ? 'done' : (onboardingStep === dot ? 'active' : '')"></div>
         </template>
       </div>
@@ -1567,7 +1567,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
       <!-- Step 1: Country -->
       <div x-show="onboardingStep === 1" class="fade-in">
         <div class="onboarding-step-title">Where is your school?</div>
-        <div class="onboarding-step-desc">We'll set up the right frameworks, categories, and terminology for your region.</div>
+        <div class="onboarding-step-desc">Pick your region so we set up the right frameworks, categories, and terminology — or skip straight to logging.</div>
         <div class="approach-grid stagger-in">
           <div class="approach-card" :class="{ selected: selectedCountry === 'AU' }" @click="selectedCountry = 'AU'; selectedApproach = '';">
             <div class="approach-icon" style="background: #EDF5EF; font-size: 1.8rem;">&#127462;&#127482;</div>
@@ -1581,6 +1581,13 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
             <div class="approach-body">
               <div class="approach-name">New Zealand</div>
               <div class="approach-desc">PB4L School-Wide, Restorative Practice / Hui Whakatika and more.</div>
+            </div>
+          </div>
+          <div class="approach-card" :class="{ selected: selectedCountry === 'SKIP' }" @click="selectedCountry = 'SKIP'; applyApproach('none');">
+            <div class="approach-icon" style="background: var(--sand-dark); font-size: 1.8rem;">&#128221;</div>
+            <div class="approach-body">
+              <div class="approach-name">Just track behaviour</div>
+              <div class="approach-desc">Skip framework setup. Log entries without linking to expectations.</div>
             </div>
           </div>
         </div>
@@ -1674,7 +1681,66 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         </div>
       </div>
 
-      <!-- Step 2: Customise Expectations -->
+      <!-- Step 4: Logging Defaults / "What's important to you?" (optional) -->
+      <div x-show="onboardingStep === 4" class="fade-in">
+        <div class="onboarding-step-title">What's important to you?</div>
+        <div class="onboarding-step-desc">Help us customise the app so it supports what matters to you. You can change any of it later in Settings.</div>
+
+        <div class="card mb-12">
+          <div class="form-group">
+            <label class="form-label">When you open the log, start on</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'positive' }" @click="settings.defaults.entryType = 'positive'">Positive</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'negative' }" @click="settings.defaults.entryType = 'negative'">Negative</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'ask' }" @click="settings.defaults.entryType = 'ask'">Ask each time</button>
+            </div>
+            <div class="text-xs text-muted mt-4">Positive-focused classrooms often start here; incident-led logging starts on Negative.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="form-group">
+            <label class="form-label">Auto-add a follow-up reminder to incidents</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'smart' }" @click="settings.defaults.followUpMode = 'smart'">Smart</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'always' }" @click="settings.defaults.followUpMode = 'always'">Every incident</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'majors' }" @click="settings.defaults.followUpMode = 'majors'">Majors only</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'off' }" @click="settings.defaults.followUpMode = 'off'">Never</button>
+            </div>
+            <div class="text-xs text-muted mt-4">"Smart" suggests follow-ups for serious or repeating incidents. You can always add or remove one per entry.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="form-group">
+            <label class="form-label">Your positive-to-negative goal</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 5 }" @click="settings.ratioTarget = 5">5 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 4 }" @click="settings.ratioTarget = 4">4 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 3 }" @click="settings.ratioTarget = 3">3 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 2 }" @click="settings.ratioTarget = 2">2 : 1</button>
+            </div>
+            <div class="text-xs text-muted mt-4">Research commonly recommends at least 4 positives for every correction. Tracked in your Analytics.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Remind me to check in on a student after no positive for</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 3 }" @click="settings.checkInReminderDays = 3">3 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 5 }" @click="settings.checkInReminderDays = 5">5 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 7 }" @click="settings.checkInReminderDays = 7">7 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 10 }" @click="settings.checkInReminderDays = 10">10 days</button>
+              <button class="btn-group-item" :class="{ selected: !settings.checkInReminderDays }" @click="settings.checkInReminderDays = 0">Don't remind me</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted">You can skip this — sensible defaults are already set.</div>
+      </div>
+
+      <!-- Step 3: Customise Expectations -->
       <div x-show="onboardingStep === 3" class="fade-in">
         <div class="onboarding-step-title" x-text="selectedApproach === 'none' ? 'Quick Setup' : 'Customise Your Expectations'"></div>
 
@@ -1716,8 +1782,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <div class="text-xs text-muted mt-12">You can change all of this later in Settings.</div>
       </div>
 
-      <!-- Step 3: Add Students -->
-      <div x-show="onboardingStep === 4" class="fade-in">
+      <!-- Step 5: Add Students -->
+      <div x-show="onboardingStep === 5" class="fade-in">
         <div class="onboarding-step-title">Add Your Students</div>
         <div class="onboarding-step-desc">
           Paste your class list below — one name per line. Copy straight from a spreadsheet, email, or class roster.
@@ -1742,8 +1808,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
         <div class="text-xs text-muted">Or skip this and add students from the dashboard.</div>
       </div>
 
-      <!-- Step 4: You're Ready -->
-      <div x-show="onboardingStep === 5" class="fade-in">
+      <!-- Step 6: You're Ready -->
+      <div x-show="onboardingStep === 6" class="fade-in">
         <div class="onboarding-step-title">You're All Set!</div>
         <div class="onboarding-step-desc">Here's how Behaviour Book works day-to-day:</div>
 
@@ -1787,13 +1853,13 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
     </div>
 
     <div class="onboarding-footer">
-      <button x-show="onboardingStep > 1" class="btn btn-secondary" @click="onboardingStep--">Back</button>
+      <button x-show="onboardingStep > 1" class="btn btn-secondary" @click="onboardingBack()">Back</button>
       <div style="flex: 1;"></div>
-      <button x-show="onboardingStep === 4" class="btn btn-secondary" @click="onboardingStep = 5">Skip</button>
-      <button x-show="onboardingStep < 5 && !(onboardingStep === 1 && !selectedCountry) && !(onboardingStep === 2 && !selectedApproach)" class="btn btn-primary" @click="onboardingStep++">
+      <button x-show="onboardingStep === 5" class="btn btn-secondary" @click="onboardingStep = 6">Skip</button>
+      <button x-show="onboardingStep < 6 && !(onboardingStep === 1 && !selectedCountry) && !(onboardingStep === 2 && !selectedApproach)" class="btn btn-primary" @click="onboardingNext()">
         Continue
       </button>
-      <button x-show="onboardingStep === 5" class="btn btn-primary" @click="finishOnboarding()" style="padding: 12px 28px;">
+      <button x-show="onboardingStep === 6" class="btn btn-primary" @click="finishOnboarding()" style="padding: 12px 28px;">
         Open My Behaviour Book
       </button>
     </div>
@@ -2247,6 +2313,21 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
           </div>
         </template>
 
+        <!-- Positive : Negative ratio vs target -->
+        <div x-show="getFilteredEntries().length > 0" class="card mb-16">
+          <div class="card-header"><span>Positive : Negative Ratio</span></div>
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <div style="font-size: 1.6rem; font-weight: 800;" :style="getOverallRatio() >= settings.ratioTarget ? 'color: var(--sage-dark);' : 'color: var(--clay-dark);'" x-text="getRatioLabel()"></div>
+            <div class="text-sm text-muted" x-text="'Goal: ' + settings.ratioTarget + ' : 1'"></div>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-bar-positive" :style="'width:' + getRatioBarPercent() + '%;'"></div>
+            <div class="ratio-bar-negative" :style="'width:' + (100 - getRatioBarPercent()) + '%;'"></div>
+          </div>
+          <div class="text-xs mt-8" :style="getOverallRatio() >= settings.ratioTarget ? 'color: var(--sage-dark); font-weight: 600;' : 'color: var(--warm-grey);'"
+               x-text="getOverallRatio() >= settings.ratioTarget ? 'Meeting your positive-to-negative goal \u2014 nice work.' : 'Below your ' + settings.ratioTarget + ':1 goal \u2014 look for more positives to log.'"></div>
+        </div>
+
         <!-- Students Needing Support -->
         <div class="card mb-16">
           <div class="card-header"><span>Students Needing Support</span></div>
@@ -2292,8 +2373,8 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               </div>
               <div class="chart-bar-value" style="display: flex; align-items: center; gap: 3px;">
                 <span x-text="item.count"></span>
-                <span x-show="getCategoryTrend(item.category) === '\u2191'" style="color: #8B2E24; font-size: 0.7rem;">\u2191</span>
-                <span x-show="getCategoryTrend(item.category) === '\u2193'" style="color: #3D6B42; font-size: 0.7rem;">\u2193</span>
+                <span x-show="getCategoryTrend(item.category) === '\u2191'" style="color: #8B2E24; font-size: 0.7rem;">&#8593;</span>
+                <span x-show="getCategoryTrend(item.category) === '\u2193'" style="color: #3D6B42; font-size: 0.7rem;">&#8595;</span>
               </div>
             </div>
           </template>
@@ -2484,6 +2565,62 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
               <div class="settings-list-row-count" x-text="settings.locations.length + ' items'"></div>
             </div>
             <span class="btn btn-sm btn-secondary" style="font-size:0.7rem; padding:3px 10px;">Edit</span>
+          </div>
+        </div>
+
+        <!-- Logging Defaults -->
+        <div class="card settings-section">
+          <div class="settings-section-title">Logging Defaults</div>
+          <p class="text-xs text-muted" style="margin-bottom: 12px;">Set the app to match how you log. These change the starting points only — you can still adjust any individual entry.</p>
+
+          <div class="form-group">
+            <label class="form-label">When you open the log, start on</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'positive' }" @click="settings.defaults.entryType = 'positive'; markChanged()">Positive</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'negative' }" @click="settings.defaults.entryType = 'negative'; markChanged()">Negative</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.entryType === 'ask' }" @click="settings.defaults.entryType = 'ask'; markChanged()">Ask each time</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Auto-add a follow-up reminder to incidents</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'smart' }" @click="settings.defaults.followUpMode = 'smart'; markChanged()">Smart</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'always' }" @click="settings.defaults.followUpMode = 'always'; markChanged()">Every incident</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'majors' }" @click="settings.defaults.followUpMode = 'majors'; markChanged()">Majors only</button>
+              <button class="btn-group-item" :class="{ selected: settings.defaults.followUpMode === 'off' }" @click="settings.defaults.followUpMode = 'off'; markChanged()">Never</button>
+            </div>
+            <div class="text-xs text-muted mt-4">"Smart" suggests follow-ups for serious or repeating incidents.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Show a separate <strong>Major</strong> section in the log</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.defaults.showMajorCategories }" @click="settings.defaults.showMajorCategories = true; markChanged()">On</button>
+              <button class="btn-group-item" :class="{ selected: !settings.defaults.showMajorCategories }" @click="settings.defaults.showMajorCategories = false; markChanged()">Off</button>
+            </div>
+            <div class="text-xs text-muted mt-4">Turn off for a simpler single-list log if you don't track major incidents at the classroom level.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Positive-to-negative goal (used in Analytics)</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 5 }" @click="settings.ratioTarget = 5; markChanged()">5 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 4 }" @click="settings.ratioTarget = 4; markChanged()">4 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 3 }" @click="settings.ratioTarget = 3; markChanged()">3 : 1</button>
+              <button class="btn-group-item" :class="{ selected: settings.ratioTarget === 2 }" @click="settings.ratioTarget = 2; markChanged()">2 : 1</button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Check-in reminder after no positive logged for</label>
+            <div class="btn-group">
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 3 }" @click="settings.checkInReminderDays = 3; markChanged()">3 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 5 }" @click="settings.checkInReminderDays = 5; markChanged()">5 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 7 }" @click="settings.checkInReminderDays = 7; markChanged()">7 days</button>
+              <button class="btn-group-item" :class="{ selected: settings.checkInReminderDays === 10 }" @click="settings.checkInReminderDays = 10; markChanged()">10 days</button>
+              <button class="btn-group-item" :class="{ selected: !settings.checkInReminderDays }" @click="settings.checkInReminderDays = 0; markChanged()">Don't remind me</button>
+            </div>
           </div>
         </div>
 
@@ -2679,7 +2816,7 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
 
             <!-- Negative categories: minor + major shown together -->
             <div x-show="logEntry.type === 'negative'">
-              <div class="form-label">Minor</div>
+              <div class="form-label" x-text="settings.defaults.showMajorCategories ? 'Minor' : 'What happened?'"></div>
               <div class="chip-grid" style="margin-bottom: 12px;">
                 <template x-for="cat in settings.categories.minor" :key="'minor-' + cat">
                   <button class="chip" :class="{ selected: logEntry.category === cat && logEntry.severity === 'minor' }" @click="logEntry.category = cat; logEntry.severity = 'minor';">
@@ -2687,18 +2824,22 @@ select.form-input { appearance: none; background-image: url("data:image/svg+xml,
                   </button>
                 </template>
               </div>
-              <div class="form-label">Major</div>
-              <div class="chip-grid">
-                <template x-for="cat in settings.categories.major" :key="'major-' + cat">
-                  <button class="chip" :class="{ selected: logEntry.category === cat && logEntry.severity === 'major' }" @click="logEntry.category = cat; logEntry.severity = 'major';">
-                    <span x-text="cat"></span>
-                  </button>
-                </template>
-              </div>
+              <template x-if="settings.defaults.showMajorCategories">
+                <div>
+                  <div class="form-label">Major</div>
+                  <div class="chip-grid">
+                    <template x-for="cat in settings.categories.major" :key="'major-' + cat">
+                      <button class="chip" :class="{ selected: logEntry.category === cat && logEntry.severity === 'major' }" @click="logEntry.category = cat; logEntry.severity = 'major';">
+                        <span x-text="cat"></span>
+                      </button>
+                    </template>
+                  </div>
+                </div>
+              </template>
             </div>
 
             <div x-show="logEntry.category" class="mt-16">
-              <button class="btn btn-primary btn-block" @click="logStep = 3; if (logEntry.type === 'negative') applySmartFollowUp()">Continue</button>
+              <button class="btn btn-primary btn-block" @click="logStep = 3; applyFollowUpDefault()">Continue</button>
             </div>
           </div>
 
@@ -3173,6 +3314,11 @@ const DEFAULT_SETTINGS = {
   },
   ratioTarget: 4.0,
   checkInReminderDays: 5,
+  defaults: {
+    entryType: 'negative',      // 'positive' | 'negative' | 'ask' — which type is pre-selected when the log opens
+    followUpMode: 'smart',      // 'smart' | 'always' | 'majors' | 'off' — when a follow-up is auto-attached to incidents
+    showMajorCategories: true   // show the separate "Major" section in the log
+  },
   exportTemplates: [],
   country: '',
   approach: ''
@@ -3423,10 +3569,21 @@ function app() {
       }
     },
 
+    onboardingNext() {
+      // "Just track behaviour" skips the framework-picker step (step 2).
+      if (this.onboardingStep === 1 && this.selectedCountry === 'SKIP') { this.onboardingStep = 3; return; }
+      this.onboardingStep++;
+    },
+
+    onboardingBack() {
+      if (this.onboardingStep === 3 && this.selectedCountry === 'SKIP') { this.onboardingStep = 1; return; }
+      this.onboardingStep--;
+    },
+
     finishOnboarding() {
       plausible('Onboarding Completed');
-      // Save country
-      this.settings.country = this.selectedCountry;
+      // Save country ('SKIP' is a no-framework shortcut, not a real region)
+      this.settings.country = this.selectedCountry === 'SKIP' ? '' : this.selectedCountry;
       this.settings.approach = this.selectedApproach;
 
       // Apply country-specific locations
@@ -3634,6 +3791,7 @@ function app() {
             if (data.settings && data.settings.tierThresholds) {
               this.settings.tierThresholds = { ...DEFAULT_SETTINGS.tierThresholds, ...data.settings.tierThresholds };
             }
+            this.settings.defaults = { ...DEFAULT_SETTINGS.defaults, ...((data.settings && data.settings.defaults) || {}) };
             this.unsavedChanges = false;
             this.fileName = file.name;
             this.started = true;
@@ -4254,6 +4412,8 @@ function app() {
 
     getCheckInReminders() {
       const reminders = [];
+      // 0 (or unset) means the teacher turned check-in reminders off
+      if (!this.settings.checkInReminderDays || this.settings.checkInReminderDays <= 0) return reminders;
       this.students.forEach(student => {
         const tier = this.getTier(student.id);
         if (tier < 2) return;
@@ -4279,7 +4439,10 @@ function app() {
 
     // ===== Quick Log =====
     freshLogEntry() {
-      return { id: '', studentId: '', date: '', type: 'negative', severity: 'minor', category: '', location: (this.settings ? this.settings.locations[0] : 'Classroom'), expectation: '', description: '', action: '' };
+      const pref = (this.settings && this.settings.defaults && this.settings.defaults.entryType) || 'negative';
+      const type = pref === 'ask' ? null : pref;
+      const severity = type === 'negative' ? 'minor' : null;
+      return { id: '', studentId: '', date: '', type: type, severity: severity, category: '', location: (this.settings ? this.settings.locations[0] : 'Classroom'), expectation: '', description: '', action: '' };
     },
 
     openQuickLog(preselectedStudentId) {
@@ -4387,12 +4550,33 @@ function app() {
       return null; // No suggestion for this combination
     },
 
-    applySmartFollowUp() {
+    applyFollowUpDefault() {
+      // Decides whether to auto-attach a follow-up when moving to the details step,
+      // based on the teacher's configured follow-up mode.
+      if (this.logEntry.type !== 'negative') return;
+      const mode = (this.settings.defaults && this.settings.defaults.followUpMode) || 'smart';
+      if (mode === 'off') return;
+      if (mode === 'majors' && this.logEntry.severity !== 'major') return;
+
       const suggestion = this.getSmartFollowUp(this.logEntry.category, this.logEntry.severity, this.logEntry.studentId);
+
+      if (mode === 'smart') {
+        // Only turn on when there's a relevant suggestion (current behaviour).
+        if (suggestion) {
+          this.logHasFollowUp = true;
+          this.setFollowUpPreset(suggestion.preset);
+          this.logFollowUpNote = suggestion.note;
+        }
+        return;
+      }
+
+      // 'always' (all negatives) or 'majors' (this is a major) — force a follow-up on.
+      this.logHasFollowUp = true;
       if (suggestion) {
-        this.logHasFollowUp = true;
         this.setFollowUpPreset(suggestion.preset);
         this.logFollowUpNote = suggestion.note;
+      } else if (!this.logFollowUpPreset) {
+        this.setFollowUpPreset('nextweek');
       }
     },
 
@@ -5096,6 +5280,23 @@ function app() {
       const neg = fe.filter(e => e.type === 'negative').length;
       if (neg === 0) return pos > 0 ? pos : 0;
       return pos / neg;
+    },
+
+    getRatioLabel() {
+      const fe = this.getFilteredEntries();
+      const neg = fe.filter(e => e.type === 'negative').length;
+      const r = this.getOverallRatio();
+      if (neg === 0) return r > 0 ? r + ' : 0' : '—';
+      return (Math.round(r * 10) / 10) + ' : 1';
+    },
+
+    getRatioBarPercent() {
+      const fe = this.getFilteredEntries();
+      const pos = fe.filter(e => e.type === 'positive').length;
+      const neg = fe.filter(e => e.type === 'negative').length;
+      const total = pos + neg;
+      if (total === 0) return 50;
+      return Math.round((pos / total) * 100);
     },
 
     getTopCategories(type) {
